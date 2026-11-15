@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794764783">
+<meta name="app-version" content="1794766005">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -177,18 +177,45 @@ details.cue[open] summary{color:var(--accent)}
 ol.steps{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:5px;font-size:.92rem}
 ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:8px}
-.fig{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:8px}
-.fig svg{width:100%;max-width:340px;height:auto;display:block;margin:0 auto}
-.fig .bd line{stroke:var(--ink);stroke-width:5;stroke-linecap:round}
-.fig .bd .head{fill:var(--ink)}
-.fig .gh{opacity:.28}
-.fig .eqm{stroke:var(--muted);stroke-width:3;fill:none;stroke-linecap:round}
-.fig .eqm.thin{stroke-width:1.5}
-.fig .eqa{stroke:var(--accent);stroke-width:3;fill:none}
-.fig .cab{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3}
-.fig .fl{stroke:var(--line);stroke-width:2}
-.figbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
-.ghost.sm2{padding:4px 8px;font-size:.75rem}
+.fig{background:#0b0c0c;border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:8px}
+.fig svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
+.fig .fl{stroke:#3a3b3b;stroke-width:2}
+.fig .limb{stroke:#f2f1ec;stroke-width:6.5;stroke-linecap:round}
+.fig .limb.far{stroke:#a9a8a2;stroke-width:5.5}
+.fig .limb.neck{stroke-width:5}
+.fig .limb.foot{stroke-width:5}
+.fig .torso{stroke:#f2f1ec;stroke-width:11;stroke-linecap:round}
+.fig .torsoF{fill:#f2f1ec;stroke:#f2f1ec;stroke-width:6;stroke-linejoin:round}
+.fig .joint{fill:#0b0c0c}
+.fig .head{fill:#f2f1ec}
+.fig .mus{stroke:#ff7a3d;stroke-width:6.5;stroke-linecap:round;opacity:.95}
+.fig .gh{opacity:.25}
+.fig .frm{stroke:#6d6c67;stroke-width:3;stroke-linecap:round;fill:none}
+.fig .frame{fill:#1d1e1e;stroke:#55554f;stroke-width:1.5}
+.fig .stack{fill:#2e2f2f;stroke:#55554f;stroke-width:1}
+.fig .pad{fill:#3a2f22;stroke:#7a6448;stroke-width:1.2}
+.fig .padf{fill:#2a231a;stroke:#6b573e;stroke-width:1.2}
+.fig .rail{stroke:#8d8c86;stroke-width:2.5}.fig .rail.thin{stroke-width:1.2;opacity:.6}
+.fig .sled{stroke:#c9c8c2;stroke-width:5;stroke-linecap:round}
+.fig .lever{stroke:#9c9b95;stroke-width:4;stroke-linecap:round}
+.fig .roller{fill:#3a2f22;stroke:#b39064;stroke-width:1.5}
+.fig .plate{fill:#252626;stroke:#f0c43c;stroke-width:2.2}
+.fig .hub{fill:#f0c43c}
+.fig .dbh{fill:#9c9b95}.fig .dbp{fill:#252626;stroke:#f0c43c;stroke-width:1.6}
+.fig .pul{fill:#252626;stroke:#c9c8c2;stroke-width:1.5}
+.fig .cab{stroke:#c9c8c2;stroke-width:1.3}
+.fig .barH{stroke:#f0c43c;stroke-width:3.5;stroke-linecap:round}
+.fig .ropeE{stroke:#f0c43c;stroke-width:3;stroke-linecap:round}
+.fig .vh{fill:none;stroke:#f0c43c;stroke-width:2.5;stroke-linejoin:round}
+.fig .arw{stroke:#5fd38d;stroke-width:3;stroke-linecap:round}.fig .arwh{fill:#5fd38d}
+.fig .cuem circle{fill:#f0c43c}.fig .cuem text{fill:#1b1600;font:700 8px system-ui,sans-serif;text-anchor:middle}
+.fig .hud{fill:#f0c43c;font:700 9.5px system-ui,sans-serif}.fig .hudbar{fill:#f0c43c;opacity:.7}
+.figbar{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:6px}
+.ghost.sm2{padding:6px 10px;font-size:.78rem}
+.figleg{margin-top:6px;font-size:.86rem}
+.figleg p{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
+.musdot{flex:0 0 auto;width:12px;height:12px;border-radius:3px;background:#ff7a3d;margin-top:3px}
+.cuen{flex:0 0 auto;width:16px;height:16px;border-radius:50%;background:#f0c43c;color:#1b1600;font-weight:700;font-size:.7rem;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
 .offline{background:rgba(227,168,60,.12);border:1px solid rgba(227,168,60,.5);border-radius:12px;padding:10px 12px;font-size:.9rem}
 a.vid{display:inline-block;margin-top:8px;color:var(--accent);font-weight:600;font-size:.9rem}
 .meal{border-top:1px solid var(--line);padding-top:6px}
@@ -709,70 +736,175 @@ function techHtml(name,ex){
    <p class="lbl">Tempo und Atmung</p><p>${esc(t.t)}</p>
    <a class="vid" href="${yt}" target="_blank" rel="noopener">Zusätzlich: Videos auf YouTube (nur mit Internet)</a>`;
 }
-/* ---------- Bewegungsanimationen (offline, reines SVG) ---------- */
-function F(common,a,b,eq,floor){return {a:Object.assign({},common,a),b:Object.assign({},common,b),eq,floor}}
-const SVGL=(x1,y1,x2,y2,c)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"/>`;
-const SVGC=(x,y,r,c)=>`<circle cx="${x}" cy="${y}" r="${r}" class="${c}"/>`;
+/* ---------- Bewegungsanimationen v2 (offline, reines SVG, Geräte wie im Studio) ---------- */
+const SVGL=(x1,y1,x2,y2,c)=>`<line x1="${(+x1).toFixed(1)}" y1="${(+y1).toFixed(1)}" x2="${(+x2).toFixed(1)}" y2="${(+y2).toFixed(1)}" class="${c}"/>`;
+const SVGC=(x,y,r,c)=>`<circle cx="${(+x).toFixed(1)}" cy="${(+y).toFixed(1)}" r="${r}" class="${c}"/>`;
+const SVGR=(x,y,w,h,c,rx)=>`<rect x="${(+x).toFixed(1)}" y="${(+y).toFixed(1)}" width="${(+w).toFixed(1)}" height="${(+h).toFixed(1)}" rx="${rx==null?2:rx}" class="${c}"/>`;
+const SVGP=(pts,c)=>`<polygon points="${pts.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ")}" class="${c}"/>`;
 const cab=(x,y,p)=>SVGL(x,y,p[0],p[1],"cab");
-const FIG={
- squat:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[102,119],el:[86,54],ha:[96,42]},{hd:[122,66],sh:[112,80],hp:[78,116],kn:[124,122],el:[98,92],ha:[108,78]},p=>SVGC(p.sh[0]-2,p.sh[1]-3,12,"eqa")),
- legpress:F({hp:[64,112],sh:[34,74],hd:[26,60],el:[56,102],ha:[70,112]},{kn:[100,98],an:[138,80]},{kn:[86,78],an:[116,92]},p=>SVGL(20,60,62,120,"eqm")+SVGL(60,132,172,70,"eqm thin")+SVGL(p.an[0]+3-10,p.an[1]-18,p.an[0]+3+10,p.an[1]+18,"eqa")),
- bench:F({hd:[38,94],sh:[54,98],hp:[108,100],kn:[138,100],an:[142,150]},{el:[56,74],ha:[58,50]},{el:[64,114],ha:[66,90]},p=>`<rect x="28" y="104" width="96" height="8" rx="2" class="eqm"/>`+SVGL(40,112,40,150,"eqm")+SVGL(112,112,112,150,"eqm")+SVGC(p.ha[0],p.ha[1],12,"eqa")),
- incline:F({hd:[46,52],sh:[58,64],hp:[102,106],kn:[134,104],an:[140,150]},{el:[76,46],ha:[86,24]},{el:[50,86],ha:[70,66]},p=>SVGL(48,52,108,116,"eqm")+SVGL(96,116,96,150,"eqm")+SVGC(p.ha[0],p.ha[1],10,"eqa")),
- latpull:F({hp:[86,116],sh:[84,72],hd:[88,58],kn:[122,116],an:[122,148]},{el:[92,40],ha:[96,16]},{el:[74,94],ha:[92,70]},p=>cab(96,0,p.ha)+SVGL(p.ha[0]-14,p.ha[1],p.ha[0]+14,p.ha[1],"eqa")+SVGL(66,122,108,122,"eqm")+`<rect x="108" y="100" width="18" height="8" rx="4" class="eqm"/>`),
- pullup:F({ha:[100,16]},{el:[100,32],sh:[100,50],hd:[104,40],hp:[100,98],kn:[104,124],an:[100,148]},{el:[84,42],sh:[98,30],hd:[106,10],hp:[98,78],kn:[102,104],an:[98,128]},p=>SVGL(56,16,150,16,"eqa")),
- row:F({hp:[64,112],kn:[100,96],an:[132,116]},{sh:[80,70],hd:[90,58],el:[104,76],ha:[128,82]},{sh:[66,68],hd:[72,54],el:[50,90],ha:[80,96]},p=>cab(196,86,p.ha)+SVGL(138,98,138,134,"eqm")+SVGL(36,118,90,118,"eqm")),
- hinge:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],el:[100,66],ha:[100,88]},{hd:[140,74],sh:[126,72],hp:[74,90],kn:[104,120],el:[124,96],ha:[122,118]},p=>SVGC(p.ha[0],p.ha[1],12,"eqa")),
- hyper:F({an:[150,138],kn:[126,118],hp:[100,98]},{sh:[62,66],hd:[50,56],el:[76,84],ha:[68,84]},{sh:[78,140],hd:[70,151],el:[92,134],ha:[90,124]},p=>SVGL(90,108,112,88,"eqm")+SVGL(102,112,156,152,"eqm thin")+SVGC(148,130,5,"eqm")+SVGC(p.ha[0],p.ha[1],8,"eqa"),158),
- calf:F({hd:[100,22],sh:[100,36],hp:[100,82],el:[100,60],ha:[100,84]},{kn:[100,114],an:[100,144]},{kn:[100,104],an:[100,134]},p=>`<rect x="88" y="146" width="40" height="8" rx="2" class="eqm"/>`+SVGL(p.an[0],p.an[1],p.an[0]+14,p.an[1]+4,"eqa")),
- legcurl:F({hd:[104,26],sh:[102,40],hp:[100,84],el:[112,62],ha:[124,70],kn:[100,114]},{an:[98,144]},{an:[72,104]},p=>cab(160,150,p.an)+SVGL(126,20,126,150,"eqm")+SVGC(p.an[0],p.an[1],4,"eqa")),
- legext:F({hp:[70,100],sh:[64,56],hd:[66,42],kn:[104,100],el:[62,80],ha:[76,104]},{an:[108,138]},{an:[142,98]},p=>SVGL(54,106,108,106,"eqm")+SVGL(56,104,52,50,"eqm")+SVGL(80,106,80,150,"eqm")+SVGC(p.an[0]+2,p.an[1]+4,6,"eqa")),
- split:F({an:[122,150],an2:[58,112]},{hd:[100,34],sh:[100,48],hp:[98,92],kn:[118,120],kn2:[84,126],el:[100,70],ha:[100,92]},{hd:[100,58],sh:[100,72],hp:[94,116],kn:[134,122],kn2:[80,144],el:[100,94],ha:[100,116]},p=>`<rect x="30" y="114" width="36" height="8" rx="2" class="eqm"/>`+SVGL(36,122,36,150,"eqm")+SVGL(60,122,60,150,"eqm")+SVGC(p.ha[0],p.ha[1],5,"eqa")),
+/* Geräte-Bausteine */
+const EQ={
+  plate:(x,y,r)=>SVGC(x,y,r||12,"plate")+SVGC(x,y,2.5,"hub"),
+  dbSide:(x,y)=>SVGC(x,y,6.5,"plate")+SVGC(x,y,2,"hub"),
+  dbFront:(x,y)=>SVGR(x-9,y-1.5,18,3,"dbh",1)+SVGR(x-11,y-6,4,12,"dbp",1)+SVGR(x+7,y-6,4,12,"dbp",1),
+  pulley:(x,y)=>SVGC(x,y,3.5,"pul"),
+  tower:(x,w,pul)=>SVGR(x,4,w,148,"frame",3)+SVGR(x+3,96,w-6,50,"stack",1)+SVGL(x+w/2,10,x+w/2,96,"cab")+(pul||[]).map(p=>EQ.pulley(p[0],p[1])).join(""),
+  bench:(x1,x2,y)=>SVGR(x1,y,x2-x1,8,"pad",3)+SVGL(x1+8,y+8,x1+8,152,"frm")+SVGL(x2-8,y+8,x2-8,152,"frm"),
+  rope:(p)=>SVGL(p[0],p[1],p[0]-4,p[1]+7,"ropeE")+SVGL(p[0],p[1],p[0]+4,p[1]+7,"ropeE"),
+  smith:(x)=>SVGL(x-2,6,x-2,152,"rail")+SVGL(x+4,6,x+4,152,"rail thin")+SVGL(x-14,6,x+16,6,"frm"),
 };
+function F(common,a,b,o){return Object.assign({a:Object.assign({},common,a),b:Object.assign({},common,b)},o)}
+const PH_DOWN=[["Absenken",2.5],["kurz halten",0.4],["Hochdrücken",1.2],["oben",0.6]];
+const PH_PULL=[["Ziehen",1.2],["halten",0.6],["Zurücklassen",2.5],["Dehnung",0.4]];
+const PH_ISO=[["Heben",1],["oben halten",0.8],["Ablassen",2.5],["unten",0.3]];
+const UP={hd:[102,30],sh:[100,44],hp:[98,88]};
 const FRONT={hd:[100,26],nk:[100,40],shL:[86,44],shR:[114,44],hp:[100,92],hpL:[92,92],hpR:[108,92],knL:[90,121],knR:[110,121],anL:[89,150],anR:[111,150]};
 const SEAT={hd:[100,36],nk:[100,50],shL:[86,54],shR:[114,54],hp:[100,102],hpL:[90,104],hpR:[110,104]};
-Object.assign(FIG,{
- lateral:F(FRONT,{elL:[80,66],haL:[82,88],elR:[120,66],haR:[118,88]},{elL:[64,46],haL:[44,48],elR:[136,46],haR:[156,48]},p=>SVGC(p.haL[0],p.haL[1],5,"eqa")+SVGC(p.haR[0],p.haR[1],5,"eqa")),
- fly:F(FRONT,{elL:[64,52],haL:[42,60],elR:[136,52],haR:[158,60]},{elL:[82,64],haL:[96,70],elR:[118,64],haR:[104,70]},p=>cab(6,30,p.haL)+cab(194,30,p.haR)),
- facepull:F({an:[98,150],kn:[100,119],hp:[98,88],sh:[98,46],hd:[96,32]},{el:[122,48],ha:[146,44]},{el:[80,40],ha:[106,30]},p=>cab(196,40,p.ha)),
- abduct:F(Object.assign({},SEAT,{elL:[78,78],haL:[76,100],elR:[122,78],haR:[124,100]}),{knL:[90,124],anL:[90,150],knR:[110,124],anR:[110,150]},{knL:[70,120],anL:[76,150],knR:[130,120],anR:[124,150]},p=>`<rect x="78" y="106" width="44" height="6" rx="2" class="eqm"/>`+SVGC(p.knL[0]-7,p.knL[1],6,"eqa")+SVGC(p.knR[0]+7,p.knR[1],6,"eqa")),
- press:F(Object.assign({},SEAT,{knL:[84,124],anL:[84,150],knR:[116,124],anR:[116,150]}),{elL:[70,64],haL:[72,38],elR:[130,64],haR:[128,38]},{elL:[78,30],haL:[84,8],elR:[122,30],haR:[116,8]},p=>`<rect x="78" y="106" width="44" height="6" rx="2" class="eqm"/>`+SVGC(p.haL[0],p.haL[1],5,"eqa")+SVGC(p.haR[0],p.haR[1],5,"eqa")),
- curl:F({hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],an:[98,150],el:[98,70]},{ha:[100,94]},{ha:[110,50]},p=>SVGC(p.ha[0],p.ha[1],6,"eqa")),
- pushdown:F({an:[96,150],kn:[98,119],hp:[94,88],sh:[102,46],hd:[106,32],el:[104,72]},{ha:[124,60]},{ha:[110,98]},p=>cab(128,0,p.ha)+SVGC(p.ha[0],p.ha[1],3,"eqa")),
- ohtri:F({an:[96,150],kn:[100,119],hp:[96,88],sh:[100,46],hd:[104,32],el:[110,26]},{ha:[90,40]},{ha:[134,12]},p=>cab(18,64,p.ha)+SVGC(p.ha[0],p.ha[1],3,"eqa")),
- crunch:F({kn:[110,148],an:[78,148],hp:[108,106]},{sh:[110,64],hd:[116,50],el:[122,58],ha:[116,44]},{sh:[144,104],hd:[154,116],el:[150,120],ha:[144,108]},p=>cab(120,0,p.ha)+SVGC(p.ha[0],p.ha[1],3,"eqa"))
-});
-const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"legpress","Beinpresse einbeinig":"legpress","Bankdrücken Langhantel":"bench","Bankdrücken Smith-Maschine":"bench","Kurzhantel-Bankdrücken":"bench","Schrägbankdrücken Kurzhantel":"incline","Schrägbankdrücken Smith-Maschine":"incline","Kurzhantel-Fliegende":"fly","Kabel-Fliegende":"fly","Latzug breit":"latpull","Latzug eng Untergriff":"latpull","Klimmzüge":"pullup","Klimmzüge Untergriff":"pullup","Rudern sitzend eng":"row","Kurzhantel-Rudern einarmig":"row","Rumänisches Kreuzheben":"hinge","Rumänisches Kreuzheben Kurzhantel":"hinge","Hyperextension":"hyper","Beinstrecker":"legext","Bulgarische Split Squats":"split","Ausfallschritte Kurzhantel":"split","Seitheben am Kabel":"lateral","Seitheben Kurzhantel":"lateral","Face Pulls Seil":"facepull","Reverse Flys Kurzhantel":"facepull","Abduktoren":"abduct","Schulterdrücken Kurzhantel":"press","Schulterdrücken Smith-Maschine":"press","Bizeps-Curls Kurzhantel":"curl","Bizeps-Curls Kabel":"curl","Trizepsdrücken Seil":"pushdown","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch","Wadenheben an der Beinpresse":"calf","Wadenheben Smith-Maschine":"calf","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"legcurl"};
-const PAIRS=[["sh","hp"],["hp","kn"],["kn","an"],["sh","el"],["el","ha"],["hp","kn2"],["kn2","an2"],["nk","hp"],["shL","shR"],["hpL","hpR"],["hpL","knL"],["knL","anL"],["hpR","knR"],["knR","anR"],["shL","elL"],["elL","haL"],["shR","elR"],["elR","haR"]];
-function figBody(p,cls){
+const RAIL=[0.894,-0.447],PERP=[0.447,0.894];
+const LP={hp:[64,112],sh:[34,74],hd:[26,60],el:[50,100],ha:[66,116]};
+const legpressEq=(p,toeKey)=>{const f=p[toeKey||"an"];const o=toeKey?0:-6;const c=[f[0]+RAIL[0]*3+PERP[0]*o,f[1]+RAIL[1]*3+PERP[1]*o];
+  return SVGP([[14,56],[22,52],[66,118],[58,124]],"padf")+SVGR(54,118,34,8,"pad",3)+SVGL(40,152,96,120,"frm")+SVGL(64,152,64,126,"frm")+
+  SVGL(70,146,190,86,"rail")+SVGL(c[0]-PERP[0]*20,c[1]-PERP[1]*20,c[0]+PERP[0]*20,c[1]+PERP[1]*20,"sled")+EQ.plate(c[0]+RAIL[0]*12,c[1]+RAIL[1]*12,9)};
+const legextEq=p=>{const pv=[104,100];const d=[p.an[0]-pv[0],p.an[1]-pv[1]];
+  return SVGR(56,104,52,8,"pad",3)+SVGP([[52,104],[60,104],[58,48],[50,48]],"padf")+SVGL(80,112,80,152,"frm")+SVGL(60,152,112,152,"frm")+
+  SVGL(pv[0]-d[0]*0.7,pv[1]-d[1]*0.7,p.an[0],p.an[1],"lever")+EQ.plate(pv[0]-d[0]*0.7,pv[1]-d[1]*0.7,10)+SVGC(pv[0],pv[1],3,"pul")+SVGC(p.an[0]+2,p.an[1]+3,6,"roller")};
+const benchEq=(p,kind)=>EQ.bench(28,124,104)+(kind==="bar"?SVGL(50,40,50,152,"frm")+SVGL(50,48,58,48,"frm")+EQ.plate(p.ha[0],p.ha[1]):kind==="smith"?EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1]):EQ.dbSide(p.ha[0],p.ha[1]));
+const inclEq=(p,kind)=>SVGP([[44,50],[52,46],[112,112],[104,118]],"padf")+SVGR(98,110,30,8,"pad",3)+SVGL(100,118,96,152,"frm")+SVGL(124,118,128,152,"frm")+(kind==="smith"?EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1],11):EQ.dbSide(p.ha[0],p.ha[1]));
+const FIG={
+ squat:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[102,119],el:[88,54],ha:[98,40]},{hd:[118,66],sh:[106,80],hp:[74,112],kn:[126,120],el:[92,92],ha:[104,76]},
+   {eq:p=>EQ.smith(p.ha[0]+2)+EQ.plate(p.ha[0]+2,p.ha[1]),ph:[["Runter",2.5],["unten",0.4],["Hochdrücken",1.2],["oben",0.6]],track:"ha",hl:[["hp","kn",0.1,0.95]],mus:"Quadrizeps · Gesäß",cues:[["kn","Knie folgen den Zehen"],["hp","Hüfte nach hinten-unten, mind. parallel"]]}),
+ squatbar:null,
+ legpress:F(LP,{kn:[100,96],an:[136,80]},{kn:[90,76],an:[114,92]},
+   {eq:p=>legpressEq(p),ph:[["Beugen",2.5],["unten",0.4],["Wegdrücken",1.2],["oben",0.5]],track:"an",hl:[["hp","kn",0.1,0.95]],mus:"Quadrizeps · Gesäß",cues:[["kn","Knie oben nicht durchdrücken"],["hp","Becken bleibt am Polster"]],foot:"plate"}),
+ calfpress:F(Object.assign({},LP,{kn:[102,94],an:[138,76]}),{to:[135,61]},{to:[148,64]},
+   {eq:p=>legpressEq(p,"to"),ph:[["Hochdrücken",1],["oben halten",1],["Absenken",2],["Dehnung halten",1]],track:"to",hl:[["kn","an",0.15,0.95]],mus:"Waden",cues:[["an","Unten volle Dehnung"],["kn","Knie bleiben fast gestreckt"]],foot:"to"}),
+ calfsmith:F({hd:[100,22],sh:[100,36],hp:[100,82],el:[90,46],ha:[100,32]},{kn:[101,114],an:[100,142],to:[114,146]},{kn:[101,104],an:[102,130],to:[114,146]},
+   {eq:p=>EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1])+SVGR(106,146,36,6,"pad",1),ph:[["Hoch",1],["oben halten",1],["Absenken",2],["Dehnung",1]],track:"an",hl:[["kn","an",0.15,0.95]],mus:"Waden",cues:[["an","Ferse tief, dann ganz hoch"]],foot:"to"}),
+ bench:F({hd:[38,94],sh:[54,98],hp:[108,100],kn:[138,100],an:[142,150]},{el:[56,74],ha:[58,50]},{el:[66,114],ha:[66,90]},
+   {eq:p=>benchEq(p,"bar"),ph:[["Absenken",2.5],["an der Brust",0.4],["Drücken",1.2],["oben",0.5]],track:"ha",hl:[["sh","hp",0,0.32],["sh","el",0,0.9]],mus:"Brust · Trizeps",cues:[["sh","Schulterblätter zusammen und runter"],["ha","Stange zur unteren Brust"]]}),
+ benchsmith:null,benchdb:null,
+ incline:F({hd:[46,52],sh:[58,64],hp:[102,106],kn:[134,104],an:[140,150]},{el:[78,44],ha:[86,24]},{el:[52,88],ha:[70,66]},
+   {eq:p=>inclEq(p,"db"),ph:PH_DOWN,track:"ha",hl:[["sh","hp",0,0.3],["sh","el",0,0.9]],mus:"obere Brust · vordere Schulter",cues:[["el","Hanteln tief absenken"],["sh","Bank flach, ca. 30°"]]}),
+ inclinesmith:null,
+ latpull:F({hp:[86,116],sh:[84,72],hd:[88,58],kn:[118,112],an:[120,148]},{el:[92,40],ha:[96,16]},{el:[74,96],ha:[92,72]},
+   {eq:p=>EQ.tower(150,18,[[159,8],[96,8]])+SVGL(96,8,150,8,"frm")+cab(96,8,p.ha)+SVGL(p.ha[0]-16,p.ha[1],p.ha[0]+16,p.ha[1],"barH")+SVGR(66,120,44,8,"pad",3)+SVGR(106,98,20,8,"pad",4)+SVGL(88,128,88,152,"frm"),
+    ph:PH_PULL,track:"ha",hl:[["sh","hp",0.12,0.62],["sh","el",0,0.5]],mus:"Latissimus · Bizeps",cues:[["el","Ellbogen Richtung Hüfte"],["sh","Brust raus, nicht zurücklehnen"]]}),
+ pullup:F({ha:[100,16]},{el:[100,32],sh:[100,50],hd:[104,40],hp:[100,98],kn:[104,124],an:[100,146]},{el:[84,42],sh:[98,30],hd:[106,12],hp:[98,78],kn:[102,104],an:[98,126]},
+   {eq:p=>SVGL(54,10,54,152,"frm")+SVGL(152,10,152,152,"frm")+SVGL(54,16,152,16,"barH"),ph:[["Hochziehen",1.2],["oben",0.5],["Ablassen",2.5],["aushängen",0.6]],track:"sh",hl:[["sh","hp",0.12,0.62],["sh","el",0,0.6]],mus:"Latissimus · Bizeps",cues:[["sh","Brust zur Stange"],["el","Unten ganz aushängen"]]}),
+ row:F({hp:[64,112],kn:[100,96],an:[132,116]},{sh:[80,70],hd:[90,58],el:[104,78],ha:[126,84]},{sh:[66,68],hd:[72,54],el:[48,90],ha:[80,96]},
+   {eq:p=>EQ.tower(176,20,[[180,104]])+cab(180,104,p.ha)+SVGP([[p.ha[0]-3,p.ha[1]-6],[p.ha[0]+5,p.ha[1]],[p.ha[0]-3,p.ha[1]+6]],"vh")+SVGR(38,118,58,8,"pad",3)+SVGL(66,126,66,152,"frm")+SVGR(134,104,6,24,"pad",2)+SVGL(96,140,176,140,"frm"),
+    ph:PH_PULL,track:"ha",hl:[["sh","hp",0.1,0.65],["sh","el",0,0.5]],mus:"oberer Rücken · Latissimus",cues:[["sh","Schulterblätter zusammen"],["hp","Aufrecht bleiben, nicht schaukeln"]]}),
+ dbrow:F({hp:[70,90],sh:[118,86],hd:[134,82],kn:[84,122],an:[88,150],kn2:[64,102],an2:[42,102],el2:[120,96],ha2:[120,104]},{el:[124,112],ha:[124,132]},{el:[98,74],ha:[110,94]},
+   {eq:p=>EQ.bench(36,128,104)+EQ.dbSide(p.ha[0],p.ha[1]),ph:PH_PULL,track:"ha",hl:[["sh","hp",0.05,0.6],["sh","el",0,0.5]],mus:"Latissimus · oberer Rücken",cues:[["el","Ellbogen nach hinten-oben"],["sh","Rücken gerade, Schulter nicht drehen"]]}),
+ hinge:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],el:[100,66],ha:[100,88]},{hd:[140,74],sh:[126,72],hp:[74,90],kn:[104,120],el:[124,96],ha:[118,118]},
+   {eq:p=>EQ.plate(p.ha[0],p.ha[1]),ph:[["Hüfte zurück",2.5],["Dehnung",0.4],["Hochkommen",1.2],["oben",0.6]],track:"ha",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger · Gesäß",cues:[["sh","Rücken neutral"],["ha","Stange nah am Bein"]]}),
+ hingedb:null,
+ hyper:F({an:[150,138],kn:[126,118],hp:[100,98]},{sh:[62,66],hd:[50,56],el:[74,78],ha:[66,72]},{sh:[78,140],hd:[70,151],el:[90,130],ha:[84,122]},
+   {eq:p=>SVGP([[88,106],[94,100],[114,86],[108,92]],"pad")+SVGL(100,104,150,152,"frm")+SVGL(96,152,124,112,"frm")+SVGC(146,132,5,"roller")+SVGR(150,136,8,12,"pad",2),floor:158,
+    ph:[["Absenken",2],["unten",0.3],["Hochkommen",1.2],["oben halten",1]],track:"sh",hl:[["hp","kn",0.05,0.9],["sh","hp",0.6,1]],mus:"Gesäß · Beinbeuger · unterer Rücken",cues:[["hp","Bewegung aus der Hüfte"],["sh","Oben nicht überstrecken"]]}),
+ legcurl:F({hd:[104,26],sh:[102,40],hp:[100,84],el:[114,60],ha:[126,64],kn:[100,114],kn2:[101,117],an2:[101,150]},{an:[100,146]},{an:[74,104]},
+   {eq:p=>EQ.tower(128,18,[[132,146]])+cab(132,146,p.an)+SVGC(p.an[0],p.an[1],4,"roller"),ph:[["Beugen",1],["oben halten",1],["Strecken",3],["unten",0.4]],track:"an",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger",cues:[["kn","Oberschenkel bleibt senkrecht"],["hp","Hüfte nicht abknicken"]]}),
+ nordic:F({kn:[100,146],an:[70,146]},{hp:[100,102],sh:[100,58],hd:[100,44],el:[106,80],ha:[114,92]},{hp:[134,118],sh:[166,90],hd:[178,82],el:[172,114],ha:[170,134]},
+   {eq:p=>SVGR(56,148,120,5,"pad",2)+SVGC(70,140,5,"roller")+SVGL(64,134,64,152,"frm"),ph:[["Langsam nach vorn",4],["abfangen",0.5],["zurück",1.5],["",0.6]],track:"sh",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger",cues:[["hp","Hüfte gestreckt, Körper gerade"],["an","Fersen fest fixiert"]]}),
+ legext:F({hp:[70,100],sh:[62,56],hd:[64,42],kn:[104,100],el:[62,80],ha:[76,104]},{an:[108,138]},{an:[142,98]},
+   {eq:legextEq,ph:[["Strecken",1],["oben halten",1],["Ablassen",3],["unten",0.3]],track:"an",hl:[["hp","kn",0.08,0.95]],mus:"Quadrizeps",cues:[["an","Oben 1 s halten"],["hp","Gesäß bleibt auf dem Sitz"]]}),
+ split:F({an:[122,150],an2:[58,112]},{hd:[100,34],sh:[100,48],hp:[98,92],kn:[118,120],kn2:[84,126],el:[100,70],ha:[100,92]},{hd:[104,58],sh:[100,72],hp:[94,116],kn:[134,122],kn2:[80,144],el:[100,94],ha:[100,116]},
+   {eq:p=>SVGR(30,112,40,8,"pad",3)+SVGL(36,120,36,152,"frm")+SVGL(64,120,64,152,"frm")+EQ.dbSide(p.ha[0],p.ha[1]),ph:[["Runter",2.5],["unten",0.3],["Hochdrücken",1.2],["oben",0.5]],track:"hp",hl:[["hp","kn",0.05,0.95]],mus:"Quadrizeps · Gesäß (vorderes Bein)",cues:[["kn","Vorderes Knie stabil über dem Fuß"],["sh","Oberkörper leicht nach vorn"]]}),
+ lateral:F(FRONT,{elL:[80,66],haL:[82,88],elR:[120,66],haR:[118,88]},{elL:[64,46],haL:[44,48],elR:[136,46],haR:[156,48]},
+   {eq:p=>EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),ph:PH_ISO,track:"haR",hl:[["shL","elL",0,0.45],["shR","elR",0,0.45]],mus:"Seitliche Schulter",cues:[["elR","Ellbogen führt, bis Schulterhöhe"],["shL","Schultern unten lassen"]]}),
+ latcable:F(Object.assign({},FRONT,{elL:[72,62],haL:[54,72]}),{elR:[120,68],haR:[112,90]},{elR:[136,46],haR:[156,50]},
+   {eq:p=>EQ.tower(30,18,[[46,146]])+cab(46,146,p.haR)+SVGC(p.haR[0],p.haR[1],3,"pul"),ph:PH_ISO,track:"haR",hl:[["shR","elR",0,0.45]],mus:"Seitliche Schulter",cues:[["elR","Ellbogen führt, bis Schulterhöhe"],["haL","Mit der freien Hand festhalten"]]}),
+ fly:F(FRONT,{elL:[64,52],haL:[42,62],elR:[136,52],haR:[158,62]},{elL:[84,64],haL:[96,72],elR:[116,64],haR:[104,72]},
+   {eq:p=>SVGR(0,4,12,148,"frame",3)+SVGR(188,4,12,148,"frame",3)+EQ.pulley(10,30)+EQ.pulley(190,30)+cab(10,30,p.haL)+cab(190,30,p.haR)+SVGC(p.haL[0],p.haL[1],3,"pul")+SVGC(p.haR[0],p.haR[1],3,"pul"),
+    ph:[["Zusammenführen",1.2],["Brust anspannen",0.6],["Öffnen",2.5],["Dehnung",0.4]],track:"haR",hl:[["shL","hp",0,0.35],["shR","hp",0,0.35]],mus:"Brust",cues:[["elL","Ellbogen leicht gebeugt, fixiert"],["haR","Vorne Brust zusammendrücken"]]}),
+ dbfly:null,
+ facepull:F({an:[98,150],kn:[100,119],hp:[98,88],sh:[98,46],hd:[96,32]},{el:[122,50],ha:[146,44]},{el:[80,40],ha:[104,30]},
+   {eq:p=>EQ.tower(180,18,[[184,40]])+cab(184,40,p.ha)+EQ.rope(p.ha),ph:PH_PULL,track:"ha",hl:[["sh","el",0,0.5]],mus:"Hintere Schulter · oberer Rücken",cues:[["ha","Seil zur Stirn, Hände auseinander"],["el","Ellbogen hoch"]]}),
+ abduct:F(Object.assign({},SEAT,{elL:[78,78],haL:[74,100],elR:[122,78],haR:[126,100]}),{knL:[90,124],anL:[90,150],knR:[110,124],anR:[110,150]},{knL:[70,120],anL:[76,150],knR:[130,120],anR:[124,150]},
+   {eq:p=>SVGR(76,40,48,64,"padf",4)+SVGR(74,104,52,8,"pad",3)+SVGL(100,112,100,152,"frm")+SVGR(p.knL[0]-12,p.knL[1]-10,6,22,"pad",3)+SVGR(p.knR[0]+6,p.knR[1]-10,6,22,"pad",3)+SVGL(70,100,70,110,"frm")+SVGL(130,100,130,110,"frm"),
+    ph:[["Auseinander",1],["halten",0.8],["Zurück",2.5],["",0.3]],track:"knR",hl:[["hpL","knL",0,0.5],["hpR","knR",0,0.5]],mus:"Abduktoren · seitliches Gesäß",cues:[["knR","Kontrolliert zurück, Gewicht nicht aufsetzen"]]}),
+ press:F(Object.assign({},SEAT,{knL:[84,124],anL:[84,150],knR:[116,124],anR:[116,150]}),{elL:[70,64],haL:[72,40],elR:[130,64],haR:[128,40]},{elL:[80,30],haL:[86,10],elR:[120,30],haR:[114,10]},
+   {eq:p=>SVGR(80,24,40,80,"padf",4)+SVGR(76,104,48,8,"pad",3)+SVGL(100,112,100,152,"frm")+EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),ph:[["Drücken",1.2],["oben",0.4],["Senken",2.5],["unten",0.3]],track:"haR",hl:[["shL","elL",0,0.4],["shR","elR",0,0.4]],mus:"Schultern · Trizeps",cues:[["haR","Nicht ganz zusammenschlagen"]]}),
+ curl:F({hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],an:[98,150],el:[98,70]},{ha:[100,96]},{ha:[112,50]},
+   {eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),ph:[["Curlen",1],["oben",0.5],["Senken",2.5],["unten",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Bizeps",cues:[["el","Ellbogen bleibt am Körper"]]}),
+ curlcable:F({hd:[100,30],sh:[98,44],hp:[96,88],kn:[98,119],an:[96,150],el:[96,70]},{ha:[100,96]},{ha:[112,50]},
+   {eq:p=>EQ.tower(148,18,[[152,146]])+cab(152,146,p.ha)+SVGL(p.ha[0],p.ha[1]-4,p.ha[0],p.ha[1]+4,"barH"),ph:[["Curlen",1],["oben",0.5],["Senken",2.5],["unten",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Bizeps",cues:[["el","Ellbogen bleibt am Körper"]]}),
+ pushdown:F({an:[96,150],kn:[98,119],hp:[94,88],sh:[102,46],hd:[106,32],el:[104,72]},{ha:[124,60]},{ha:[112,98]},
+   {eq:p=>EQ.tower(136,18,[[140,8]])+cab(140,8,p.ha)+EQ.rope(p.ha),ph:[["Drücken",1],["unten halten",0.5],["Zurück",2.5],["",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Trizeps",cues:[["el","Ellbogen bleiben am Körper"],["ha","Unten Seil auseinanderziehen"]]}),
+ ohtri:F({an:[110,150],kn:[108,119],hp:[110,88],sh:[104,46],hd:[108,32],el:[112,24]},{ha:[92,40]},{ha:[138,10]},
+   {eq:p=>EQ.tower(14,18,[[30,60]])+cab(30,60,p.ha)+EQ.rope(p.ha),ph:[["Strecken",1],["oben",0.5],["Zurück in Dehnung",2.5],["Dehnung",0.4]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Trizeps (langer Kopf)",cues:[["el","Ellbogen nach vorn oben, ruhig halten"]]}),
+ crunch:F({kn:[110,148],an:[78,148],hp:[108,106]},{sh:[112,64],hd:[118,50],el:[124,58],ha:[120,46]},{sh:[146,104],hd:[156,116],el:[150,120],ha:[146,108]},
+   {eq:p=>EQ.tower(166,18,[[170,8]])+cab(170,8,p.ha)+EQ.rope(p.ha)+SVGR(60,148,70,4,"pad",2),ph:[["Einrollen",1],["halten",0.6],["Aufrollen",2],["",0.3]],track:"sh",hl:[["sh","hp",0.25,0.95]],mus:"Bauch",cues:[["hp","Hüfte bleibt stehen"],["sh","Rippen Richtung Becken"]]})
+};
+/* Varianten mit anderem Gerät */
+FIG.benchsmith=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"smith")});
+FIG.benchdb=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"db"),cues:[["sh","Schulterblätter zusammen"],["ha","Hanteln tief, oben nicht zusammenschlagen"]]});
+FIG.inclinesmith=Object.assign({},FIG.incline,{eq:p=>inclEq(p,"smith"),cues:[["ha","Stange zur oberen Brust"],["sh","Bank flach, ca. 30°"]]});
+FIG.hingedb=Object.assign({},FIG.hinge,{eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),cues:[["sh","Rücken neutral"],["ha","Hanteln nah am Bein"]]});
+FIG.squatbar=Object.assign({},FIG.squat,{eq:p=>SVGL(66,20,66,152,"frm")+SVGL(140,20,140,152,"frm")+EQ.plate(p.ha[0]+2,p.ha[1])});
+FIG.dbfly=Object.assign({},FIG.fly,{eq:p=>SVGR(88,14,24,86,"padf",4)+EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),note:"Von oben gesehen, du liegst auf der Flachbank."});
+const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"legpress","Beinpresse einbeinig":"legpress","Bankdrücken Langhantel":"bench","Bankdrücken Smith-Maschine":"benchsmith","Kurzhantel-Bankdrücken":"benchdb","Schrägbankdrücken Kurzhantel":"incline","Schrägbankdrücken Smith-Maschine":"inclinesmith","Kurzhantel-Fliegende":"dbfly","Kabel-Fliegende":"fly","Latzug breit":"latpull","Latzug eng Untergriff":"latpull","Klimmzüge":"pullup","Klimmzüge Untergriff":"pullup","Rudern sitzend eng":"row","Kurzhantel-Rudern einarmig":"dbrow","Rumänisches Kreuzheben":"hinge","Rumänisches Kreuzheben Kurzhantel":"hingedb","Hyperextension":"hyper","Beinstrecker":"legext","Bulgarische Split Squats":"split","Ausfallschritte Kurzhantel":"split","Seitheben am Kabel":"latcable","Seitheben Kurzhantel":"lateral","Face Pulls Seil":"facepull","Abduktoren":"abduct","Schulterdrücken Kurzhantel":"press","Bizeps-Curls Kurzhantel":"curl","Bizeps-Curls Kabel":"curlcable","Trizepsdrücken Seil":"pushdown","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch","Wadenheben an der Beinpresse":"calfpress","Wadenheben Smith-Maschine":"calfsmith","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"nordic"};
+const PAIRS=[["hp","kn"],["kn","an"],["sh","el"],["el","ha"],["hp","kn2"],["kn2","an2"],["sh","el2"],["el2","ha2"],["an","to"],["hpL","hpR"],["hpL","knL"],["knL","anL"],["hpR","knR"],["knR","anR"],["shL","elL"],["elL","haL"],["shR","elR"],["elR","haR"]];
+const fx=n=>(+n).toFixed(1);
+function figBody(p,cls,f){
   let h=`<g class="${cls}">`;
-  PAIRS.forEach(([a,b])=>{if(p[a]&&p[b])h+=SVGL(p[a][0].toFixed(1),p[a][1].toFixed(1),p[b][0].toFixed(1),p[b][1].toFixed(1),"")});
+  if(p.nk){h+=SVGP([p.shL,p.shR,p.hpR||p.hp,p.hpL||p.hp],"torsoF")}else if(p.sh&&p.hp)h+=SVGL(p.sh[0],p.sh[1],p.hp[0],p.hp[1],"torso");
+  PAIRS.forEach(([a,b])=>{if(p[a]&&p[b]){const back=(a.endsWith("2")||b.endsWith("2"));h+=SVGL(p[a][0],p[a][1],p[b][0],p[b][1],back?"limb far":"limb")}});
   const base=p.nk||p.sh;
-  if(base&&p.hd){const dx=base[0]-p.hd[0],dy=base[1]-p.hd[1],d=Math.hypot(dx,dy)||1;h+=SVGL((p.hd[0]+dx/d*9).toFixed(1),(p.hd[1]+dy/d*9).toFixed(1),base[0].toFixed(1),base[1].toFixed(1),"")}
-  if(p.an&&!p.nk)h+=SVGL(p.an[0],p.an[1],p.an[0]+11,p.an[1],"");
-  if(p.hd)h+=`<circle cx="${p.hd[0].toFixed(1)}" cy="${p.hd[1].toFixed(1)}" r="9" class="head"/>`;
+  if(base&&p.hd){const dx=base[0]-p.hd[0],dy=base[1]-p.hd[1],d=Math.hypot(dx,dy)||1;h+=SVGL(p.hd[0]+dx/d*8,p.hd[1]+dy/d*8,base[0],base[1],"limb neck")}
+  if(p.an&&!p.nk&&!p.to&&!(f&&f.foot))h+=SVGL(p.an[0],p.an[1],p.an[0]+11,p.an[1],"limb foot");
+  if(f&&f.foot==="plate"&&p.an)h+=SVGL(p.an[0],p.an[1],p.an[0]-PERP[0]*11,p.an[1]-PERP[1]*11,"limb foot");
+  ["kn","el","kn2","knL","knR","elL","elR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],2.2,"joint")});
+  if(p.hd)h+=`<circle cx="${fx(p.hd[0])}" cy="${fx(p.hd[1])}" r="8.5" class="head"/>`;
   return h+"</g>";
 }
-function lerpPose(a,b,t){const o={};for(const k in a){o[k]=b[k]?[a[k][0]+(b[k][0]-a[k][0])*t,a[k][1]+(b[k][1]-a[k][1])*t]:a[k]}return o}
+function segPart(p,a,b,f0,f1){const A=p[a],B=p[b];if(!A||!B)return "";return SVGL(A[0]+(B[0]-A[0])*f0,A[1]+(B[1]-A[1])*f0,A[0]+(B[0]-A[0])*f1,A[1]+(B[1]-A[1])*f1,"mus")}
+function lerpPose(a,b,t){const o={};for(const k in a){o[k]=b[k]?[a[k][0]+(b[k][0]-a[k][0])*t,a[k][1]+(b[k][1]-a[k][1])*t]:a[k]}for(const k in b)if(!o[k])o[k]=b[k];return o}
+const ease=x=>x<0.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+function phaseAt(f,sec){
+  const ph=f.ph||PH_DOWN;const tot=ph.reduce((s,x)=>s+x[1],0);let r=sec%tot;
+  for(let i=0;i<4;i++){const d=ph[i][1];if(r<d||i===3){const q=d?Math.min(1,r/d):1;const t=i===0?ease(q):i===1?1:i===2?1-ease(q):0;return {i,t,q,label:ph[i][0],dur:d}}r-=d}
+}
 const reduceMotion=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){return false}})();
-function drawFig(svg,t){
-  const f=FIG[svg.dataset.fig];if(!f)return;const p=lerpPose(f.a,f.b,t);const fl=f.floor||152;
-  let h=SVGL(0,fl,200,fl,"fl")+(f.eq?f.eq(p):"");
-  if(reduceMotion||svg.dataset.static)h+=figBody(f.a,"bd gh")+figBody(f.b,"bd");else h+=figBody(p,"bd");
+function arrowSvg(from,to){const dx=to[0]-from[0],dy=to[1]-from[1],d=Math.hypot(dx,dy);if(d<0.05)return "";const ux=dx/d,uy=dy/d;
+  const s=[from[0]+ux*9,from[1]+uy*9],e=[from[0]+ux*24,from[1]+uy*24];const l=[e[0]-ux*6-uy*4,e[1]-uy*6+ux*4],r=[e[0]-ux*6+uy*4,e[1]-uy*6-ux*4];
+  return SVGL(s[0],s[1],e[0],e[1],"arw")+SVGP([e,l,r],"arwh")}
+function drawFig(svg,t,info){
+  const f=FIG[svg.dataset.fig];if(!f)return;const fl=f.floor||152;
+  const stat=reduceMotion||svg.dataset.static;
+  const p=stat?f.b:lerpPose(f.a,f.b,t);
+  let h=SVGL(0,fl,200,fl,"fl");
+  if(stat){h+=(f.eq?`<g class="gh">${f.eq(f.a)}</g>`:"")+figBody(f.a,"bd gh",f)}
+  h+=(f.eq?f.eq(p):"")+figBody(p,"bd",f);
+  (f.hl||[]).forEach(x=>{h+=segPart(p,x[0],x[1],x[2],x[3])});
+  (f.cues||[]).forEach((c,i)=>{const j=p[c[0]];if(j)h+=`<g class="cuem"><circle cx="${fx(j[0]+9)}" cy="${fx(j[1]-9)}" r="6"/><text x="${fx(j[0]+9)}" y="${fx(j[1]-6.6)}">${i+1}</text></g>`});
+  if(!stat&&info&&f.track&&info.i%2===0){const j0=p[f.track];const p2=lerpPose(f.a,f.b,info.i===0?Math.min(1,t+0.06):Math.max(0,t-0.06));const j1=p2[f.track];if(j0&&j1)h+=arrowSvg(j0,j1)}
+  if(stat)h+=`<text class="hud" x="6" y="13">Grau = Start · Weiß = Endposition</text>`;
+  else if(info){const sym=info.i===0||info.i===2?(info.i===0?"▶":"◀"):"‖";h+=`<text class="hud" x="6" y="13">${sym} ${esc(info.label)}${info.dur>=0.8?` · ${String(info.dur).replace(".",",")} s`:""}</text><rect class="hudbar" x="6" y="17" width="${fx(60*info.q)}" height="2.5" rx="1"/>`}
   svg.innerHTML=h;
 }
 const ANIM=new Set();let animRun=false;
 function animLoop(now){
   if(!ANIM.size){animRun=false;return}
-  const ph=(now%3200)/3200;const t=0.5-0.5*Math.cos(ph*2*Math.PI);
-  ANIM.forEach(svg=>{if(!svg.isConnected){ANIM.delete(svg);return}drawFig(svg,t)});
+  ANIM.forEach(svg=>{if(!svg.isConnected){ANIM.delete(svg);return}const f=FIG[svg.dataset.fig];if(!f)return;
+    const st=svg._st||(svg._st={t0:now,acc:0,last:now});const slow=svg.dataset.slow?0.5:1;
+    if(!svg.dataset.paused)st.acc+=(now-st.last)/1000*slow;st.last=now;
+    const info=phaseAt(f,st.acc);drawFig(svg,info.t,info)});
   requestAnimationFrame(animLoop);
 }
-function figHtml(name){const k=PAT[name];if(!k)return "";return `<div class="fig"><svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg><div class="figbar"><span class="small muted">Schematischer Ablauf: Start ↔ Ende</span><button class="ghost sm2" data-act="figmode">Start/Ende stehend</button></div></div>`}
+function startAnim(svg){if(reduceMotion||svg.dataset.static)return;ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}
+function figHtml(name){const k=PAT[name];const f=k&&FIG[k];if(!f)return "";
+  return `<div class="fig"><svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
+  <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button><button class="ghost sm2" data-act="figmode">Start/Ende</button></div>
+  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}<p class="muted small">Pfeil = Bewegungsrichtung. Oben links: aktuelle Phase und Tempo.</p></div></div>`}
+function figAct(act,a){const svg=a.closest(".fig").querySelector("svg");
+  if(act==="figplay"){if(svg.dataset.paused){delete svg.dataset.paused;a.textContent="Pause"}else{svg.dataset.paused="1";a.textContent="Weiter"}return}
+  if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}
+  if(act==="figmode"){if(svg.dataset.static){delete svg.dataset.static;a.textContent="Start/Ende";startAnim(svg)}else{svg.dataset.static="1";ANIM.delete(svg);a.textContent="Animation";drawFig(svg,1)}}}
 document.addEventListener("toggle",e=>{
   const d=e.target;if(!d.classList||!d.classList.contains("cue"))return;
   d.querySelectorAll("svg.anim").forEach(svg=>{
-    if(d.open){drawFig(svg,0);if(!reduceMotion&&!svg.dataset.static){ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}}
+    if(d.open){drawFig(svg,0,phaseAt(FIG[svg.dataset.fig]||{},0));startAnim(svg)}
     else ANIM.delete(svg);
   });
 },true);
@@ -1102,7 +1234,7 @@ document.addEventListener("click",e=>{
       const last=i===d.ex[slot].sets.length-1;startTimer(ex.rest,last?"Pause bis zur nächsten Übung":`Satzpause ${d.ex[slot].name}`);if(d.ex[slot].sets.every(x=>x.done)){const y=window.scrollY;renderHeute();window.scrollTo(0,y)}}
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}
-  if(act==="figmode"){const svg=a.closest(".fig").querySelector("svg");if(svg.dataset.static){delete svg.dataset.static;a.textContent="Start/Ende stehend";if(!reduceMotion){ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}}else{svg.dataset.static="1";ANIM.delete(svg);a.textContent="Animation abspielen";drawFig(svg,0)}return}
+  if(act==="figmode"||act==="figplay"||act==="figslow"){figAct(act,a);return}
   if(act==="wload"){loadWhoop(true);return}
   if(act==="wpull"){loadWhoop(true,true);loadWithings(true);return}
   if(act==="save"){saveSession();return}
