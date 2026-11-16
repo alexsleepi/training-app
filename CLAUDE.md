@@ -45,6 +45,6 @@ Siehe `docs/n8n.md`. Für Änderungen an n8n braucht Claude Code den n8n-MCP-Con
 ## Offene Punkte
 
 - Auf dem iPhone noch nicht real getestet: Offline-Start, Bildschirm bleibt an (Wake Lock), Piepton am Pausenende. Der Piepton ist bei Stummschalter stumm und kommt bei gesperrtem Bildschirm erst nach dem Entsperren (Grenze von Web-Apps).
-- Fehler-Benachrichtigung, falls Whoop- oder Withings-Abruf in n8n fehlschlägt.
+- Fehler ohne Fehlermeldung (z. B. keine neuen Whoop-Daten, weil der Strap nicht synchronisiert) meldet niemand. Fehler mit Meldung gehen per Mail über „Fehler-Melder Training“ (siehe docs/n8n.md).
 - n8n-Ausführungskontingent prüfen (Whoop ~7×/Tag, Withings 4×/Tag, App-Abgleich).
 - Optional: echte Übungsvideos statt SVG (eigene Aufnahmen oder KI-generiert, offline gecacht).

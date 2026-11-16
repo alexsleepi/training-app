@@ -9,6 +9,7 @@ Instanz: `https://sleepi.app.n8n.cloud`, persönliches Projekt `3FZ2SBEIccRygh0T
 | Whoop → Trainings-App | `6a6whSJh7yrNGHCz` | Holt Recovery, HRV, Ruhepuls, Schlaf, Strain, Gewicht (Whoop API v2, OAuth2-Zugang „Whoop“). Zeitplan `0 6-10,14,20 * * *` Europe/Berlin, schreibt in „Whoop täglich“. |
 | Withings → Trainings-App | `lcoGWM6rgrC3hwxK` | Holt Gewicht, Körperfett, Fett- und Muskelmasse der Withings Body Cardio. Zeitplan `15 7,9,12,21 * * *`. Token-Erneuerung über `POST https://wbsapi.withings.net/v2/oauth2` mit `action=requesttoken` (kleingeschrieben!), Secret über Query-Auth-Zugang „Withings Secret“. Neu verbinden: Webhook `GET /webhook/withings-callback`. |
 | Trainings-App (Offline-Web-App) | `mJqwPH3BfHjTQqDZ` | Datenschnittstelle der App: `POST /webhook/training-api`. |
+| Fehler-Melder Training | `SIITCQD8nRqsvbVR` | Fehler-Workflow der drei Workflows oben (Einstellung „Error Workflow“). Mailt bei einem Produktionsfehler Name, Fehlermeldung, Link und Hinweise an die private Adresse. SMTP-Zugang „SMTP account“. Muss veröffentlicht bleiben, sonst ruft n8n ihn nicht auf. |
 
 ## API der App
 
