@@ -4,7 +4,7 @@
   "description": "Trainings-App (Offline-Web-App)",
   "scripts": {
     "build": "python3 tools/build.py",
-    "test": "node tests/sync.test.js"
+    "test": "node tests/sync.test.js && node tests/logic.test.js"
   },
   "devDependencies": {
     "jsdom": "^24.0.0"

@@ -9,9 +9,11 @@ src/app.html          Quelle der App (eine Datei: HTML, CSS, JS). Läuft auch al
 src/sync.js           Ersetzt in der iPhone-Version die Claude-Anbindung: Abgleich mit n8n per Schlüssel.
 src/sw.template.js    Service Worker (Offline-Cache). __VER__ wird beim Build ersetzt.
 src/icon.png          App-Icon (erzeugt mit tools/icon.py)
+src/fonts/            Schrift Barlow als woff2 (SIL Open Font License), wird nach fonts/ kopiert und vom Service Worker gecacht
 tools/build.py        Baut aus src/ die veröffentlichte App ins Repo-Root
-index.html, sw.js, manifest.json, icon.png   GEBAUTE Dateien → nie direkt bearbeiten
+index.html, sw.js, manifest.json, icon.png, fonts/   GEBAUTE Dateien → nie direkt bearbeiten
 tests/sync.test.js    jsdom-Test für Schlüssel, Abgleich, Löschen, Nachsichern (n8n wird simuliert)
+tests/logic.test.js   jsdom-Test für Entlastung, Progression, Wochensätze, keine externen Quellen
 docs/n8n.md           Die n8n-Workflows und Datentabellen
 ```
 
@@ -21,10 +23,10 @@ Veröffentlicht über GitHub Pages: https://alexsleepi.github.io/training-app/ (
 
 1. Änderungen nur in `src/app.html` (bzw. `src/sync.js`, `src/sw.template.js`).
 2. `python3 tools/build.py` – bricht ab, wenn eine Ersetzung nicht mehr eindeutig passt (dann `tools/build.py` anpassen).
-3. Prüfen: `npm install && npm test`, außerdem Syntax-Check:
+3. Prüfen: `npm install && npm test` (bricht bei Fehlern mit Exit-Code 1 ab; neue Logik bekommt eine Prüfung in `tests/`), außerdem Syntax-Check:
    `node -e "const s=require('fs').readFileSync('index.html','utf8');new Function(s.match(/<script>([\s\S]*)<\/script>/)[1])"`
 4. Sichtprüfung im Handyformat (390×844), z. B. mit Playwright-Screenshot.
-5. Committen und pushen. Die App aktualisiert sich auf dem iPhone beim nächsten Öffnen mit Netz (Service Worker: Netzwerk zuerst, 3,5 s Timeout, sonst Cache).
+5. Committen und pushen. Die App aktualisiert sich auf dem iPhone von selbst: Der Service Worker startet sofort aus dem Speicher, lädt im Hintergrund die neue Version und zeigt „Neu laden“. Ohne Tippen erscheint sie beim nächsten Öffnen.
 
 ## Wichtige Regeln
 
@@ -42,7 +44,7 @@ Siehe `docs/n8n.md`. Für Änderungen an n8n braucht Claude Code den n8n-MCP-Con
 
 ## Offene Punkte
 
-- Auf dem iPhone noch nicht real getestet: Offline-Start, Bildschirm bleibt an (Wake Lock), Piepton am Pausenende.
+- Auf dem iPhone noch nicht real getestet: Offline-Start, Bildschirm bleibt an (Wake Lock), Piepton am Pausenende. Der Piepton ist bei Stummschalter stumm und kommt bei gesperrtem Bildschirm erst nach dem Entsperren (Grenze von Web-Apps).
 - Fehler-Benachrichtigung, falls Whoop- oder Withings-Abruf in n8n fehlschlägt.
 - n8n-Ausführungskontingent prüfen (Whoop ~7×/Tag, Withings 4×/Tag, App-Abgleich).
 - Die alte Claude-Artefakt-Version gleicht nicht mit dieser App ab. Nicht weiter pflegen.

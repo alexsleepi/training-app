@@ -4,10 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hypertrophie 3×</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Schriften liegen lokal (src/fonts, SIL Open Font License), damit die App offline gleich aussieht. */
+@font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/barlow-condensed-latin-700-normal.woff2) format("woff2")}
 :root{
   /* Layout: Handy-App, eine Spalte, Tabs unten. Sichtbeton-Grau mit Signal-Gelb wie im Studio. */
   color-scheme: dark;
@@ -131,15 +135,16 @@ nav.tabs button.on{color:var(--accent)}
 .fx-nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
 .fx-start{width:100%;margin:4px 0 12px}
 .rirq{background:var(--surface2);border-radius:10px;padding:8px 10px;margin:8px 0}
-.pill{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;min-width:44px;height:40px;font-weight:700}
-.pill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.rpill{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;min-width:44px;height:40px;font-weight:700}
+.rpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .timer{position:fixed;left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:40;background:var(--accent);color:var(--accent-ink);border-radius:14px;padding:10px 12px;display:none;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:536px;margin:0 auto}
 .timer.on{display:flex}
+.timer.end{background:var(--good)}
 .timer .tv{font-family:var(--display);font-size:2rem;font-weight:700;line-height:1;min-width:84px}
 .timer .lb{flex:1;font-size:.85rem;font-weight:600;line-height:1.2}
 .timer button{background:rgba(0,0,0,.14);border:none;border-radius:8px;padding:8px 10px;font-weight:700;color:var(--accent-ink)}
 
-.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;z-index:50;font-size:.92rem;display:none;max-width:90vw}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;z-index:50;font-size:.92rem;display:none;width:max-content;max-width:90vw}
 .toast.on{display:block}
 
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -322,6 +327,8 @@ function saveDrafts(){lsSet("hp3_drafts",drafts)}
 (function load(){const c=lsGet("hp3_cache");if(c&&Array.isArray(c.sessions)){S.sessions=c.sessions;S.settings=Object.assign({swaps:{},startDate:null},c.settings||{})}drafts=lsGet("hp3_drafts")||{}})();
 
 const $=s=>document.querySelector(s);
+/* Neu zeichnen, ohne dass eine offene "Ausführung anzeigen" zuklappt */
+function setHtml(el,html){const open=[...el.querySelectorAll("details[data-k][open]")].map(x=>x.dataset.k);el.innerHTML=html;open.forEach(k=>{const x=el.querySelector(`details[data-k="${k}"]`);if(x)x.open=true})}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=v=>{if(v===""||v==null)return null;const n=parseFloat(String(v).replace(",","."));return isFinite(n)?n:null};
 const fmt=n=>n==null?"–":(Math.round(n*10)/10).toLocaleString("de-DE");
@@ -358,9 +365,10 @@ function dayZone(d){return readiness(d).z}
 function deloadStatus(){
   const s=sorted();let i=s.length-1;let n=0;while(i>=0&&!s[i].deload){n++;i--}
   const main=["A1","A2","A3","B1","B2","B3","C1","C3"];let stuck=0,checked=0;
-  main.forEach(slot=>{const xs=s.filter(x=>!x.deload).map(x=>(x.exercises||[]).find(e=>e.slot===slot)).filter(Boolean);
-    const byName=xs.filter(e=>e.name===xs[xs.length-1]?.name).slice(-6);if(byName.length<6)return;checked++;
-    const best=e=>Math.max(...e.sets.map(z=>e1rm((z.kg||0),z.reps||0)));const a=Math.max(...byName.slice(0,3).map(best)),b=Math.max(...byName.slice(3).map(best));if(b<=a*1.005)stuck++});
+  main.forEach(slot=>{const xs=s.filter(x=>!x.deload).map(x=>{const e=(x.exercises||[]).find(e=>e.slot===slot);return e&&{e,bw:x.bw}}).filter(Boolean);
+    const byName=xs.filter(o=>o.e.name===xs[xs.length-1]?.e.name).slice(-6);if(byName.length<6)return;checked++;
+    /* Körpergewichtsübungen (Klimmzüge): Körpergewicht mitrechnen, sonst ist die Schätzung bei 0 kg immer 0 und gilt als Stillstand */
+    const best=({e,bw})=>{const add=isBwName(e.name)?(bw||latestWeight()||80):0;return Math.max(...e.sets.map(z=>e1rm((z.kg||0)+add,z.reps||0)))};const a=Math.max(...byName.slice(0,3).map(best)),b=Math.max(...byName.slice(3).map(best));if(b<=a*1.005)stuck++});
   const h=(whoop.hist&&whoop.hist.hrvs)||[];let down=false;if(h.length>=21){const v=h.slice(-30).map(x=>x.v),w=h.slice(-7).map(x=>x.v);const m=v.reduce((a,b)=>a+b,0)/v.length,sd=Math.sqrt(v.reduce((a,b)=>a+(b-m)*(b-m),0)/v.length);const m7=w.reduce((a,b)=>a+b,0)/w.length;down=m7<m-0.5*sd}
   const reasons=[];if(stuck>=2)reasons.push(`${stuck} Grundübungen stagnieren seit 3 Einheiten`);if(down)reasons.push("dein HRV-Wochenschnitt liegt unter deinem Monatsschnitt");
   let due=false,why="";
@@ -412,6 +420,8 @@ function getDraft(day){
 }
 
 /* ---------- Render: Training ---------- */
+function offNoteHtml(){return navigator.onLine===false?`<div class="offline"><b>Offline-Modus.</b> Alles funktioniert weiter, auch Timer und Ausführungen. Gespeicherte Trainings werden automatisch hochgeladen, sobald du wieder Netz hast. Die Seite jetzt nicht neu laden.</div>`:""}
+function renderOffNote(){const el=$("#offnote");if(el)el.innerHTML=offNoteHtml()}
 function renderHeute(){
   const day=ui.day||(ui.day=nextDay());const P=PROGRAM[day];const d=getDraft(day);saveDrafts();
   const nd=nextDay();const RD=readiness(d);const z=RD.z;
@@ -434,12 +444,11 @@ function renderHeute(){
    </div>
    ${z?`<div class="zone ${z}"><strong>${zoneTxt[z][0]}</strong><span class="small">${zoneTxt[z][1]}</span>${RD.why?`<span class="small muted" style="display:block;margin-top:4px">Grund: ${esc(RD.why)}</span>`:""}</div>`:`<p class="small muted">Recovery kommt automatisch aus Whoop (über n8n). Sonst hier von Hand eintragen.</p>`}
    <p class="small wstat" id="wstat">${whoopStatusHtml()}</p>
-   <label class="toggle"><input type="checkbox" id="f-deload" data-f="deload" ${d.deload?"checked":""}> Deload-Woche (halbe Sätze, leichte Spannung)</label>
+   <label class="toggle"><input type="checkbox" id="f-deload" data-f="deload" ${d.deload?"checked":""}> Entlastungswoche (halbe Sätze, ca. 10 % leichter)</label>
   </div>`;
 
   {const DS=deloadStatus();if(DS.due&&!d.deload)h+=`<div class="banner"><b>Entlastung empfohlen.</b> ${esc(DS.why)} Eine Woche mit halben Sätzen und ca. −10 % Gewicht, danach geht es stärker weiter. <div class="row" style="margin-top:8px"><button class="btn sm" data-act="deloadon">Diese Woche entlasten</button></div></div>`;}
-  if(false)h+=`<div class="banner"><b>Woche ${weekNo()}: Deload.</b> Jede 7. Woche entlastest du: gleiche Gewichte, halbe Sätze. Danach geht die Progression weiter.</div>`;
-  if(navigator.onLine===false)h+=`<div class="offline"><b>Offline-Modus.</b> Alles funktioniert weiter, auch Timer und Ausführungen. Gespeicherte Trainings werden automatisch hochgeladen, sobald du wieder Netz hast. Die Seite jetzt nicht neu laden.</div>`;
+  h+=`<div id="offnote">${offNoteHtml()}</div>`;
   h+=`<button class="btn fx-start" data-act="fopen">Fokusmodus starten · eine Übung pro Bildschirm</button>`;
   h+=`<p class="small muted">Aufwärmen: 5 min locker auf Rudergerät oder Rad, dann vor den ersten beiden Übungen 2 Aufwärmsätze mit ca. 50 % und 75 % des Arbeitsgewichts.</p>`;
 
@@ -458,7 +467,7 @@ function renderHeute(){
       </div>`).join("")}</div>
      ${rirAsk(e,ex)}
      <div class="row" style="justify-content:flex-end"><button class="ghost" data-act="addset" data-slot="${ex.id}">+ Satz</button></div>
-     <details class="cue"><summary>Ausführung anzeigen</summary>${techHtml(name,ex)}</details>
+     <details class="cue" data-k="${ex.id}"><summary>Ausführung anzeigen</summary>${techHtml(name,ex)}</details>
     </article>`;
   });
 
@@ -485,7 +494,7 @@ function renderHeute(){
    <button class="btn" data-act="save">Training speichern</button>
    <button class="btn sec sm" data-act="reset">Eingaben zurücksetzen</button>
   </article>`;
-  $("#v-heute").innerHTML=h;
+  setHtml($("#v-heute"),h);
 }
 
 /* ---------- Render: Plan ---------- */
@@ -502,14 +511,17 @@ function renderPlan(){
     P.ex.map(ex=>`<div class="plan-ex"><span class="c">${ex.id}</span><span>${esc(exName(ex))}<br><span class="small muted">${esc(ex.gear)}</span></span><span class="num small">${ex.sets}×${ex.lo}–${ex.hi}</span></div>`).join("")+
     (P.cardio?`<div class="plan-ex"><span class="c">+</span><span>Cardio Zone 2<br><span class="small muted">${P.cardio.dev}</span></span><span class="num small">${P.cardio.min} min</span></div>`:"")+`</div></div>`});
   h+=`<div class="card"><h2>Progression</h2><ul class="rules">
-    <li><b>Doppelte Progression:</b> Bleib beim Gewicht, bis du in allen Sätzen das obere Ende des Wiederholungsbereichs schaffst. Dann steigern (Maschinen +5 kg, Langhantel +2,5 kg, Kurzhanteln +2 kg). Die App rechnet das für dich aus.</li>
+    <li><b>Doppelte Progression:</b> Bleib beim Gewicht, bis du in allen Sätzen das obere Ende des Wiederholungsbereichs schaffst. Dann um einen Schritt steigern. Der Schritt steht bei jeder Übung: meist +2,5 kg, Kurzhanteln +2 kg, Beinpresse, Latzug und Rudern +5 kg. Die App rechnet das für dich aus.</li>
+    <li><b>Früher steigern:</b> Hattest du im letzten Satz noch 3 oder mehr Wdh. Reserve, geht das Gewicht schon beim nächsten Mal hoch.</li>
+    <li><b>Zurückgehen:</b> Zweimal in Folge unter dem Wiederholungsbereich, dann ca. 8 % leichter und sauber wieder aufbauen.</li>
     <li><b>Intensität:</b> Arbeitssätze enden 1–2 Wdh. vor dem Versagen (RIR 1–2). Technik bleibt sauber.</li>
-    <li><b>Deload:</b> Jede 7. Woche halbe Sätze bei gleichen Gewichten. Früher, wenn du zwei Einheiten in Folge stagnierst und deine Recovery im Schnitt sinkt.</li>
-    <li><b>Ernährung:</b> Bei über ca. 20 % Körperfett ist Rekomposition am effektivsten: leichtes Defizit (ca. −300 kcal), 2 g Protein pro kg, schwer trainieren. Muskeln wachsen trotzdem, Fett geht runter. Ab ca. 18 % auf schlanken Aufbau (+150 kcal) wechseln.</li></ul></div>
+    <li><b>Entlastung nach Bedarf:</b> Die App empfiehlt sie ab 15 Einheiten, wenn zwei Grundübungen seit 3 Einheiten nicht stärker werden. Eine reicht, wenn zusätzlich dein HRV-Wochenschnitt unter dem Monatsschnitt liegt. Spätestens nach 24 Einheiten (ca. 8 Wochen). Dann eine Woche halbe Sätze und ca. 10 % weniger Gewicht.</li>
+    <li><b>Ernährung:</b> Bei über ca. 20 % Körperfett ist Rekomposition am effektivsten: leichtes Defizit (ca. −300 kcal), ca. 1,9 g Eiweiß pro kg, schwer trainieren. Muskeln wachsen trotzdem, Fett geht runter. Ab ca. 18 % auf schlanken Aufbau (+150 kcal) wechseln.</li></ul></div>
   <div class="card"><h2>Whoop-Regeln</h2><ul class="rules">
-    <li><span class="chip good">Grün ≥ 67 %</span> Plan komplett, letzter Satz bei Isolationsübungen darf bis RIR 0–1.</li>
-    <li><span class="chip mid">Gelb 34–66 %</span> Plan komplett, jeder Satz mit RIR 2.</li>
-    <li><span class="chip bad">Rot &lt; 34 %</span> Ein Satz weniger pro Übung, Gewichte halten, RIR 3, Cardio nur Gehen.</li>
+    <li>Die Tagesform richtet sich vor allem nach deiner <b>HRV im Vergleich zu deinem eigenen 30-Tage-Schnitt</b>. Das sagt mehr als feste Recovery-Grenzen.</li>
+    <li><span class="chip bad">Rot</span> Recovery unter 34 % oder HRV den zweiten Tag in Folge deutlich unter deinem Schnitt. Ein Satz weniger pro Übung, Gewichte halten, RIR 3, Cardio nur Gehen.</li>
+    <li><span class="chip mid">Gelb</span> HRV heute deutlich unter deinem Schnitt. Solange noch keine 10 Tage HRV vorliegen: Recovery unter 50 %. Plan komplett, jeder Satz mit RIR 2.</li>
+    <li><span class="chip good">Grün</span> Alles andere. Plan komplett, letzter Satz bei Isolationsübungen darf bis RIR 0–1.</li>
     <li>Schlaf ist einer der größten Hebel: zu wenig Schlaf bremst Regeneration und Muskelaufbau nachweislich. Eine feste Grenze gibt es nicht, achte auf den Trend im Verlauf.</li>
     <li>Ein einzelner Recovery-Wert sagt deine Tagesform nur grob voraus. Wichtiger ist, wie sich der erste Arbeitssatz anfühlt: Läuft er deutlich schwerer als letztes Mal, nimm die gelbe Regel.</li></ul></div>
   <div class="card"><h2>Cardio</h2><ul class="rules">
@@ -541,7 +553,7 @@ function renderVerlauf(){
   let h=`<div class="card hist"><div class="row between"><h2>Verlauf</h2><span class="small muted num">${list.length} Einheiten</span></div>`;
   if(!list.length)h+=`<p class="empty">Noch kein Training gespeichert. Nach deiner ersten Einheit erscheint sie hier mit allen Sätzen.</p>`;
   list.forEach(s=>{if(ui.editId===s.id){h+=editHtml(ui.editBuf);return}const z=zone(s.recovery);const {v,n}=sessVolume(s);
-    h+=`<details><summary><span><b>${fmtDate(s.date)}</b> · ${esc(PROGRAM[s.day]?.title||s.day)}${s.deload?' · Deload':''}</span><span class="row" style="gap:6px">${z?`<span class="chip ${z}">${s.recovery} %</span>`:""}<span class="small muted num">${n} Sätze</span></span></summary>
+    h+=`<details><summary><span><b>${fmtDate(s.date)}</b> · ${esc(PROGRAM[s.day]?.title||s.day)}${s.deload?' · Entlastung':''}</span><span class="row" style="gap:6px">${z?`<span class="chip ${z}">${s.recovery} %</span>`:""}<span class="small muted num">${n} Sätze</span></span></summary>
      <div class="lines">${(s.exercises||[]).map(e=>`<div><span>${esc(e.name)}</span><span class="num">${e.sets.map(x=>`${fmt(x.kg)}×${x.reps}`).join(", ")}</span></div>`).join("")}
      ${s.cardio&&s.cardio.done?`<div><span>Cardio ${esc(s.cardio.type)}</span><span class="num">${s.cardio.min||"–"} min${s.cardio.hr?" · Ø "+s.cardio.hr+" bpm":""}</span></div>`:""}
      <div><span>Volumen</span><span class="num">${Math.round(v).toLocaleString("de-DE")} kg</span></div>
@@ -581,6 +593,7 @@ function barChart(items){
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}${bars}</svg>`;
 }
 const e1rm=(kg,r)=>kg*(1+r/30);
+const isBwName=n=>/Klimmz/.test(n||"");
 /* ---------- Whoop über n8n ---------- */
 const WS="n8n",W_TABLE="I8sfrL6DhPCNqqjx",W_PROJECT="3FZ2SBEIccRygh0T",W_FLOW="6a6whSJh7yrNGHCz";
 let mcp=null;
@@ -630,7 +643,7 @@ function applyWhoop(){
   const d=getDraft(ui.day);let ch=false;
   const set=(k,v)=>{if(v==null)return;if(d[k]===""||d[k]==null||d.src&&d.src[k]==="whoop"){if(String(d[k])!==String(v)){d[k]=String(v);ch=true}d.src=Object.assign({},d.src,{[k]:"whoop"})}};
   set("recovery",T.rec);set("sleep",T.sleep);set("hrv",T.hrv);set("strain",T.strain);
-  saveDrafts();
+  saveDrafts();return ch;
 }
 function whoopStatusHtml(){
   const T=whoop.today,t=ymd(new Date());
@@ -1036,7 +1049,7 @@ function renderErnaehrung(){
   const d=protDay(k);const sum=protSum(d,T.per);const pct=Math.min(100,sum/T.t*100);
   h+=`<div class="card"><div class="row between"><h2>Eiweiß heute</h2><span class="chip acc num">${sum} / ${T.t} g</span></div>
    <div class="pbar"><div style="width:${pct.toFixed(0)}%;background:${sum>=T.lo?"var(--good)":"var(--accent)"}"></div></div>
-   <p class="small muted num">Ziel ${T.t} g pro Tag (Bereich ${T.lo}–${T.hi} g, ca. 2 g pro kg bei ${fmt(T.w)} kg). Gleich an Trainings- und Ruhetagen.</p>
+   <p class="small muted num">Ziel ${T.t} g pro Tag (Bereich ${T.lo}–${T.hi} g, ca. 1,9 g pro kg bei ${fmt(T.w)} kg). Gleich an Trainings- und Ruhetagen.</p>
    <div class="plist">${PSLOT.map((n,i)=>`<button class="pslot ${d.done[i]?"on":""}" data-act="pslot" data-i="${i}"><span class="pchk">${d.done[i]?"✓":""}</span><span class="pn">${esc(n)}</span><span class="num muted">ca. ${T.per} g</span></button>`).join("")}</div>
    <div class="row between" style="margin-top:10px"><span class="small">Extra: <b class="num">${d.extra||0} g</b></span><div class="row" style="gap:6px"><button class="btn sec sm" data-act="pextra" data-v="-10">−10 g</button><button class="btn sec sm" data-act="pextra" data-v="10">+10 g</button><button class="btn sec sm" data-act="pextra" data-v="25">+25 g</button></div></div>
    ${protWeek(T)}</div>
@@ -1091,7 +1104,7 @@ function renderFortschritt(){
   if(!ui.exSel||!names.includes(ui.exSel))ui.exSel=withData[0]||names[0];
   const pts=[],rows=[];
   s.forEach(x=>{const e=(x.exercises||[]).find(e=>e.name===ui.exSel);if(!e||!e.sets.length)return;
-    const bwAdd=/Klimmz/.test(ui.exSel)?(x.bw||latestWeight()||0):0;let best=null;e.sets.forEach(st=>{const v=e1rm((st.kg||0)+bwAdd,st.reps||0);if(!best||v>best.v)best={v,st}});
+    const bwAdd=isBwName(ui.exSel)?(x.bw||latestWeight()||0):0;let best=null;e.sets.forEach(st=>{const v=e1rm((st.kg||0)+bwAdd,st.reps||0);if(!best||v>best.v)best={v,st}});
     pts.push({x:new Date(x.date).getTime(),y:Math.round(best.v*10)/10});rows.push({d:x.date,st:best.st,sets:e.sets})});
   h+=`<div class="card"><div class="row between"><h2>Kraftkurve</h2></div>
    <div class="field"><label for="exsel">Übung</label><select id="exsel" data-f="exsel">${names.map(n=>`<option ${n===ui.exSel?"selected":""} value="${esc(n)}">${esc(n)}${withData.includes(n)?"":" (noch keine Daten)"}</option>`).join("")}</select></div>
@@ -1102,7 +1115,7 @@ function renderFortschritt(){
 
   // Sätze pro Woche (letzte 8 Wochen)
   const weeks=[];for(let i=7;i>=0;i--){const st=mondayOf(new Date(now-i*7*DAY_MS)).getTime();const en=st+7*DAY_MS;let n=0;s.forEach(x=>{const t=new Date(x.date).getTime();if(t>=st&&t<en)n+=sessVolume(x).n});weeks.push({l:shortDate(new Date(st)),v:n})}
-  h+=`<div class="card"><h2>Harte Sätze pro Woche</h2><p class="small muted">Richtwert bei vollem Plan: ca. 50 Sätze pro Woche (Deload ca. 25). Deutlich weniger heißt: Einheiten ausgelassen oder oft rot.</p>${s.length?barChart(weeks):`<p class="empty">Noch keine Wochen erfasst.</p>`}</div>`;
+  h+=`<div class="card"><h2>Harte Sätze pro Woche</h2><p class="small muted">Richtwert bei vollem Plan: ca. 60 Sätze pro Woche (Entlastung ca. 40). Deutlich weniger heißt: Einheiten ausgelassen oder oft rot.</p>${s.length?barChart(weeks):`<p class="empty">Noch keine Wochen erfasst.</p>`}</div>`;
 
   const bw=weightSeries();
   const rc=s.filter(x=>x.recovery!=null).map(x=>({x:new Date(x.date).getTime(),y:x.recovery}));
@@ -1127,14 +1140,21 @@ function renderAll(skipHeute){renderHeader();if(!skipHeute)renderHeute();renderP
 
 /* ---------- Toast & Timer ---------- */
 let toastT;function toast(m,ms){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),ms||2800)}
-let actx=null;function beep(){try{if(!actx)return;[0,0.25].forEach(o=>{const os=actx.createOscillator(),g=actx.createGain();os.frequency.value=880;os.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.25,actx.currentTime+o);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+o+0.2);os.start(actx.currentTime+o);os.stop(actx.currentTime+o+0.22)})}catch(e){}}
-const T={end:0,iv:null,label:""};
-function startTimer(sec,label){T.end=Date.now()+sec*1000;T.label=label;$("#timer").classList.add("on");$("#tLbl").textContent=label;clearInterval(T.iv);T.iv=setInterval(tick,250);tick()}
-function tick(){const r=(T.end-Date.now())/1000;$("#tVal").textContent=mmss(Math.ceil(r));if(r<=0){clearInterval(T.iv);$("#tLbl").textContent="Pause vorbei. Nächster Satz.";try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep();setTimeout(()=>{if(Date.now()>=T.end)$("#timer").classList.remove("on")},5000)}}
+let actx=null;function beep(){try{if(!actx)return;if(actx.state!=="running")actx.resume().catch(()=>{});[0,0.25].forEach(o=>{const os=actx.createOscillator(),g=actx.createGain();os.frequency.value=880;os.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.25,actx.currentTime+o);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+o+0.2);os.start(actx.currentTime+o);os.stop(actx.currentTime+o+0.22)})}catch(e){}}
+const T={end:0,iv:null,label:"",rang:false};
+/* Timer übersteht Sperrbildschirm und Neustart der App: Endzeit liegt im localStorage */
+function saveTimer(){if(T.end)lsSet("hp3_timer",{end:T.end,label:T.label});else{try{localStorage.removeItem("hp3_timer")}catch(e){}}}
+function runTimer(){clearInterval(T.iv);T.iv=setInterval(tick,250);tick()}
+function startTimer(sec,label){T.end=Date.now()+sec*1000;T.label=label;T.rang=false;saveTimer();$("#timer").classList.add("on");$("#timer").classList.remove("end");$("#tLbl").textContent=label;runTimer()}
+function stopTimer(){clearInterval(T.iv);T.end=0;saveTimer();$("#timer").classList.remove("on","end")}
+function tick(){if(!T.end)return;const r=(T.end-Date.now())/1000;$("#tVal").textContent=mmss(Math.ceil(r));$("#timer").classList.toggle("end",r<=0);$("#tLbl").textContent=r<=0?"Pause vorbei. Nächster Satz.":T.label;
+  if(r<=0){clearInterval(T.iv);if(!T.rang){T.rang=true;if(r>-30){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep()}}const e0=T.end;setTimeout(()=>{if(T.end===e0)stopTimer()},5000)}}
+(function(){const t=lsGet("hp3_timer");if(!t||!(t.end>Date.now()-60000)){T.end=0;saveTimer();return}T.end=t.end;T.label=t.label||"Satzpause";T.rang=t.end<=Date.now();$("#timer").classList.add("on");runTimer()})();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState!=="visible")return;if(actx&&actx.state!=="running")actx.resume().catch(()=>{});if(T.end)runTimer()});
 
 
 function rirAsk(e,ex){if(!e.sets.length||e.sets.some(x=>!x.done))return "";
-  return `<div class="rirq"><span class="small">Wie viele Wdh. wären im letzten Satz noch gegangen?</span><div class="row" style="gap:6px;margin-top:6px">${[0,1,2,3,4].map(v=>`<button class="pill ${String(e.rir)===String(v)?"on":""}" data-act="rir" data-slot="${ex.id}" data-v="${v}">${v===4?"4+":v}</button>`).join("")}</div></div>`}
+  return `<div class="rirq"><span class="small">Wie viele Wdh. wären im letzten Satz noch gegangen?</span><div class="row" style="gap:6px;margin-top:6px">${[0,1,2,3,4].map(v=>`<button class="rpill ${String(e.rir)===String(v)?"on":""}" data-act="rir" data-slot="${ex.id}" data-v="${v}">${v===4?"4+":v}</button>`).join("")}</div></div>`}
 /* ---------- Fokusmodus ---------- */
 let wakeLock=null;
 async function lockScreen(on){try{if(on&&"wakeLock" in navigator){if(!wakeLock||wakeLock.released)wakeLock=await navigator.wakeLock.request("screen")}else if(!on&&wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
@@ -1163,9 +1183,9 @@ function renderFocus(){
      <button class="btn fx-done" data-act="fdone">✓ Satz fertig</button>`}
   h+=`<div class="fx-sets">${e.sets.map((x,k)=>`<button class="${x.done?"d":k===i?"c":""}" data-act="fset" data-i="${k}">${k+1}: ${x.done?`${fmt(num(x.kg)??0)}×${x.reps}`:"offen"}</button>`).join("")}</div>
    <div class="fx-nav"><button class="btn sec" data-act="fprev" ${ui.fx===0?"disabled":""}>← Zurück</button><button class="btn sec" data-act="fnext" ${ui.fx===n-1?"disabled":""}>Weiter →</button></div>
-   <details class="cue" style="margin-top:12px"><summary>Ausführung anzeigen</summary>${techHtml(e.name,ex)}</details>
+   <details class="cue" data-k="f-${ex.id}" style="margin-top:12px"><summary>Ausführung anzeigen</summary>${techHtml(e.name,ex)}</details>
    ${ex.alts.length?`<button class="ghost" style="margin-top:8px" data-act="swap" data-slot="${ex.id}">Übung tauschen (Gerät besetzt?)</button>`:""}`;
-  el.innerHTML=h;el.classList.add("on");
+  setHtml(el,h);el.classList.add("on");
 }
 function openFocus(){const P=PROGRAM[ui.day],d=getDraft(ui.day);const k=P.ex.findIndex(x=>d.ex[x.id].sets.some(z=>!z.done));ui.fx=k<0?P.ex.length-1:k;ui.fset=null;ui.focus=true;lockScreen(true);renderFocus();$("#focus").scrollTop=0}
 function closeFocus(){ui.focus=false;ui.fset=null;lockScreen(false);renderFocus();renderHeute()}
@@ -1194,8 +1214,8 @@ async function putSession(s){
 }
 let uploading=false;
 async function uploadPending(){if(uploading||!col||!navigator.onLine)return;uploading=true;try{for(const p of S.sessions.filter(x=>x._pending)){await putSession(p)}}finally{uploading=false}}
-window.addEventListener("online",()=>{renderHeader();renderHeute();uploadPending()});
-window.addEventListener("offline",()=>{renderHeader();renderHeute()});
+window.addEventListener("online",()=>{renderHeader();renderOffNote();uploadPending()});
+window.addEventListener("offline",()=>{renderHeader();renderOffNote()});
 async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();if(col&&navigator.onLine!==false){try{const o=JSON.parse(JSON.stringify(S.settings));await col.doc("settings").set(o);S._setPending=false;saveLocal()}catch(e){}}}
 function tombs(){return S.settings.deleted||(S.settings.deleted={})}
 function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();ui.delId=null;putSettings();if(col)col.doc(id).delete().catch(()=>{});renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
@@ -1231,9 +1251,9 @@ document.addEventListener("click",e=>{
   const tb=e.target.closest("[data-tab]");
   if(tb){ui.tab=tb.dataset.tab;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b===tb));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+ui.tab));if(ui.tab==="fortschritt")renderFortschritt();window.scrollTo({top:0});return}
   const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act;
-  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}else if(actx.state!=="running")actx.resume().catch(()=>{});
   if(act==="fopen"){openFocus();return}
-  if(act==="rir"){const d=getDraft(ui.day);d.ex[a.dataset.slot].rir=+a.dataset.v;saveDrafts();if(ui.focus)renderFocus();a.parentElement.querySelectorAll(".pill").forEach(b=>b.classList.toggle("on",b===a));return}
+  if(act==="rir"){const d=getDraft(ui.day);d.ex[a.dataset.slot].rir=+a.dataset.v;saveDrafts();if(ui.focus)renderFocus();a.parentElement.querySelectorAll(".rpill").forEach(b=>b.classList.toggle("on",b===a));return}
   if(act==="deloadon"){S.settings.deloadUntil=Date.now()+7*DAY_MS;putSettings();for(const k in drafts)if(drafts[k]&&!Object.values(drafts[k].ex).some(e=>e.sets.some(x=>x.done)))delete drafts[k];saveDrafts();renderHeute();toast("Entlastungswoche aktiv für 7 Tage.");return}
   if(act==="import"){importData();return}
   if(/^f(close|prev|next|set|kg|reps|done)$/.test(act)){focusAct(act,a);return}
@@ -1265,9 +1285,9 @@ document.addEventListener("click",e=>{
   if(act==="wsave"){const v=num($("#n-today").value),bf=num($("#n-bf").value);const k=ymd(new Date());if(bf!=null){if(bf<3||bf>60){toast("Körperfett bitte in % (3–60).");return}S.settings.bf=Object.assign({},S.settings.bf||{},{[k]:bf})}if(v==null&&bf!=null){putSettings();renderFortschritt();toast("Körperfett gespeichert.");return}if(!v||v<30||v>250){toast("Bitte ein Gewicht in kg eintragen.");return}S.settings.weights=Object.assign({},S.settings.weights||{},{[k]:v});putSettings();renderFortschritt();renderFortschritt();toast("Gewicht gespeichert.");return}
   if(act==="reset"){if(ui.resetArm!==ui.day){ui.resetArm=ui.day;a.textContent="Wirklich alles löschen? Nochmal tippen";a.classList.add("danger");setTimeout(()=>{ui.resetArm=null;if(a.isConnected){a.textContent="Eingaben zurücksetzen";a.classList.remove("danger")}},4000);return}
     ui.resetArm=null;delete drafts[ui.day];saveDrafts();applyWhoop();renderHeute();toast("Eingaben zurückgesetzt.");return}
-  if(act==="t-plus"){T.end+=15000;tick();return}
-  if(act==="t-minus"){T.end-=15000;tick();return}
-  if(act==="t-stop"){clearInterval(T.iv);$("#timer").classList.remove("on");return}
+  if(act==="t-plus"){T.end=Math.max(T.end,Date.now())+15000;T.rang=false;saveTimer();runTimer();return}
+  if(act==="t-minus"){T.end-=15000;saveTimer();runTimer();return}
+  if(act==="t-stop"){stopTimer();return}
   if(act==="del"){ui.delId=a.dataset.id;renderVerlauf();return}
   if(act==="delno"){ui.delId=null;renderVerlauf();return}
   if(act==="delyes"){deleteSession(a.dataset.id);return}

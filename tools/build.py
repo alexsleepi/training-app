@@ -47,7 +47,15 @@ b = s.index('</script>', a)
 s = s[:a] + sync + '\nsyncState=apiKey()?"loading":"nokey";\nui.day=nextDay();\napplyWhoop();\nrenderAll();\nsync();\n' + s[b:]
 
 (ROOT / "index.html").write_text(s, encoding="utf-8")
-(ROOT / "sw.js").write_text((SRC / "sw.template.js").read_text().replace("__VER__", ver))
+fonts = sorted(f.name for f in (SRC / "fonts").glob("*.woff2"))
+assert fonts, "Keine Schriften in src/fonts"
+(ROOT / "fonts").mkdir(exist_ok=True)
+for f in (ROOT / "fonts").iterdir():
+    f.unlink()
+for f in (SRC / "fonts").iterdir():
+    shutil.copy(f, ROOT / "fonts" / f.name)
+(ROOT / "sw.js").write_text((SRC / "sw.template.js").read_text().replace("__VER__", ver)
+                            .replace("__FONTS__", ",".join(json.dumps("fonts/" + f) for f in fonts)))
 m = {"name": "Hypertrophie 3×", "short_name": "Training", "id": "./", "start_url": "./", "scope": "./", "display": "standalone",
      "orientation": "portrait", "background_color": "#111212", "theme_color": "#111212", "lang": "de",
      "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
