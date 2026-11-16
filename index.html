@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794825137">
+<meta name="app-version" content="1794825218">
 <style>
 /* Schriften liegen lokal (src/fonts, SIL Open Font License), damit die App offline gleich aussieht. */
 @font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
@@ -325,7 +325,7 @@ const DAY_MS=864e5;
 let S={sessions:[],settings:{swaps:{},startDate:null}};
 let drafts={};
 let ui={tab:"heute",day:null,exSel:null,delId:null};
-let col=null, syncState="loading";
+let syncState="loading";
 
 function lsGet(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -607,49 +607,10 @@ function barChart(items){
 const e1rm=(kg,r)=>kg*(1+r/30);
 const isBwName=n=>/Klimmz/.test(n||"");
 /* ---------- Whoop über n8n ---------- */
-const WS="n8n",W_TABLE="I8sfrL6DhPCNqqjx",W_PROJECT="3FZ2SBEIccRygh0T",W_FLOW="6a6whSJh7yrNGHCz";
-let mcp=null;
 let whoop=Object.assign({state:"idle",msg:"",at:null,today:null,hist:null,weight:null},lsGet("hp3_whoop")||{});
 if(whoop.state==="loading")whoop.state="idle";
 function ymd(d){const x=new Date(d);return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")}
-function wErrText(e){const c=e&&e.code;
-  if(c==="server_not_connected"||c==="selection_required")return "n8n ist für diese App nicht verbunden. In claude.ai unter Einstellungen → Connectors prüfen.";
-  if(c==="needs_reauth")return "n8n neu verbinden: claude.ai → Einstellungen → Connectors.";
-  if(c==="approval_required"||c==="not_in_manifest"||c==="consent_required")return "approve";
-  if(c==="server_unavailable"||c==="upstream_error")return "n8n antwortet gerade nicht. Später erneut laden.";
-  if(c==="tool_error")return "n8n meldet einen Fehler: "+String(e.message||"").slice(0,160);
-  return "Whoop-Daten nicht erreichbar.";}
 function saveWhoop(){lsSet("hp3_whoop",{at:whoop.at,today:whoop.today,hist:whoop.hist,weight:whoop.weight,state:whoop.state==="ok"?"ok":"idle"})}
-async function readTable(fresh){
-  const r=await mcp.callTool(WS,"get_data_table_rows",{dataTableId:W_TABLE,projectId:W_PROJECT,sortBy:"datum:desc",limit:31},{cache:fresh?false:{staleTime:10*60e3,gcTime:864e5}});
-  let p=r&&r.payload!==undefined?r.payload:r;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p={}}}
-  return (p&&Array.isArray(p.rows)?p.rows:Array.isArray(p)?p:[]).filter(x=>x&&typeof x.datum==="string");
-}
-async function loadWhoop(fresh,pull){
-  if(!mcp){whoop.state="nomcp";renderWhoop();return}
-  if(navigator.onLine===false){whoop.state="offline";renderWhoop();return}
-  whoop.state="loading";whoop.msg=pull?"Frage Whoop über n8n ab…":"";renderWhoop();
-  let rows;
-  try{
-    if(pull){
-      try{await mcp.callTool(WS,"execute_workflow",{workflowId:W_FLOW,executionMode:"production"},{cache:false})}
-      catch(e){const m=wErrText(e);if(m==="approve"){whoop.state="approve";renderWhoop();return}}
-      await new Promise(r=>setTimeout(r,9000));
-    }
-    rows=await readTable(fresh||pull);
-  }catch(e){const m=wErrText(e);whoop.state=m==="approve"?"approve":"error";whoop.msg=m;renderWhoop();return}
-  if(!rows.length){whoop.state="nodata";whoop.msg="Noch keine Whoop-Daten in n8n. Sobald der Workflow „Whoop → Trainings-App“ mit deinem Whoop-Zugang läuft, erscheinen sie hier.";renderWhoop();return}
-  rows.sort((a,b)=>a.datum<b.datum?-1:1);
-  const t=ymd(new Date());const R=rows.find(x=>x.datum===t);
-  const n=v=>v==null||v===""?null:Number(v);
-  whoop.today=R?{d:t,rec:n(R.recovery),hrv:n(R.hrv)!=null?Math.round(n(R.hrv)):null,rhr:n(R.ruhepuls),sleep:n(R.schlaf),strain:n(R.strain)}:null;
-  whoop.hist={recs:rows.filter(x=>n(x.recovery)!=null).map(x=>({d:x.datum,rec:n(x.recovery)})),sleeps:rows.filter(x=>n(x.schlaf)!=null).map(x=>({d:x.datum,perf:n(x.schlaf)})),hrvs:rows.filter(x=>n(x.hrv)!=null).map(x=>({d:x.datum,v:n(x.hrv)})),lastRec:rows[rows.length-1].datum};
-  const wr=[...rows].reverse().find(x=>n(x.gewicht)!=null);whoop.weight=wr?n(wr.gewicht):null;
-  whoop.at=Date.now();whoop.state="ok";whoop.msg="";saveWhoop();
-  applyWhoop();
-  const typing=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#v-heute");
-  renderAll(!!typing);if(typing)renderWhoop();
-}
 function applyWhoop(){
   const T=whoop.today;if(!T||T.d!==ymd(new Date()))return;
   const d=getDraft(ui.day);let ch=false;
@@ -660,8 +621,6 @@ function applyWhoop(){
 function whoopStatusHtml(){
   const T=whoop.today,t=ymd(new Date());
   if(whoop.state==="loading")return `<span class="muted">${esc(whoop.msg||"Lade Whoop-Daten…")}</span>`;
-  if(whoop.state==="approve")return `<span>Die App braucht deine Erlaubnis, die Whoop-Daten aus n8n zu lesen.</span> <button class="btn sm" data-act="wload">Whoop-Zugriff erlauben</button>`;
-  if(whoop.state==="nomcp")return `<span class="muted">Whoop-Abruf ist in dieser Ansicht nicht verfügbar. Öffne die App in Claude.</span>`;
   if(whoop.state==="offline")return `<span class="muted">Offline. ${whoop.at?"Letzter Whoop-Stand: "+new Date(whoop.at).toLocaleString("de-DE",{weekday:"short",hour:"2-digit",minute:"2-digit"}):"Keine Whoop-Daten geladen."} Lade die App vor dem Studio einmal mit Netz.</span>`;
   if(whoop.state==="error"||whoop.state==="nodata")return `<span>${esc(whoop.msg)}</span> <button class="ghost sm2" data-act="wload">Erneut versuchen</button>`;
   if(whoop.state==="ok"){
@@ -672,19 +631,7 @@ function whoopStatusHtml(){
 }
 function renderWhoop(){const el=document.getElementById("wstat");if(el)el.innerHTML=whoopStatusHtml()}
 /* ---------- Withings über n8n ---------- */
-const WT_TABLE="9b1qBqdVuOTitwrZ";
 let withings=lsGet("hp3_withings")||{rows:[],at:null};
-async function loadWithings(fresh){
-  if(!mcp||navigator.onLine===false)return;
-  try{
-    const r=await mcp.callTool(WS,"get_data_table_rows",{dataTableId:WT_TABLE,projectId:W_PROJECT,sortBy:"datum:desc",limit:100},{cache:fresh?false:{staleTime:10*60e3,gcTime:864e5}});
-    let p=r&&r.payload!==undefined?r.payload:r;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p={}}}
-    const n=v=>v==null||v===""?null:Number(v);
-    const rows=(p&&Array.isArray(p.rows)?p.rows:[]).filter(x=>x&&typeof x.datum==="string").map(x=>({d:x.datum,w:n(x.gewicht),bf:n(x.fett_prozent),fm:n(x.fettmasse),mm:n(x.muskelmasse)})).sort((a,b)=>a.d<b.d?-1:1);
-    withings={rows,at:Date.now()};lsSet("hp3_withings",withings);
-    renderErnaehrung();renderFortschritt();
-  }catch(e){}
-}
 function withingsCard(){
   const rows=withings.rows||[];if(!rows.length)return "";
   const bf=rows.filter(r=>r.bf!=null).map(r=>({x:new Date(r.d+"T12:00").getTime(),y:r.bf}));
@@ -1219,19 +1166,8 @@ function focusAct(act,a){
 
 /* ---------- Speichern ---------- */
 function cleanSession(s){const o=JSON.parse(JSON.stringify(s));delete o._pending;return o}
-async function putSession(s){
-  s._pending=true;saveLocal();
-  if(!col)return;
-  try{await col.doc(s.id).set(cleanSession(s));s._pending=false;saveLocal();renderHeader()}
-  catch(e){if(e&&e.code==="quota_exceeded")toast("Speicher voll. Lösche alte Einheiten.")}
-}
-let uploading=false;
-async function uploadPending(){if(uploading||!col||!navigator.onLine)return;uploading=true;try{for(const p of S.sessions.filter(x=>x._pending)){await putSession(p)}}finally{uploading=false}}
-window.addEventListener("online",()=>{renderHeader();renderOffNote();uploadPending()});
-window.addEventListener("offline",()=>{renderHeader();renderOffNote()});
-async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();if(col&&navigator.onLine!==false){try{const o=JSON.parse(JSON.stringify(S.settings));await col.doc("settings").set(o);S._setPending=false;saveLocal()}catch(e){}}}
 function tombs(){return S.settings.deleted||(S.settings.deleted={})}
-function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();delPend()[id]=1;ui.delId=null;putSettings();if(col)col.doc(id).delete().catch(()=>{});renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
+function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();delPend()[id]=1;ui.delId=null;putSettings();renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
 function undoDelete(){const s=ui.lastDel;if(!s)return;delete tombs()[s.id];delete delPend()[s.id];S.sessions.push(s);ui.lastDel=null;putSettings();putSession(s);renderAll(true);toast("Wiederhergestellt.")}
 function importData(){const box=$("#importBox");let arr;try{arr=JSON.parse(box.value)}catch(e){toast("Das ist kein gültiger Export. Bitte den kompletten kopierten Text einfügen.");return}
   if(!Array.isArray(arr)){toast("Erwartet wird eine Liste von Einheiten.");return}
@@ -1292,8 +1228,7 @@ document.addEventListener("click",e=>{
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}
   if(act==="figmode"||act==="figplay"||act==="figslow"){figAct(act,a);return}
-  if(act==="wload"){loadWhoop(true);return}
-  if(act==="wpull"){loadWhoop(true,true);loadWithings(true);return}
+  if(act==="wload"||act==="wpull"){sync(true);return}
   if(act==="save"){saveSession();return}
   if(act==="pslot"){const T=proteinTarget();const k=ymd(new Date());const d=protDay(k);const i=+a.dataset.i;d.done[i]=!d.done[i];protSave(k,d);renderErnaehrung();return}
   if(act==="pextra"){const k=ymd(new Date());const d=protDay(k);d.extra=Math.max(0,(d.extra||0)+(+a.dataset.v));protSave(k,d);renderErnaehrung();return}
@@ -1331,38 +1266,8 @@ document.addEventListener("change",e=>{
   if(f==="c-done"){d.cardio.done=t.checked;saveDrafts();return}
 });
 
-/* ---------- Konto-Speicher ---------- */
-async function connect(){
-  const fallback=setTimeout(()=>{if(syncState==="loading"){syncState="local";renderHeader()}},10000);
-  try{
-    if(!window.claude||!window.claude.use)throw 0;
-    const db=await window.claude.use("db");const user=await window.claude.use("user");
-    const uid=user&&await user.id();
-    if(!db||!uid)throw 0;
-    col=db.collection("data/users/"+uid);
-    let first=true;
-    col.onSnapshot(async snap=>{
-      clearTimeout(fallback);
-      const remote=[];let settings=null;
-      snap.docs.forEach(d=>{if(!d.exists)return;if(d.id==="settings")settings=d.data();else if(d.id.startsWith("s_"))remote.push(Object.assign({},d.data(),{id:d.id}))});
-      if(snap.metadata.fromCache&&!remote.length&&!settings){renderHeader();return}
-      if(settings&&!(S._setPending&&(S.settings._ts||0)>(settings._ts||0))){const del=Object.assign({},settings.deleted||{},S.settings.deleted||{});S.settings=Object.assign({swaps:{},startDate:null},JSON.parse(JSON.stringify(settings)),{swaps:Object.assign({},settings.swaps||{}),deleted:del});S._setPending=false}
-      const dead=tombs();
-      const byId=new Map();remote.forEach(r=>{if(!dead[r.id])byId.set(r.id,r)});
-      S.sessions.forEach(x=>{if(dead[x.id])return;const r=byId.get(x.id);if(!r){if(x._pending||snap.metadata.fromCache)byId.set(x.id,x)}else if(x._pending)byId.set(x.id,x)});
-      S.sessions=[...byId.values()];
-      if(col&&!snap.metadata.fromCache)remote.forEach(r=>{if(dead[r.id])col.doc(r.id).delete().catch(()=>{})});
-      if(!snap.metadata.fromCache){syncState="cloud";
-        uploadPending();if(S._setPending)putSettings();
-        if(first){first=false;if(!settings&&(S.settings.startDate||Object.keys(S.settings.swaps).length||S.settings.nutri||S.settings.weights))putSettings()}}
-      saveLocal();
-      const typing=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#v-heute");
-      renderAll(!!typing);
-    },err=>{clearTimeout(fallback);syncState="local";renderHeader()});
-  }catch(e){clearTimeout(fallback);syncState="local";renderHeader()}
-}
-
-/* ---------- Offline-App: Sync über n8n ---------- */
+/* ---------- Abgleich mit n8n: src/sync.js wird hier beim Build eingefügt ---------- */
+/* ---------- Abgleich mit n8n (per Schlüssel). Der Build fügt diese Datei in src/app.html an der Marke @SYNC@ ein. ---------- */
 const API="https://sleepi.app.n8n.cloud/webhook/training-api";
 function apiKey(){try{return localStorage.getItem("hp3_key")||""}catch(e){return ""}}
 let syncing=null,syncAgain=false,syncMsg="";
@@ -1425,14 +1330,11 @@ function sync(manual){
 }
 let syncT=null;function syncSoon(){clearTimeout(syncT);syncT=setTimeout(()=>sync(),800)}
 async function putSession(s){s._pending=true;saveLocal();renderHeader();syncSoon()}
-async function uploadPending(){syncSoon()}
 async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();syncSoon()}
-function loadWhoop(){return sync(true)}
-function loadWithings(){}
 function saveKey(v){v=String(v||"").trim();if(v.length<10){toast("Bitte den kompletten Schlüssel einfügen.");return}try{localStorage.setItem("hp3_key",v)}catch(e){}syncState="loading";renderHeader();sync(true).then(()=>{if(syncState==="cloud")toast("Verbunden. Daten sind synchronisiert.")})}
 function keyCardHtml(){return `<div class="card"><h2>Mit n8n verbinden</h2><p class="small muted">Einmalig: Füge den Zugangsschlüssel ein, den Claude dir gegeben hat. Danach holt die App Whoop- und Waagenwerte und sichert deine Trainings automatisch.</p>
   <div class="row"><div class="field" style="flex:1"><label for="k-in">Zugangsschlüssel</label><input id="k-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Schlüssel einfügen"></div><button class="btn sm" data-act="keysave" style="align-self:flex-end">Verbinden</button></div></div>`}
-window.addEventListener("online",()=>{renderHeader();sync()});
+window.addEventListener("online",()=>{renderHeader();renderOffNote();sync()});
 window.addEventListener("offline",()=>{syncState="local";renderHeader();renderOffNote()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&(!S._lastSync||Date.now()-S._lastSync>120000))sync()});
 setInterval(()=>{if(document.visibilityState==="visible")sync()},10*60000);
@@ -1444,6 +1346,8 @@ if("serviceWorker" in navigator){const hadCtl=!!navigator.serviceWorker.controll
   navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadCtl)showUpdate()})}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest('[data-act="appreload"]'))location.reload()});
 
+
+/* ---------- Start ---------- */
 syncState=apiKey()?"loading":"nokey";
 ui.day=nextDay();
 applyWhoop();
