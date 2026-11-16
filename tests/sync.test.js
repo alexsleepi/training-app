@@ -25,5 +25,27 @@ let n=0;const ok=(name,fn)=>{fn();n++;console.log('ok',name)};
  E('S.sessions.push({id:"s_5",date:new Date().toISOString(),day:"B",exercises:[]});putSession(S.sessions[S.sessions.length-1])');await wait(1200);
  ok('neue Einheit wird gesichert',()=>{assert.ok(w.server.sessions.some(x=>x.id==="s_5"));assert.equal(E('S.sessions.filter(x=>x._pending).length'),0)});
  ok('Einstellungen liegen in n8n',()=>assert.ok(w.server.settings));
+ // Abgleich ohne Änderung darf das Training nicht neu zeichnen
+ const art=()=>d.querySelector('#v-heute article[data-slot]');const cue=()=>art().querySelector('details.cue');
+ cue().open=true;const node0=art();
+ await E('sync()');
+ ok('Abgleich ohne Änderung zeichnet nicht neu',()=>{assert.equal(art(),node0);assert.ok(cue().open)});
+ w.server.sessions.push({id:"s_9",date:"2026-11-12T10:00:00Z",day:"C",exercises:[{slot:"C1",name:"Bulgarische Split Squats",sets:[{kg:12,reps:10}]}]});
+ await E('sync()');
+ ok('Abgleich mit Änderung zeichnet neu, offene Ausführung bleibt offen',()=>{assert.notEqual(art(),node0);assert.ok(cue().open);assert.ok(E('S.sessions.some(x=>x.id==="s_9")'))});
+ // Offline: nur der Hinweis ändert sich
+ const node1=art();Object.defineProperty(w.navigator,'onLine',{get:()=>false,configurable:true});w.dispatchEvent(new w.Event('offline'));
+ ok('offline: Hinweis erscheint, Training bleibt stehen',()=>{assert.match(d.querySelector('#offnote').textContent,/Offline-Modus/);assert.equal(art(),node1);assert.match(pill(),/Offline/)});
+ Object.defineProperty(w.navigator,'onLine',{get:()=>true,configurable:true});w.dispatchEvent(new w.Event('online'));await wait(100);
+ ok('wieder online: Hinweis verschwindet',()=>assert.equal(d.querySelector('#offnote').textContent,''));
+ // Pausen-Timer
+ E('startTimer(90,"Satzpause Test")');
+ ok('Timer speichert seine Endzeit',()=>{const t=JSON.parse(w.localStorage.getItem('hp3_timer'));assert.ok(t.end>Date.now()+80000);assert.equal(t.label,'Satzpause Test')});
+ c('[data-act=t-plus]');
+ ok('+15 verlängert und speichert',()=>assert.ok(JSON.parse(w.localStorage.getItem('hp3_timer')).end>Date.now()+100000));
+ E('T.end=Date.now()-1000;T.rang=false;tick()');
+ ok('Ende: Timer wird grün',()=>{assert.ok(d.querySelector('#timer').classList.contains('end'));assert.match(d.querySelector('#tLbl').textContent,/Pause vorbei/)});
+ c('[data-act=t-stop]');
+ ok('Stopp löscht den Timer',()=>{assert.equal(w.localStorage.getItem('hp3_timer'),null);assert.ok(!d.querySelector('#timer').classList.contains('on'))});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
  console.log(`${n} Prüfungen bestanden`);process.exit(0)})().catch(e=>{console.error('FEHLER',e.message);process.exit(1)});

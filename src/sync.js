@@ -3,6 +3,10 @@ const API="training-api";
 function apiKey(){try{return localStorage.getItem("hp3_key")||""}catch(e){return ""}}
 let syncing=null,syncAgain=false,syncMsg="";
 function delPend(){return S._delPending||(S._delPending={})}
+/* Stabile Signatur (Schlüssel sortiert), um echte Änderungen zu erkennen */
+function stableStr(v){return JSON.stringify(v,(k,x)=>x&&typeof x==="object"&&!Array.isArray(x)?Object.keys(x).sort().reduce((o,k2)=>(o[k2]=x[k2],o),{}):x)}
+function dataSig(){return stableStr({s:S.sessions.map(cleanSession).sort((a,b)=>a.id<b.id?-1:1),t:S.settings})}
+function extSig(){return stableStr([whoop.today,whoop.hist,whoop.weight,withings.rows])}
 function processWhoopRows(rows){
   rows=(rows||[]).filter(x=>x&&typeof x.datum==="string");
   if(!rows.length){whoop.state="nodata";whoop.msg="Noch keine Whoop-Daten in n8n.";return}
@@ -11,7 +15,7 @@ function processWhoopRows(rows){
   whoop.today=R?{d:t,rec:n(R.recovery),hrv:n(R.hrv)!=null?Math.round(n(R.hrv)):null,rhr:n(R.ruhepuls),sleep:n(R.schlaf),strain:n(R.strain)}:null;
   whoop.hist={recs:rows.filter(x=>n(x.recovery)!=null).map(x=>({d:x.datum,rec:n(x.recovery)})),sleeps:rows.filter(x=>n(x.schlaf)!=null).map(x=>({d:x.datum,perf:n(x.schlaf)})),hrvs:rows.filter(x=>n(x.hrv)!=null).map(x=>({d:x.datum,v:n(x.hrv)})),lastRec:rows[rows.length-1].datum};
   const wr=[...rows].reverse().find(x=>n(x.gewicht)!=null);whoop.weight=wr?n(wr.gewicht):null;
-  whoop.at=Date.now();whoop.state="ok";whoop.msg="";saveWhoop();applyWhoop();
+  whoop.at=Date.now();whoop.state="ok";whoop.msg="";saveWhoop();return applyWhoop();
 }
 function processWithingsRows(rows){const n=v=>v==null||v===""?null:Number(v);
   const r=(rows||[]).filter(x=>x&&typeof x.datum==="string").map(x=>({d:x.datum,w:n(x.gewicht),bf:n(x.fett_prozent),fm:n(x.fettmasse),mm:n(x.muskelmasse)})).sort((a,b)=>a.d<b.d?-1:1);
@@ -31,6 +35,7 @@ function sync(manual){
     if(r.status===401){syncState="badkey";whoop.state="error";whoop.msg="Der Zugangsschlüssel stimmt nicht.";renderHeader();renderWhoop();return}
     if(!r.ok)throw new Error("HTTP "+r.status);
     const j=await r.json();if(!j||!j.ok)throw new Error("Antwort");
+    const sig0=dataSig(),ext0=extSig();
     pend.forEach(p=>{if(JSON.stringify(cleanSession(p))===sent.get(p.id))p._pending=false});
     dels.forEach(id=>delete delPend()[id]);
     if(setTs!=null&&(S.settings._ts||0)===setTs)S._setPending=false;
@@ -43,10 +48,13 @@ function sync(manual){
     (j.sessions||[]).forEach(rs=>{if(!rs||!rs.id||dead2[rs.id])return;remoteIds.add(rs.id);const l=byId.get(rs.id);if(!l||!l._pending)byId.set(rs.id,rs)});
     byId.forEach(x=>{if(!remoteIds.has(x.id))x._pending=true});
     S.sessions=[...byId.values()];
-    processWhoopRows(j.whoop);processWithingsRows(j.withings);
+    const draftCh=!!processWhoopRows(j.whoop);processWithingsRows(j.withings);
     syncState="cloud";syncMsg="";S._lastSync=Date.now();saveLocal();
     const ae=document.activeElement;const typing=ae&&ae.closest&&(ae.closest("#v-heute")||ae.closest("#focus"));
-    renderAll(!!typing);if(typing)renderWhoop();if(ui.focus&&!typing)renderFocus();
+    /* Nur neu zeichnen, wenn sich etwas geändert hat. Sonst klappt mitten im Training nichts zu. */
+    renderHeader();renderWhoop();
+    if(dataSig()!==sig0||draftCh||document.getElementById("k-in")){renderAll(!!typing);renderWhoop();if(ui.focus&&!typing)renderFocus()}
+    else if(extSig()!==ext0){renderAll(!!typing);renderWhoop()}
   })().catch(e=>{syncState="error";if(manual||whoop.state==="loading"){whoop.state=whoop.at?"ok":"error";whoop.msg="n8n gerade nicht erreichbar."}renderHeader();renderWhoop()})
   .finally(()=>{syncing=null;if(syncAgain){syncAgain=false;setTimeout(sync,300)}});
   return syncing;
@@ -61,7 +69,13 @@ function saveKey(v){v=String(v||"").trim();if(v.length<10){toast("Bitte den komp
 function keyCardHtml(){return `<div class="card"><h2>Mit n8n verbinden</h2><p class="small muted">Einmalig: Füge den Zugangsschlüssel ein, den Claude dir gegeben hat. Danach holt die App Whoop- und Waagenwerte und sichert deine Trainings automatisch.</p>
   <div class="row"><div class="field" style="flex:1"><label for="k-in">Zugangsschlüssel</label><input id="k-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Schlüssel einfügen"></div><button class="btn sm" data-act="keysave" style="align-self:flex-end">Verbinden</button></div></div>`}
 window.addEventListener("online",()=>{renderHeader();sync()});
-window.addEventListener("offline",()=>{syncState="local";renderHeader();renderHeute()});
+window.addEventListener("offline",()=>{syncState="local";renderHeader();renderOffNote()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&(!S._lastSync||Date.now()-S._lastSync>120000))sync()});
 setInterval(()=>{if(document.visibilityState==="visible")sync()},10*60000);
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("training-sw",{scope:"./"}).catch(()=>{})})}
+/* Neue Version: Der Service Worker meldet sich, die App bietet "Neu laden" an. Ohne Tippen kommt sie beim nächsten Öffnen. */
+let updShown=false;function showUpdate(){if(updShown)return;updShown=true;toastAct("Neue Version der App geladen.","Neu laden","appreload")}
+if("serviceWorker" in navigator){const hadCtl=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("message",e=>{if(e.data&&e.data.type==="update")showUpdate()});
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadCtl)showUpdate()})}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest('[data-act="appreload"]'))location.reload()});

@@ -139,11 +139,12 @@ nav.tabs button.on{color:var(--accent)}
 .rpill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .timer{position:fixed;left:12px;right:12px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:40;background:var(--accent);color:var(--accent-ink);border-radius:14px;padding:10px 12px;display:none;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:536px;margin:0 auto}
 .timer.on{display:flex}
+.timer.end{background:var(--good)}
 .timer .tv{font-family:var(--display);font-size:2rem;font-weight:700;line-height:1;min-width:84px}
 .timer .lb{flex:1;font-size:.85rem;font-weight:600;line-height:1.2}
 .timer button{background:rgba(0,0,0,.14);border:none;border-radius:8px;padding:8px 10px;font-weight:700;color:var(--accent-ink)}
 
-.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;z-index:50;font-size:.92rem;display:none;max-width:90vw}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;z-index:50;font-size:.92rem;display:none;width:max-content;max-width:90vw}
 .toast.on{display:block}
 
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -326,6 +327,8 @@ function saveDrafts(){lsSet("hp3_drafts",drafts)}
 (function load(){const c=lsGet("hp3_cache");if(c&&Array.isArray(c.sessions)){S.sessions=c.sessions;S.settings=Object.assign({swaps:{},startDate:null},c.settings||{})}drafts=lsGet("hp3_drafts")||{}})();
 
 const $=s=>document.querySelector(s);
+/* Neu zeichnen, ohne dass eine offene "Ausführung anzeigen" zuklappt */
+function setHtml(el,html){const open=[...el.querySelectorAll("details[data-k][open]")].map(x=>x.dataset.k);el.innerHTML=html;open.forEach(k=>{const x=el.querySelector(`details[data-k="${k}"]`);if(x)x.open=true})}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=v=>{if(v===""||v==null)return null;const n=parseFloat(String(v).replace(",","."));return isFinite(n)?n:null};
 const fmt=n=>n==null?"–":(Math.round(n*10)/10).toLocaleString("de-DE");
@@ -417,6 +420,8 @@ function getDraft(day){
 }
 
 /* ---------- Render: Training ---------- */
+function offNoteHtml(){return navigator.onLine===false?`<div class="offline"><b>Offline-Modus.</b> Alles funktioniert weiter, auch Timer und Ausführungen. Gespeicherte Trainings werden automatisch hochgeladen, sobald du wieder Netz hast. Die Seite jetzt nicht neu laden.</div>`:""}
+function renderOffNote(){const el=$("#offnote");if(el)el.innerHTML=offNoteHtml()}
 function renderHeute(){
   const day=ui.day||(ui.day=nextDay());const P=PROGRAM[day];const d=getDraft(day);saveDrafts();
   const nd=nextDay();const RD=readiness(d);const z=RD.z;
@@ -443,7 +448,7 @@ function renderHeute(){
   </div>`;
 
   {const DS=deloadStatus();if(DS.due&&!d.deload)h+=`<div class="banner"><b>Entlastung empfohlen.</b> ${esc(DS.why)} Eine Woche mit halben Sätzen und ca. −10 % Gewicht, danach geht es stärker weiter. <div class="row" style="margin-top:8px"><button class="btn sm" data-act="deloadon">Diese Woche entlasten</button></div></div>`;}
-  if(navigator.onLine===false)h+=`<div class="offline"><b>Offline-Modus.</b> Alles funktioniert weiter, auch Timer und Ausführungen. Gespeicherte Trainings werden automatisch hochgeladen, sobald du wieder Netz hast. Die Seite jetzt nicht neu laden.</div>`;
+  h+=`<div id="offnote">${offNoteHtml()}</div>`;
   h+=`<button class="btn fx-start" data-act="fopen">Fokusmodus starten · eine Übung pro Bildschirm</button>`;
   h+=`<p class="small muted">Aufwärmen: 5 min locker auf Rudergerät oder Rad, dann vor den ersten beiden Übungen 2 Aufwärmsätze mit ca. 50 % und 75 % des Arbeitsgewichts.</p>`;
 
@@ -462,7 +467,7 @@ function renderHeute(){
       </div>`).join("")}</div>
      ${rirAsk(e,ex)}
      <div class="row" style="justify-content:flex-end"><button class="ghost" data-act="addset" data-slot="${ex.id}">+ Satz</button></div>
-     <details class="cue"><summary>Ausführung anzeigen</summary>${techHtml(name,ex)}</details>
+     <details class="cue" data-k="${ex.id}"><summary>Ausführung anzeigen</summary>${techHtml(name,ex)}</details>
     </article>`;
   });
 
@@ -489,7 +494,7 @@ function renderHeute(){
    <button class="btn" data-act="save">Training speichern</button>
    <button class="btn sec sm" data-act="reset">Eingaben zurücksetzen</button>
   </article>`;
-  $("#v-heute").innerHTML=h;
+  setHtml($("#v-heute"),h);
 }
 
 /* ---------- Render: Plan ---------- */
@@ -638,7 +643,7 @@ function applyWhoop(){
   const d=getDraft(ui.day);let ch=false;
   const set=(k,v)=>{if(v==null)return;if(d[k]===""||d[k]==null||d.src&&d.src[k]==="whoop"){if(String(d[k])!==String(v)){d[k]=String(v);ch=true}d.src=Object.assign({},d.src,{[k]:"whoop"})}};
   set("recovery",T.rec);set("sleep",T.sleep);set("hrv",T.hrv);set("strain",T.strain);
-  saveDrafts();
+  saveDrafts();return ch;
 }
 function whoopStatusHtml(){
   const T=whoop.today,t=ymd(new Date());
@@ -1135,10 +1140,17 @@ function renderAll(skipHeute){renderHeader();if(!skipHeute)renderHeute();renderP
 
 /* ---------- Toast & Timer ---------- */
 let toastT;function toast(m,ms){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),ms||2800)}
-let actx=null;function beep(){try{if(!actx)return;[0,0.25].forEach(o=>{const os=actx.createOscillator(),g=actx.createGain();os.frequency.value=880;os.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.25,actx.currentTime+o);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+o+0.2);os.start(actx.currentTime+o);os.stop(actx.currentTime+o+0.22)})}catch(e){}}
-const T={end:0,iv:null,label:""};
-function startTimer(sec,label){T.end=Date.now()+sec*1000;T.label=label;$("#timer").classList.add("on");$("#tLbl").textContent=label;clearInterval(T.iv);T.iv=setInterval(tick,250);tick()}
-function tick(){const r=(T.end-Date.now())/1000;$("#tVal").textContent=mmss(Math.ceil(r));if(r<=0){clearInterval(T.iv);$("#tLbl").textContent="Pause vorbei. Nächster Satz.";try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep();setTimeout(()=>{if(Date.now()>=T.end)$("#timer").classList.remove("on")},5000)}}
+let actx=null;function beep(){try{if(!actx)return;if(actx.state!=="running")actx.resume().catch(()=>{});[0,0.25].forEach(o=>{const os=actx.createOscillator(),g=actx.createGain();os.frequency.value=880;os.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(0.25,actx.currentTime+o);g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+o+0.2);os.start(actx.currentTime+o);os.stop(actx.currentTime+o+0.22)})}catch(e){}}
+const T={end:0,iv:null,label:"",rang:false};
+/* Timer übersteht Sperrbildschirm und Neustart der App: Endzeit liegt im localStorage */
+function saveTimer(){if(T.end)lsSet("hp3_timer",{end:T.end,label:T.label});else{try{localStorage.removeItem("hp3_timer")}catch(e){}}}
+function runTimer(){clearInterval(T.iv);T.iv=setInterval(tick,250);tick()}
+function startTimer(sec,label){T.end=Date.now()+sec*1000;T.label=label;T.rang=false;saveTimer();$("#timer").classList.add("on");$("#timer").classList.remove("end");$("#tLbl").textContent=label;runTimer()}
+function stopTimer(){clearInterval(T.iv);T.end=0;saveTimer();$("#timer").classList.remove("on","end")}
+function tick(){if(!T.end)return;const r=(T.end-Date.now())/1000;$("#tVal").textContent=mmss(Math.ceil(r));$("#timer").classList.toggle("end",r<=0);$("#tLbl").textContent=r<=0?"Pause vorbei. Nächster Satz.":T.label;
+  if(r<=0){clearInterval(T.iv);if(!T.rang){T.rang=true;if(r>-30){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep()}}const e0=T.end;setTimeout(()=>{if(T.end===e0)stopTimer()},5000)}}
+(function(){const t=lsGet("hp3_timer");if(!t||!(t.end>Date.now()-60000)){T.end=0;saveTimer();return}T.end=t.end;T.label=t.label||"Satzpause";T.rang=t.end<=Date.now();$("#timer").classList.add("on");runTimer()})();
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState!=="visible")return;if(actx&&actx.state!=="running")actx.resume().catch(()=>{});if(T.end)runTimer()});
 
 
 function rirAsk(e,ex){if(!e.sets.length||e.sets.some(x=>!x.done))return "";
@@ -1171,9 +1183,9 @@ function renderFocus(){
      <button class="btn fx-done" data-act="fdone">✓ Satz fertig</button>`}
   h+=`<div class="fx-sets">${e.sets.map((x,k)=>`<button class="${x.done?"d":k===i?"c":""}" data-act="fset" data-i="${k}">${k+1}: ${x.done?`${fmt(num(x.kg)??0)}×${x.reps}`:"offen"}</button>`).join("")}</div>
    <div class="fx-nav"><button class="btn sec" data-act="fprev" ${ui.fx===0?"disabled":""}>← Zurück</button><button class="btn sec" data-act="fnext" ${ui.fx===n-1?"disabled":""}>Weiter →</button></div>
-   <details class="cue" style="margin-top:12px"><summary>Ausführung anzeigen</summary>${techHtml(e.name,ex)}</details>
+   <details class="cue" data-k="f-${ex.id}" style="margin-top:12px"><summary>Ausführung anzeigen</summary>${techHtml(e.name,ex)}</details>
    ${ex.alts.length?`<button class="ghost" style="margin-top:8px" data-act="swap" data-slot="${ex.id}">Übung tauschen (Gerät besetzt?)</button>`:""}`;
-  el.innerHTML=h;el.classList.add("on");
+  setHtml(el,h);el.classList.add("on");
 }
 function openFocus(){const P=PROGRAM[ui.day],d=getDraft(ui.day);const k=P.ex.findIndex(x=>d.ex[x.id].sets.some(z=>!z.done));ui.fx=k<0?P.ex.length-1:k;ui.fset=null;ui.focus=true;lockScreen(true);renderFocus();$("#focus").scrollTop=0}
 function closeFocus(){ui.focus=false;ui.fset=null;lockScreen(false);renderFocus();renderHeute()}
@@ -1202,8 +1214,8 @@ async function putSession(s){
 }
 let uploading=false;
 async function uploadPending(){if(uploading||!col||!navigator.onLine)return;uploading=true;try{for(const p of S.sessions.filter(x=>x._pending)){await putSession(p)}}finally{uploading=false}}
-window.addEventListener("online",()=>{renderHeader();renderHeute();uploadPending()});
-window.addEventListener("offline",()=>{renderHeader();renderHeute()});
+window.addEventListener("online",()=>{renderHeader();renderOffNote();uploadPending()});
+window.addEventListener("offline",()=>{renderHeader();renderOffNote()});
 async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();if(col&&navigator.onLine!==false){try{const o=JSON.parse(JSON.stringify(S.settings));await col.doc("settings").set(o);S._setPending=false;saveLocal()}catch(e){}}}
 function tombs(){return S.settings.deleted||(S.settings.deleted={})}
 function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();ui.delId=null;putSettings();if(col)col.doc(id).delete().catch(()=>{});renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
@@ -1239,7 +1251,7 @@ document.addEventListener("click",e=>{
   const tb=e.target.closest("[data-tab]");
   if(tb){ui.tab=tb.dataset.tab;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b===tb));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+ui.tab));if(ui.tab==="fortschritt")renderFortschritt();window.scrollTo({top:0});return}
   const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act;
-  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}else if(actx.state!=="running")actx.resume().catch(()=>{});
   if(act==="fopen"){openFocus();return}
   if(act==="rir"){const d=getDraft(ui.day);d.ex[a.dataset.slot].rir=+a.dataset.v;saveDrafts();if(ui.focus)renderFocus();a.parentElement.querySelectorAll(".rpill").forEach(b=>b.classList.toggle("on",b===a));return}
   if(act==="deloadon"){S.settings.deloadUntil=Date.now()+7*DAY_MS;putSettings();for(const k in drafts)if(drafts[k]&&!Object.values(drafts[k].ex).some(e=>e.sets.some(x=>x.done)))delete drafts[k];saveDrafts();renderHeute();toast("Entlastungswoche aktiv für 7 Tage.");return}
@@ -1273,9 +1285,9 @@ document.addEventListener("click",e=>{
   if(act==="wsave"){const v=num($("#n-today").value),bf=num($("#n-bf").value);const k=ymd(new Date());if(bf!=null){if(bf<3||bf>60){toast("Körperfett bitte in % (3–60).");return}S.settings.bf=Object.assign({},S.settings.bf||{},{[k]:bf})}if(v==null&&bf!=null){putSettings();renderFortschritt();toast("Körperfett gespeichert.");return}if(!v||v<30||v>250){toast("Bitte ein Gewicht in kg eintragen.");return}S.settings.weights=Object.assign({},S.settings.weights||{},{[k]:v});putSettings();renderFortschritt();renderFortschritt();toast("Gewicht gespeichert.");return}
   if(act==="reset"){if(ui.resetArm!==ui.day){ui.resetArm=ui.day;a.textContent="Wirklich alles löschen? Nochmal tippen";a.classList.add("danger");setTimeout(()=>{ui.resetArm=null;if(a.isConnected){a.textContent="Eingaben zurücksetzen";a.classList.remove("danger")}},4000);return}
     ui.resetArm=null;delete drafts[ui.day];saveDrafts();applyWhoop();renderHeute();toast("Eingaben zurückgesetzt.");return}
-  if(act==="t-plus"){T.end+=15000;tick();return}
-  if(act==="t-minus"){T.end-=15000;tick();return}
-  if(act==="t-stop"){clearInterval(T.iv);$("#timer").classList.remove("on");return}
+  if(act==="t-plus"){T.end=Math.max(T.end,Date.now())+15000;T.rang=false;saveTimer();runTimer();return}
+  if(act==="t-minus"){T.end-=15000;saveTimer();runTimer();return}
+  if(act==="t-stop"){stopTimer();return}
   if(act==="del"){ui.delId=a.dataset.id;renderVerlauf();return}
   if(act==="delno"){ui.delId=null;renderVerlauf();return}
   if(act==="delyes"){deleteSession(a.dataset.id);return}
