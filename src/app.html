@@ -338,6 +338,8 @@ const $=s=>document.querySelector(s);
 function setHtml(el,html){const open=[...el.querySelectorAll("details[data-k][open]")].map(x=>x.dataset.k);el.innerHTML=html;open.forEach(k=>{const x=el.querySelector(`details[data-k="${k}"]`);if(x)x.open=true})}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num=v=>{if(v===""||v==null)return null;const n=parseFloat(String(v).replace(",","."));return isFinite(n)?n:null};
+/* Gewicht im Eingabefeld mit Komma zeigen. Gespeichert wird weiter als Zahl, num() liest Punkt und Komma. */
+const kgTxt=v=>String(v??"").replace(".",",");
 const fmt=n=>n==null?"–":(Math.round(n*10)/10).toLocaleString("de-DE");
 const fmtDate=iso=>new Date(iso).toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"2-digit"});
 const shortDate=iso=>new Date(iso).toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit"});
@@ -473,7 +475,7 @@ function renderHeute(){
      <p class="sugg">${sg.html}</p>
      <div class="sets">${e.sets.map((s,i)=>`<div class="set ${s.done?"done":""}" data-slot="${ex.id}" data-i="${i}">
         <span class="n num">${i+1}</span>
-        <div class="u"><input type="text" inputmode="decimal" aria-label="Satz ${i+1} Gewicht" placeholder="kg" value="${esc(s.kg)}" data-slot="${ex.id}" data-i="${i}" data-k="kg"><span>kg</span></div>
+        <div class="u"><input type="text" inputmode="decimal" aria-label="Satz ${i+1} Gewicht" placeholder="kg" value="${esc(kgTxt(s.kg))}" data-slot="${ex.id}" data-i="${i}" data-k="kg"><span>kg</span></div>
         <div class="u"><input type="text" inputmode="numeric" aria-label="Satz ${i+1} Wiederholungen" placeholder="${ex.lo}–${ex.hi}" value="${esc(s.reps)}" data-slot="${ex.id}" data-i="${i}" data-k="reps"><span>Wdh</span></div>
         <button class="chk" data-act="chk" data-slot="${ex.id}" data-i="${i}" aria-label="Satz ${i+1} abhaken" aria-pressed="${s.done}">✓</button>
       </div>`).join("")}</div>
@@ -557,7 +559,7 @@ function renderPlan(){
 function sessVolume(s){let v=0,n=0;(s.exercises||[]).forEach(e=>e.sets.forEach(x=>{v+=(x.kg||0)*(x.reps||0);n++}));return {v,n}}
 function editHtml(b){
   return `<div class="card" style="margin:8px 0;border-color:var(--accent)"><div class="row between"><h3>${fmtDate(b.date)} · ${esc(PROGRAM[b.day]?.title||b.day)} bearbeiten</h3></div>
-   ${b.exercises.map((e,x)=>`<p class="lbl">${esc(e.name)}</p>${e.sets.map((st,i)=>`<div class="set" style="grid-template-columns:28px 1fr 1fr 40px"><span class="muted num">${i+1}</span><input inputmode="decimal" aria-label="kg" data-ek="kg" data-x="${x}" data-i="${i}" value="${esc(String(st.kg))}"><input inputmode="numeric" aria-label="Wdh." data-ek="reps" data-x="${x}" data-i="${i}" value="${esc(String(st.reps))}"><button class="btn sec sm" aria-label="Satz löschen" data-act="editdelset" data-x="${x}" data-i="${i}">×</button></div>`).join("")}`).join("")}
+   ${b.exercises.map((e,x)=>`<p class="lbl">${esc(e.name)}</p>${e.sets.map((st,i)=>`<div class="set" style="grid-template-columns:28px 1fr 1fr 40px"><span class="muted num">${i+1}</span><input inputmode="decimal" aria-label="kg" data-ek="kg" data-x="${x}" data-i="${i}" value="${esc(kgTxt(st.kg))}"><input inputmode="numeric" aria-label="Wdh." data-ek="reps" data-x="${x}" data-i="${i}" value="${esc(String(st.reps))}"><button class="btn sec sm" aria-label="Satz löschen" data-act="editdelset" data-x="${x}" data-i="${i}">×</button></div>`).join("")}`).join("")}
    <div class="row" style="justify-content:flex-end;margin-top:10px"><button class="btn sec sm" data-act="editcancel">Abbrechen</button><button class="btn sm" data-act="editsave">Änderungen speichern</button></div></div>`;
 }
 function renderVerlauf(){
@@ -1223,7 +1225,7 @@ document.addEventListener("click",e=>{
     if(!st.done&&!(num(st.reps)>0)){row.classList.add("flash");row.querySelector('[data-k=reps]').focus();setTimeout(()=>row.classList.remove("flash"),1200);toast("Trag erst die Wiederholungen ein.");return}
     {const exd=PROGRAM[ui.day].ex.find(x=>x.id===slot);if(!st.done&&num(st.kg)==null&&!(exd&&exd.bw)){row.querySelector('[data-k=kg]').focus();toast("Trag das Gewicht ein (bei Körpergewicht 0).");return}}
     st.done=!st.done;row.classList.toggle("done",st.done);a.setAttribute("aria-pressed",st.done);saveDrafts();
-    if(st.done){const ex=PROGRAM[ui.day].ex.find(x=>x.id===slot);const next=d.ex[slot].sets[i+1];if(next&&!next.kg){next.kg=st.kg;const inp=document.querySelector(`input[data-slot="${slot}"][data-i="${i+1}"][data-k="kg"]`);if(inp)inp.value=st.kg}
+    if(st.done){const ex=PROGRAM[ui.day].ex.find(x=>x.id===slot);const next=d.ex[slot].sets[i+1];if(next&&!next.kg){next.kg=st.kg;const inp=document.querySelector(`input[data-slot="${slot}"][data-i="${i+1}"][data-k="kg"]`);if(inp)inp.value=kgTxt(st.kg)}
       const last=i===d.ex[slot].sets.length-1;startTimer(ex.rest,last?"Pause bis zur nächsten Übung":`Satzpause ${d.ex[slot].name}`);if(d.ex[slot].sets.every(x=>x.done)){const y=window.scrollY;renderHeute();window.scrollTo(0,y)}}
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}

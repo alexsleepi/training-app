@@ -44,6 +44,11 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   const del=E('ORDER.reduce((a,k)=>a+PROGRAM[k].ex.reduce((b,x)=>b+plannedSets(x,{deload:true}),0),0)');
   assert.ok(Math.abs(full-65)<=2,`voller Plan ${full}`);assert.ok(Math.abs(del-40)<=3,`Entlastung ${del}`);
   assert.match(E('document.querySelector("#v-fortschritt").textContent'),/ca\. 65 Sätze pro Woche/)});
+ ok('Gewichte im Eingabefeld mit Komma, gespeichert als Zahl',()=>{
+  last("A1","Kniebeuge",S3(80,10,9,8));E('drafts={};ui.day="A";renderHeute()');
+  const inp=w.document.querySelector('input[data-slot="A1"][data-i="0"][data-k="kg"]');assert.equal(inp.value,"82,5");
+  E('const d=getDraft("A");d.ex.A1.sets.forEach(x=>{x.kg="82,5";x.reps="8";x.done=true});saveSession()');
+  const saved=JSON.parse(E('JSON.stringify(S.sessions[S.sessions.length-1].exercises.find(e=>e.slot==="A1").sets.map(x=>x.kg))'));assert.deepEqual(saved,[82.5,82.5,82.5])});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
