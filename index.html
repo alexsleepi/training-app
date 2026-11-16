@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794813700">
+<meta name="app-version" content="1794825218">
 <style>
 /* Schriften liegen lokal (src/fonts, SIL Open Font License), damit die App offline gleich aussieht. */
 @font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
@@ -287,7 +287,7 @@ const PROGRAM = {
       {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
       {id:"A3",name:"Latzug breit",gear:"Kabelturm, oberer Zug",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5},cue:"Brust raus, Ellbogen Richtung Hüfte ziehen, oben voll in die Dehnung gehen.",alts:["Klimmzüge"]},
       {id:"A4",name:"Beinstrecker",gear:"Beinstrecker-Maschine",sets:2,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{quads:1},cue:"Oben eine Sekunde halten, drei Sekunden ablassen.",alts:["Ausfallschritte Kurzhantel"]},
-      {id:"A5",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:3,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
+      {id:"A5",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:4,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
       {id:"A6",name:"Trizepsdrücken Seil",gear:"Kabelturm, oberer Zug",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen bleiben am Körper, unten das Seil auseinanderziehen.",alts:["Überkopf-Trizeps Kabel"]},
       {id:"A7",name:"Wadenheben an der Beinpresse",gear:"Technogym Leg Press, Fußballen an der Plattenkante",sets:3,lo:10,hi:20,rest:60,inc:5,iso:true,m:{calves:1},cue:"Unten volle Dehnung 1 s halten, ganz hoch auf die Zehen.",alts:["Wadenheben Smith-Maschine"]}
      ]},
@@ -299,7 +299,7 @@ const PROGRAM = {
       {id:"B3",name:"Rudern sitzend eng",gear:"Kabelturm mit Ruderbank",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5,rear:.5},cue:"Aufrecht sitzen, Griff zum Bauchnabel, Schulterblätter zusammen, vorne lang machen.",alts:["Kurzhantel-Rudern einarmig"]},
       {id:"B4",name:"Beinpresse",gear:"Technogym Leg Press",sets:3,lo:10,hi:15,rest:120,inc:5,m:{quads:1,glutes:.5},cue:"Füße mittig, tief gehen ohne dass das Becken abrollt, Knie oben nicht durchdrücken.",alts:["Kniebeuge Smith-Maschine"]},
       {id:"B5",name:"Beinbeuger-Curl am Kabel",gear:"Kabelturm, unterer Zug, Fußschlaufe",sets:3,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{hams:1},cue:"Stehend, ein Bein, Ferse Richtung Gesäß ziehen, Oberschenkel bleibt senkrecht.",alts:["Nordic Curls"]},
-      {id:"B6",name:"Seitheben Kurzhantel",gear:"Kurzhanteln",sets:3,lo:12,hi:20,rest:75,inc:2,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, Arme seitlich bis Schulterhöhe.",alts:["Seitheben am Kabel"]},
+      {id:"B6",name:"Seitheben Kurzhantel",gear:"Kurzhanteln",sets:4,lo:12,hi:20,rest:75,inc:2,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, Arme seitlich bis Schulterhöhe.",alts:["Seitheben am Kabel"]},
       {id:"B7",name:"Bizeps-Curls Kurzhantel",gear:"Kurzhantelablage",sets:3,lo:10,hi:15,rest:75,inc:2,iso:true,m:{bi:1},cue:"Ellbogen ruhig, unten ganz strecken, ohne Schwung.",alts:["Bizeps-Curls Kabel"]}
      ]},
   C:{title:"Tag C", focus:"Split Squats · Fliegende · Klimmzüge",
@@ -309,13 +309,12 @@ const PROGRAM = {
       {id:"C2",name:"Kabel-Fliegende",gear:"Kabelturm, Züge auf Schulterhöhe",sets:3,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{chest:1},cue:"Leicht gebeugte Ellbogen, weite Dehnung, vorne Brust zusammendrücken.",alts:["Kurzhantel-Fliegende"]},
       {id:"C3",name:"Klimmzüge Untergriff",gear:"Rack · 0 kg = Körpergewicht",sets:3,lo:6,hi:12,rest:120,inc:2.5,bw:true,m:{back:1,bi:.5},cue:"Unten ganz aushängen, Brust zur Stange. Zu schwer? Auf Latzug eng tauschen.",alts:["Latzug eng Untergriff"]},
       {id:"C4",name:"Beinbeuger-Curl am Kabel",gear:"Kabelturm, unterer Zug, Fußschlaufe",sets:3,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{hams:1},cue:"Stehend, ein Bein, Ferse Richtung Gesäß ziehen, Oberschenkel bleibt senkrecht.",alts:["Nordic Curls"]},
-      {id:"C5",name:"Face Pulls Seil",gear:"Kabelturm, Stirnhöhe",sets:2,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{rear:1},cue:"Seil zur Stirn, Hände auseinander, Daumen zeigen nach hinten.",alts:["Reverse Flys Kurzhantel"]},
+      {id:"C5",name:"Face Pulls Seil",gear:"Kabelturm, Stirnhöhe",sets:3,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{rear:1},cue:"Seil zur Stirn, Hände auseinander, Daumen zeigen nach hinten.",alts:["Reverse Flys Kurzhantel"]},
       {id:"C6",name:"Überkopf-Trizeps Kabel",gear:"Kabelturm, Seil",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen nach vorn oben, tief in die Dehnung, Ellbogen ruhig halten.",alts:["Trizepsdrücken Seil"]},
       {id:"C7",name:"Wadenheben an der Beinpresse",gear:"Technogym Leg Press, Fußballen an der Plattenkante",sets:3,lo:10,hi:20,rest:60,inc:5,iso:true,m:{calves:1},cue:"Unten volle Dehnung 1 s halten, ganz hoch auf die Zehen.",alts:["Wadenheben Smith-Maschine"]},
       {id:"C8",name:"Kabel-Crunch",gear:"Kabelturm, Seil oben",sets:2,lo:10,hi:15,rest:60,inc:5,iso:true,m:{abs:1},cue:"Kniend, Rippen Richtung Becken einrollen, Hüfte bleibt stehen.",alts:["Abduktoren"]}
      ]}
 };
-const PLAN_V=2;
 const MUSCLES=[["chest","Brust"],["back","Rücken (Lat)"],["quads","Quadrizeps"],["hams","Beinbeuger"],["glutes","Gesäß"],["side","Seitliche Schulter"],["rear","Hintere Schulter"],["tri","Trizeps"],["bi","Bizeps"],["calves","Waden"],["abs","Bauch"]];
 function weeklyVolume(){const v={};ORDER_ALL.forEach(k=>PROGRAM[k].ex.forEach(ex=>Object.entries(ex.m||{}).forEach(([mu,f])=>{v[mu]=(v[mu]||0)+ex.sets*f})));return v}
 const ORDER_ALL=["A","B","C"];
@@ -326,7 +325,7 @@ const DAY_MS=864e5;
 let S={sessions:[],settings:{swaps:{},startDate:null}};
 let drafts={};
 let ui={tab:"heute",day:null,exSel:null,delId:null};
-let col=null, syncState="loading";
+let syncState="loading";
 
 function lsGet(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -399,8 +398,12 @@ function suggest(ex,name,d){
   const sets=lp.ex.sets;const top=Math.max(...sets.map(s=>s.kg||0));
   const work=sets.filter(s=>(s.kg||0)===top);
   const last=`Letztes Mal (${shortDate(lp.sess.date)}): ${fmt(top)} kg × ${work.map(s=>s.reps).join(" · ")}`;
-  const allTop=work.length>=Math.min(ex.sets,lp.ex.planned||ex.sets)&&work.every(s=>s.reps>=ex.hi);
   const below=work.some(s=>s.reps<ex.lo);
+  /* Grundübungen: steigern, wenn der Schnitt höchstens 1 Wdh. unter dem oberen Ende liegt (z. B. 10 · 9 · 8 bei 6–10).
+     Isolationsübungen: erst, wenn alle Sätze das obere Ende schaffen (kleine Gewichte, große Sprünge). */
+  const avgR=work.reduce((a,s)=>a+(s.reps||0),0)/Math.max(1,work.length);
+  const allTop=work.length>=Math.min(ex.sets,lp.ex.planned||ex.sets)&&(ex.iso?work.every(s=>s.reps>=ex.hi):!below&&avgR>=ex.hi-1);
+  const topTxt=ex.iso?"Alle Sätze am oberen Ende":`Im Schnitt ${fmt(avgR)} Wdh., nah am oberen Ende`;
   const z=dayZone(d);const rir=lp.ex.rir;const rirTxt=rir!=null?` · Reserve ${rir>=4?"4+":rir}`:"";
   const last2=`${last}${rirTxt}`;
   if(d.deload){const dk=roundTo(top*0.9,ex.inc);return {kg:String(dk),html:`${last2}<br>Entlastung: <b>${fmt(dk)} kg</b> (ca. −10 %), halbe Sätze, 3–4 Wdh. Reserve.`}}
@@ -408,7 +411,7 @@ function suggest(ex,name,d){
   if(two.length===2&&two.every(p=>{const t=Math.max(...p.ex.sets.map(x=>x.kg||0));return t>=top&&p.ex.sets.filter(x=>(x.kg||0)===t).some(x=>x.reps<ex.lo)})){const dk=roundTo(top*0.92,ex.inc);
     return {kg:String(dk),html:`${last2}<br>Zweimal in Folge unter ${ex.lo} Wdh. → heute <b>${fmt(dk)} kg</b> (ca. −8 %) und sauber wieder aufbauen.`}}
   if(!allTop&&!below&&rir!=null&&rir>=3&&z!=="bad"){const nk=Math.round((top+ex.inc)*10)/10;return {kg:String(nk),html:`${last2}<br>Letzter Satz hatte noch ${rir>=4?"4+":rir} Wdh. Reserve, das war zu leicht → heute <b>${fmt(nk)} kg</b>.`}}
-  if(allTop&&z!=="bad"){const nk=Math.round((top+ex.inc)*10)/10;return {kg:String(nk),html:`${last2}<br>Alle Sätze am oberen Ende → heute <b>${fmt(nk)} kg</b> (+${fmt(ex.inc)}).`}}
+  if(allTop&&z!=="bad"){const nk=Math.round((top+ex.inc)*10)/10;return {kg:String(nk),html:`${last2}<br>${topTxt} → heute <b>${fmt(nk)} kg</b> (+${fmt(ex.inc)}).`}}
   if(allTop&&z==="bad")return {kg:String(top),html:`${last2}<br>Steigerung wäre fällig, bei roter Recovery aber <b>${fmt(top)} kg halten</b>.`};
   if(below)return {kg:String(top),html:`${last2}<br>Unter ${ex.lo} Wdh. → <b>${fmt(top)} kg halten</b> und Wiederholungen aufbauen.`};
   return {kg:String(top),html:`${last2}<br>Ziel heute: <b>${fmt(top)} kg</b>, pro Satz +1 Wdh.`};
@@ -512,7 +515,7 @@ function renderPlan(){
   let h=`<div class="card"><h2>Deine Woche</h2>
    <p>Training <b>Di · Fr · So</b>, dazwischen immer mindestens ein Ruhetag. Die App wählt automatisch die nächste Einheit A → B → C. Fällt ein Termin aus, machst du beim nächsten einfach dort weiter.</p>
    <div>${WEEK.map(x=>`<div class="wk ${TRAIN_WD.includes(x.wd)?"tr":""} ${x.wd===tw?"now":""}"><b>${WD[x.wd]}</b><span><b style="font-family:var(--body);font-size:.93rem">${x.t}</b><br><span class="small muted">${x.d}</span></span></div>`).join("")}</div>
-   <p class="small muted">Dauer pro Einheit: ca. 65–80 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
+   <p class="small muted">Dauer pro Einheit: ca. 70–85 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
    <table class="tbl num"><tbody>${(()=>{const v=weeklyVolume();return MUSCLES.map(([k,l])=>`<tr><td>${l}</td><td style="text-align:right">${fmt(v[k]||0)}</td><td style="width:45%"><div style="height:6px;border-radius:3px;background:${(v[k]||0)>=8?"var(--good)":(v[k]||0)>=5?"var(--mid)":"var(--muted)"};width:${Math.min(100,(v[k]||0)/14*100)}%"></div></td></tr>`).join("")})()}</tbody></table>
    <p class="small muted">Richtwert für Muskelaufbau: ca. 8–16 Sätze pro großer Muskelgruppe. Waden und Bauch brauchen weniger.</p></div>`;
   ORDER.forEach(k=>{const P=PROGRAM[k];
@@ -520,7 +523,7 @@ function renderPlan(){
     P.ex.map(ex=>`<div class="plan-ex"><span class="c">${ex.id}</span><span>${esc(exName(ex))}<br><span class="small muted">${esc(ex.gear)}</span></span><span class="num small">${ex.sets}×${ex.lo}–${ex.hi}</span></div>`).join("")+
     (P.cardio?`<div class="plan-ex"><span class="c">+</span><span>Cardio Zone 2<br><span class="small muted">${P.cardio.dev}</span></span><span class="num small">${P.cardio.min} min</span></div>`:"")+`</div></div>`});
   h+=`<div class="card"><h2>Progression</h2><ul class="rules">
-    <li><b>Doppelte Progression:</b> Bleib beim Gewicht, bis du in allen Sätzen das obere Ende des Wiederholungsbereichs schaffst. Dann um einen Schritt steigern. Der Schritt steht bei jeder Übung: meist +2,5 kg, Kurzhanteln +2 kg, Beinpresse, Latzug und Rudern +5 kg. Die App rechnet das für dich aus.</li>
+    <li><b>Doppelte Progression:</b> Bleib beim Gewicht und bau Wiederholungen auf. <b>Grundübungen</b> steigerst du, sobald du im Schnitt höchstens 1 Wdh. unter dem oberen Ende liegst und kein Satz unter dem Bereich ist (z. B. 10 · 9 · 8 bei 6–10). <b>Isolationsübungen</b> erst, wenn alle Sätze das obere Ende schaffen, weil dort jeder Schritt ein großer Sprung ist. Der Schritt steht bei jeder Übung: meist +2,5 kg, Kurzhanteln +2 kg, Beinpresse, Latzug und Rudern +5 kg. Die App rechnet das für dich aus.</li>
     <li><b>Früher steigern:</b> Hattest du im letzten Satz noch 3 oder mehr Wdh. Reserve, geht das Gewicht schon beim nächsten Mal hoch.</li>
     <li><b>Zurückgehen:</b> Zweimal in Folge unter dem Wiederholungsbereich, dann ca. 8 % leichter und sauber wieder aufbauen.</li>
     <li><b>Intensität:</b> Arbeitssätze enden 1–2 Wdh. vor dem Versagen (RIR 1–2). Technik bleibt sauber.</li>
@@ -604,49 +607,10 @@ function barChart(items){
 const e1rm=(kg,r)=>kg*(1+r/30);
 const isBwName=n=>/Klimmz/.test(n||"");
 /* ---------- Whoop über n8n ---------- */
-const WS="n8n",W_TABLE="I8sfrL6DhPCNqqjx",W_PROJECT="3FZ2SBEIccRygh0T",W_FLOW="6a6whSJh7yrNGHCz";
-let mcp=null;
 let whoop=Object.assign({state:"idle",msg:"",at:null,today:null,hist:null,weight:null},lsGet("hp3_whoop")||{});
 if(whoop.state==="loading")whoop.state="idle";
 function ymd(d){const x=new Date(d);return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")}
-function wErrText(e){const c=e&&e.code;
-  if(c==="server_not_connected"||c==="selection_required")return "n8n ist für diese App nicht verbunden. In claude.ai unter Einstellungen → Connectors prüfen.";
-  if(c==="needs_reauth")return "n8n neu verbinden: claude.ai → Einstellungen → Connectors.";
-  if(c==="approval_required"||c==="not_in_manifest"||c==="consent_required")return "approve";
-  if(c==="server_unavailable"||c==="upstream_error")return "n8n antwortet gerade nicht. Später erneut laden.";
-  if(c==="tool_error")return "n8n meldet einen Fehler: "+String(e.message||"").slice(0,160);
-  return "Whoop-Daten nicht erreichbar.";}
 function saveWhoop(){lsSet("hp3_whoop",{at:whoop.at,today:whoop.today,hist:whoop.hist,weight:whoop.weight,state:whoop.state==="ok"?"ok":"idle"})}
-async function readTable(fresh){
-  const r=await mcp.callTool(WS,"get_data_table_rows",{dataTableId:W_TABLE,projectId:W_PROJECT,sortBy:"datum:desc",limit:31},{cache:fresh?false:{staleTime:10*60e3,gcTime:864e5}});
-  let p=r&&r.payload!==undefined?r.payload:r;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p={}}}
-  return (p&&Array.isArray(p.rows)?p.rows:Array.isArray(p)?p:[]).filter(x=>x&&typeof x.datum==="string");
-}
-async function loadWhoop(fresh,pull){
-  if(!mcp){whoop.state="nomcp";renderWhoop();return}
-  if(navigator.onLine===false){whoop.state="offline";renderWhoop();return}
-  whoop.state="loading";whoop.msg=pull?"Frage Whoop über n8n ab…":"";renderWhoop();
-  let rows;
-  try{
-    if(pull){
-      try{await mcp.callTool(WS,"execute_workflow",{workflowId:W_FLOW,executionMode:"production"},{cache:false})}
-      catch(e){const m=wErrText(e);if(m==="approve"){whoop.state="approve";renderWhoop();return}}
-      await new Promise(r=>setTimeout(r,9000));
-    }
-    rows=await readTable(fresh||pull);
-  }catch(e){const m=wErrText(e);whoop.state=m==="approve"?"approve":"error";whoop.msg=m;renderWhoop();return}
-  if(!rows.length){whoop.state="nodata";whoop.msg="Noch keine Whoop-Daten in n8n. Sobald der Workflow „Whoop → Trainings-App“ mit deinem Whoop-Zugang läuft, erscheinen sie hier.";renderWhoop();return}
-  rows.sort((a,b)=>a.datum<b.datum?-1:1);
-  const t=ymd(new Date());const R=rows.find(x=>x.datum===t);
-  const n=v=>v==null||v===""?null:Number(v);
-  whoop.today=R?{d:t,rec:n(R.recovery),hrv:n(R.hrv)!=null?Math.round(n(R.hrv)):null,rhr:n(R.ruhepuls),sleep:n(R.schlaf),strain:n(R.strain)}:null;
-  whoop.hist={recs:rows.filter(x=>n(x.recovery)!=null).map(x=>({d:x.datum,rec:n(x.recovery)})),sleeps:rows.filter(x=>n(x.schlaf)!=null).map(x=>({d:x.datum,perf:n(x.schlaf)})),hrvs:rows.filter(x=>n(x.hrv)!=null).map(x=>({d:x.datum,v:n(x.hrv)})),lastRec:rows[rows.length-1].datum};
-  const wr=[...rows].reverse().find(x=>n(x.gewicht)!=null);whoop.weight=wr?n(wr.gewicht):null;
-  whoop.at=Date.now();whoop.state="ok";whoop.msg="";saveWhoop();
-  applyWhoop();
-  const typing=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#v-heute");
-  renderAll(!!typing);if(typing)renderWhoop();
-}
 function applyWhoop(){
   const T=whoop.today;if(!T||T.d!==ymd(new Date()))return;
   const d=getDraft(ui.day);let ch=false;
@@ -657,8 +621,6 @@ function applyWhoop(){
 function whoopStatusHtml(){
   const T=whoop.today,t=ymd(new Date());
   if(whoop.state==="loading")return `<span class="muted">${esc(whoop.msg||"Lade Whoop-Daten…")}</span>`;
-  if(whoop.state==="approve")return `<span>Die App braucht deine Erlaubnis, die Whoop-Daten aus n8n zu lesen.</span> <button class="btn sm" data-act="wload">Whoop-Zugriff erlauben</button>`;
-  if(whoop.state==="nomcp")return `<span class="muted">Whoop-Abruf ist in dieser Ansicht nicht verfügbar. Öffne die App in Claude.</span>`;
   if(whoop.state==="offline")return `<span class="muted">Offline. ${whoop.at?"Letzter Whoop-Stand: "+new Date(whoop.at).toLocaleString("de-DE",{weekday:"short",hour:"2-digit",minute:"2-digit"}):"Keine Whoop-Daten geladen."} Lade die App vor dem Studio einmal mit Netz.</span>`;
   if(whoop.state==="error"||whoop.state==="nodata")return `<span>${esc(whoop.msg)}</span> <button class="ghost sm2" data-act="wload">Erneut versuchen</button>`;
   if(whoop.state==="ok"){
@@ -669,19 +631,7 @@ function whoopStatusHtml(){
 }
 function renderWhoop(){const el=document.getElementById("wstat");if(el)el.innerHTML=whoopStatusHtml()}
 /* ---------- Withings über n8n ---------- */
-const WT_TABLE="9b1qBqdVuOTitwrZ";
 let withings=lsGet("hp3_withings")||{rows:[],at:null};
-async function loadWithings(fresh){
-  if(!mcp||navigator.onLine===false)return;
-  try{
-    const r=await mcp.callTool(WS,"get_data_table_rows",{dataTableId:WT_TABLE,projectId:W_PROJECT,sortBy:"datum:desc",limit:100},{cache:fresh?false:{staleTime:10*60e3,gcTime:864e5}});
-    let p=r&&r.payload!==undefined?r.payload:r;if(typeof p==="string"){try{p=JSON.parse(p)}catch(e){p={}}}
-    const n=v=>v==null||v===""?null:Number(v);
-    const rows=(p&&Array.isArray(p.rows)?p.rows:[]).filter(x=>x&&typeof x.datum==="string").map(x=>({d:x.datum,w:n(x.gewicht),bf:n(x.fett_prozent),fm:n(x.fettmasse),mm:n(x.muskelmasse)})).sort((a,b)=>a.d<b.d?-1:1);
-    withings={rows,at:Date.now()};lsSet("hp3_withings",withings);
-    renderErnaehrung();renderFortschritt();
-  }catch(e){}
-}
 function withingsCard(){
   const rows=withings.rows||[];if(!rows.length)return "";
   const bf=rows.filter(r=>r.bf!=null).map(r=>({x:new Date(r.d+"T12:00").getTime(),y:r.bf}));
@@ -1124,7 +1074,7 @@ function renderFortschritt(){
 
   // Sätze pro Woche (letzte 8 Wochen)
   const weeks=[];for(let i=7;i>=0;i--){const st=mondayOf(new Date(now-i*7*DAY_MS)).getTime();const en=st+7*DAY_MS;let n=0;s.forEach(x=>{const t=new Date(x.date).getTime();if(t>=st&&t<en)n+=sessVolume(x).n});weeks.push({l:shortDate(new Date(st)),v:n})}
-  h+=`<div class="card"><h2>Harte Sätze pro Woche</h2><p class="small muted">Richtwert bei vollem Plan: ca. 60 Sätze pro Woche (Entlastung ca. 40). Deutlich weniger heißt: Einheiten ausgelassen oder oft rot.</p>${s.length?barChart(weeks):`<p class="empty">Noch keine Wochen erfasst.</p>`}</div>`;
+  h+=`<div class="card"><h2>Harte Sätze pro Woche</h2><p class="small muted">Richtwert bei vollem Plan: ca. 65 Sätze pro Woche (Entlastung ca. 40). Deutlich weniger heißt: Einheiten ausgelassen oder oft rot.</p>${s.length?barChart(weeks):`<p class="empty">Noch keine Wochen erfasst.</p>`}</div>`;
 
   const bw=weightSeries();
   const rc=s.filter(x=>x.recovery!=null).map(x=>({x:new Date(x.date).getTime(),y:x.recovery}));
@@ -1216,19 +1166,8 @@ function focusAct(act,a){
 
 /* ---------- Speichern ---------- */
 function cleanSession(s){const o=JSON.parse(JSON.stringify(s));delete o._pending;return o}
-async function putSession(s){
-  s._pending=true;saveLocal();
-  if(!col)return;
-  try{await col.doc(s.id).set(cleanSession(s));s._pending=false;saveLocal();renderHeader()}
-  catch(e){if(e&&e.code==="quota_exceeded")toast("Speicher voll. Lösche alte Einheiten.")}
-}
-let uploading=false;
-async function uploadPending(){if(uploading||!col||!navigator.onLine)return;uploading=true;try{for(const p of S.sessions.filter(x=>x._pending)){await putSession(p)}}finally{uploading=false}}
-window.addEventListener("online",()=>{renderHeader();renderOffNote();uploadPending()});
-window.addEventListener("offline",()=>{renderHeader();renderOffNote()});
-async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();if(col&&navigator.onLine!==false){try{const o=JSON.parse(JSON.stringify(S.settings));await col.doc("settings").set(o);S._setPending=false;saveLocal()}catch(e){}}}
 function tombs(){return S.settings.deleted||(S.settings.deleted={})}
-function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();delPend()[id]=1;ui.delId=null;putSettings();if(col)col.doc(id).delete().catch(()=>{});renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
+function deleteSession(id){const s=S.sessions.find(x=>x.id===id);if(!s)return;ui.lastDel=cleanSession(s);S.sessions=S.sessions.filter(x=>x.id!==id);tombs()[id]=Date.now();delPend()[id]=1;ui.delId=null;putSettings();renderAll(true);toastAct("Einheit gelöscht.","Rückgängig","undo")}
 function undoDelete(){const s=ui.lastDel;if(!s)return;delete tombs()[s.id];delete delPend()[s.id];S.sessions.push(s);ui.lastDel=null;putSettings();putSession(s);renderAll(true);toast("Wiederhergestellt.")}
 function importData(){const box=$("#importBox");let arr;try{arr=JSON.parse(box.value)}catch(e){toast("Das ist kein gültiger Export. Bitte den kompletten kopierten Text einfügen.");return}
   if(!Array.isArray(arr)){toast("Erwartet wird eine Liste von Einheiten.");return}
@@ -1289,8 +1228,7 @@ document.addEventListener("click",e=>{
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}
   if(act==="figmode"||act==="figplay"||act==="figslow"){figAct(act,a);return}
-  if(act==="wload"){loadWhoop(true);return}
-  if(act==="wpull"){loadWhoop(true,true);loadWithings(true);return}
+  if(act==="wload"||act==="wpull"){sync(true);return}
   if(act==="save"){saveSession();return}
   if(act==="pslot"){const T=proteinTarget();const k=ymd(new Date());const d=protDay(k);const i=+a.dataset.i;d.done[i]=!d.done[i];protSave(k,d);renderErnaehrung();return}
   if(act==="pextra"){const k=ymd(new Date());const d=protDay(k);d.extra=Math.max(0,(d.extra||0)+(+a.dataset.v));protSave(k,d);renderErnaehrung();return}
@@ -1328,38 +1266,8 @@ document.addEventListener("change",e=>{
   if(f==="c-done"){d.cardio.done=t.checked;saveDrafts();return}
 });
 
-/* ---------- Konto-Speicher ---------- */
-async function connect(){
-  const fallback=setTimeout(()=>{if(syncState==="loading"){syncState="local";renderHeader()}},10000);
-  try{
-    if(!window.claude||!window.claude.use)throw 0;
-    const db=await window.claude.use("db");const user=await window.claude.use("user");
-    const uid=user&&await user.id();
-    if(!db||!uid)throw 0;
-    col=db.collection("data/users/"+uid);
-    let first=true;
-    col.onSnapshot(async snap=>{
-      clearTimeout(fallback);
-      const remote=[];let settings=null;
-      snap.docs.forEach(d=>{if(!d.exists)return;if(d.id==="settings")settings=d.data();else if(d.id.startsWith("s_"))remote.push(Object.assign({},d.data(),{id:d.id}))});
-      if(snap.metadata.fromCache&&!remote.length&&!settings){renderHeader();return}
-      if(settings&&!(S._setPending&&(S.settings._ts||0)>(settings._ts||0))){const del=Object.assign({},settings.deleted||{},S.settings.deleted||{});S.settings=Object.assign({swaps:{},startDate:null},JSON.parse(JSON.stringify(settings)),{swaps:Object.assign({},settings.swaps||{}),deleted:del});S._setPending=false}
-      const dead=tombs();
-      const byId=new Map();remote.forEach(r=>{if(!dead[r.id])byId.set(r.id,r)});
-      S.sessions.forEach(x=>{if(dead[x.id])return;const r=byId.get(x.id);if(!r){if(x._pending||snap.metadata.fromCache)byId.set(x.id,x)}else if(x._pending)byId.set(x.id,x)});
-      S.sessions=[...byId.values()];
-      if(col&&!snap.metadata.fromCache)remote.forEach(r=>{if(dead[r.id])col.doc(r.id).delete().catch(()=>{})});
-      if(!snap.metadata.fromCache){syncState="cloud";
-        uploadPending();if(S._setPending)putSettings();
-        if(first){first=false;if(!settings&&(S.settings.startDate||Object.keys(S.settings.swaps).length||S.settings.nutri||S.settings.weights))putSettings()}}
-      saveLocal();
-      const typing=document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#v-heute");
-      renderAll(!!typing);
-    },err=>{clearTimeout(fallback);syncState="local";renderHeader()});
-  }catch(e){clearTimeout(fallback);syncState="local";renderHeader()}
-}
-
-/* ---------- Offline-App: Sync über n8n ---------- */
+/* ---------- Abgleich mit n8n: src/sync.js wird hier beim Build eingefügt ---------- */
+/* ---------- Abgleich mit n8n (per Schlüssel). Der Build fügt diese Datei in src/app.html an der Marke @SYNC@ ein. ---------- */
 const API="https://sleepi.app.n8n.cloud/webhook/training-api";
 function apiKey(){try{return localStorage.getItem("hp3_key")||""}catch(e){return ""}}
 let syncing=null,syncAgain=false,syncMsg="";
@@ -1422,14 +1330,11 @@ function sync(manual){
 }
 let syncT=null;function syncSoon(){clearTimeout(syncT);syncT=setTimeout(()=>sync(),800)}
 async function putSession(s){s._pending=true;saveLocal();renderHeader();syncSoon()}
-async function uploadPending(){syncSoon()}
 async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();syncSoon()}
-function loadWhoop(){return sync(true)}
-function loadWithings(){}
 function saveKey(v){v=String(v||"").trim();if(v.length<10){toast("Bitte den kompletten Schlüssel einfügen.");return}try{localStorage.setItem("hp3_key",v)}catch(e){}syncState="loading";renderHeader();sync(true).then(()=>{if(syncState==="cloud")toast("Verbunden. Daten sind synchronisiert.")})}
 function keyCardHtml(){return `<div class="card"><h2>Mit n8n verbinden</h2><p class="small muted">Einmalig: Füge den Zugangsschlüssel ein, den Claude dir gegeben hat. Danach holt die App Whoop- und Waagenwerte und sichert deine Trainings automatisch.</p>
   <div class="row"><div class="field" style="flex:1"><label for="k-in">Zugangsschlüssel</label><input id="k-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Schlüssel einfügen"></div><button class="btn sm" data-act="keysave" style="align-self:flex-end">Verbinden</button></div></div>`}
-window.addEventListener("online",()=>{renderHeader();sync()});
+window.addEventListener("online",()=>{renderHeader();renderOffNote();sync()});
 window.addEventListener("offline",()=>{syncState="local";renderHeader();renderOffNote()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&(!S._lastSync||Date.now()-S._lastSync>120000))sync()});
 setInterval(()=>{if(document.visibilityState==="visible")sync()},10*60000);
@@ -1441,6 +1346,8 @@ if("serviceWorker" in navigator){const hadCtl=!!navigator.serviceWorker.controll
   navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadCtl)showUpdate()})}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest('[data-act="appreload"]'))location.reload()});
 
+
+/* ---------- Start ---------- */
 syncState=apiKey()?"loading":"nokey";
 ui.day=nextDay();
 applyWhoop();

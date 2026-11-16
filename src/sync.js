@@ -1,5 +1,5 @@
-/* ---------- Offline-App: Sync über n8n ---------- */
-const API="training-api";
+/* ---------- Abgleich mit n8n (per Schlüssel). Der Build fügt diese Datei in src/app.html an der Marke @SYNC@ ein. ---------- */
+const API="https://sleepi.app.n8n.cloud/webhook/training-api";
 function apiKey(){try{return localStorage.getItem("hp3_key")||""}catch(e){return ""}}
 let syncing=null,syncAgain=false,syncMsg="";
 function delPend(){return S._delPending||(S._delPending={})}
@@ -31,7 +31,7 @@ function sync(manual){
     if(manual){whoop.state="loading";whoop.msg="Gleiche mit n8n ab…";renderWhoop()}
     syncState=syncState==="cloud"?"cloud":"loading";renderHeader();
     const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),20000);
-    let r;try{r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store",signal:ctl.signal})}finally{clearTimeout(to)}
+    let r;try{r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},credentials:"omit",body:JSON.stringify(body),cache:"no-store",signal:ctl.signal})}finally{clearTimeout(to)}
     if(r.status===401){syncState="badkey";whoop.state="error";whoop.msg="Der Zugangsschlüssel stimmt nicht.";renderHeader();renderWhoop();return}
     if(!r.ok)throw new Error("HTTP "+r.status);
     const j=await r.json();if(!j||!j.ok)throw new Error("Antwort");
@@ -61,18 +61,15 @@ function sync(manual){
 }
 let syncT=null;function syncSoon(){clearTimeout(syncT);syncT=setTimeout(()=>sync(),800)}
 async function putSession(s){s._pending=true;saveLocal();renderHeader();syncSoon()}
-async function uploadPending(){syncSoon()}
 async function putSettings(){S.settings._ts=Date.now();S._setPending=true;saveLocal();syncSoon()}
-function loadWhoop(){return sync(true)}
-function loadWithings(){}
 function saveKey(v){v=String(v||"").trim();if(v.length<10){toast("Bitte den kompletten Schlüssel einfügen.");return}try{localStorage.setItem("hp3_key",v)}catch(e){}syncState="loading";renderHeader();sync(true).then(()=>{if(syncState==="cloud")toast("Verbunden. Daten sind synchronisiert.")})}
 function keyCardHtml(){return `<div class="card"><h2>Mit n8n verbinden</h2><p class="small muted">Einmalig: Füge den Zugangsschlüssel ein, den Claude dir gegeben hat. Danach holt die App Whoop- und Waagenwerte und sichert deine Trainings automatisch.</p>
   <div class="row"><div class="field" style="flex:1"><label for="k-in">Zugangsschlüssel</label><input id="k-in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Schlüssel einfügen"></div><button class="btn sm" data-act="keysave" style="align-self:flex-end">Verbinden</button></div></div>`}
-window.addEventListener("online",()=>{renderHeader();sync()});
+window.addEventListener("online",()=>{renderHeader();renderOffNote();sync()});
 window.addEventListener("offline",()=>{syncState="local";renderHeader();renderOffNote()});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&(!S._lastSync||Date.now()-S._lastSync>120000))sync()});
 setInterval(()=>{if(document.visibilityState==="visible")sync()},10*60000);
-if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("training-sw",{scope:"./"}).catch(()=>{})})}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})})}
 /* Neue Version: Der Service Worker meldet sich, die App bietet "Neu laden" an. Ohne Tippen kommt sie beim nächsten Öffnen. */
 let updShown=false;function showUpdate(){if(updShown)return;updShown=true;toastAct("Neue Version der App geladen.","Neu laden","appreload")}
 if("serviceWorker" in navigator){const hadCtl=!!navigator.serviceWorker.controller;
