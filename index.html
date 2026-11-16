@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794811301">
+<meta name="app-version" content="1794811648">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -566,20 +566,21 @@ function renderVerlauf(){
 }
 
 /* ---------- Charts ---------- */
-function lineChart(pts,{unit="",color="var(--accent)",bands=null,fixed=null}={}){
+function lineChart(pts,{unit="",color="var(--accent)",bands=null,fixed=null,goals=null}={}){
   if(pts.length<2)return `<p class="empty">Noch zu wenige Daten. Ab 2 Einheiten erscheint hier die Kurve.</p>`;
   const W=340,H=170,L=38,R=14,T=14,B=24;
-  let ys=pts.map(p=>p.y);let lo=fixed?fixed[0]:Math.min(...ys),hi=fixed?fixed[1]:Math.max(...ys);
+  let ys=pts.map(p=>p.y).concat((goals||[]).map(g=>g.v));let lo=fixed?fixed[0]:Math.min(...ys),hi=fixed?fixed[1]:Math.max(...ys);
   if(!fixed){const pad=(hi-lo)*0.15||Math.max(1,hi*0.05);lo=Math.max(0,lo-pad);hi=hi+pad}
   const xs=pts.map(p=>p.x);const x0=Math.min(...xs),x1=Math.max(...xs)||x0+1;
   const X=x=>L+(x1===x0?0:(x-x0)/(x1-x0))*(W-L-R);const Y=y=>T+(1-(y-lo)/(hi-lo))*(H-T-B);
   let g="";for(let i=0;i<=3;i++){const v=lo+(hi-lo)*i/3;const y=Y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="10" fill="var(--muted)">${fmt(v)}</text>`}
+  let gl="";(goals||[]).forEach(G=>{const y=Y(G.v).toFixed(1);gl+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="${G.c||"var(--good)"}" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${L+4}" y="${(+y-4).toFixed(1)}" font-size="10" fill="${G.c||"var(--good)"}">${esc(G.l)}</text>`});
   let bd="";if(bands){bands.forEach(b=>{bd+=`<rect x="${L}" width="${W-L-R}" y="${Y(b.to)}" height="${Y(b.from)-Y(b.to)}" fill="${b.c}" opacity=".08"/>`})}
   const path=pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
   const area=path+` L${X(pts[pts.length-1].x).toFixed(1)} ${H-B} L${X(pts[0].x).toFixed(1)} ${H-B} Z`;
   const lp=pts[pts.length-1];
   const dots=pts.map(p=>`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="2.4" fill="${color}"/>`).join("");
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${bd}${g}<path d="${area}" fill="${color}" opacity=".13"/><path d="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>${dots}<circle cx="${X(lp.x)}" cy="${Y(lp.y)}" r="5" fill="${color}" stroke="var(--bg)" stroke-width="2"/><text x="${Math.min(X(lp.x),W-R)}" y="${Math.max(Y(lp.y)-10,11)}" text-anchor="end" font-size="11" font-weight="700" fill="var(--ink)">${fmt(lp.y)}${unit}</text><text x="${L}" y="${H-6}" font-size="10" fill="var(--muted)">${shortDate(new Date(x0))}</text><text x="${W-R}" y="${H-6}" text-anchor="end" font-size="10" fill="var(--muted)">${shortDate(new Date(x1))}</text></svg>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${bd}${g}${gl}<path d="${area}" fill="${color}" opacity=".13"/><path d="${path}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>${dots}<circle cx="${X(lp.x)}" cy="${Y(lp.y)}" r="5" fill="${color}" stroke="var(--bg)" stroke-width="2"/><text x="${Math.min(X(lp.x),W-R)}" y="${Math.max(Y(lp.y)-10,11)}" text-anchor="end" font-size="11" font-weight="700" fill="var(--ink)">${fmt(lp.y)}${unit}</text><text x="${L}" y="${H-6}" font-size="10" fill="var(--muted)">${shortDate(new Date(x0))}</text><text x="${W-R}" y="${H-6}" text-anchor="end" font-size="10" fill="var(--muted)">${shortDate(new Date(x1))}</text></svg>`;
 }
 function barChart(items){
   if(!items.length)return `<p class="empty">Noch keine Wochen erfasst.</p>`;
@@ -676,8 +677,8 @@ function withingsCard(){
   return `<div class="card"><h2>Körperzusammensetzung</h2>
    <p class="small muted">Von deiner Withings-Waage. Körperfett misst sie nur barfuß, deshalb gibt es nicht jeden Tag einen Wert.${lb?` Letzte Messung ${shortDate(lb.d+"T12:00")}: ${fmt(lb.bf)} % Fett, ${fmt(lb.mm)} kg Muskelmasse.`:""}</p>
    <p class="lbl">Muskelmasse kg</p>${lineChart(mm,{unit:" kg",color:"var(--accent)"})}
-   <p class="lbl">Körperfett %</p>${lineChart(bf,{unit:" %",color:"#e3a83c"})}
-   <p class="small muted">Ziel beim Aufbau: Muskelmasse steigt, Körperfett bleibt etwa gleich. Einzelwerte schwanken mit Wasserhaushalt, achte auf den Trend über 4 Wochen.</p></div>`;
+   <p class="lbl">Körperfett % · Ziel unter 20 %</p>${lineChart(bf,{unit:" %",color:"#e3a83c",goals:[{v:20,l:"Ziel 20 %"}]})}
+   <p class="small muted">Ziel: Muskelmasse hält oder steigt, Körperfett sinkt Richtung 20 %. Ab ca. 18 % lohnt sich dann schlanker Aufbau. Einzelwerte schwanken mit Wasserhaushalt, achte auf den Trend über 4 Wochen.</p></div>`;
 }
 function whoopHistCard(){
   if(!whoop.hist||!whoop.hist.recs.length)return "";
@@ -984,12 +985,29 @@ function scaleDay(type,T){
 }
 function bfHtml(){const mb=Object.assign({},S.settings.bf||{});(withings.rows||[]).forEach(r=>{if(r.bf!=null)mb[r.d]=r.bf});const e=Object.entries(mb).sort();if(!e.length)return "";const [d,bf]=e[e.length-1];const w=latestWeight();const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
   return `<p class="small num">Körperfett ${fmt(bf)} % (${shortDate(d+"T12:00")})${w?` · fettfreie Masse ca. ${fmt(Math.round(w*(1-bf/100)*10)/10)} kg`:""}. Ziel beim Aufbau: fettfreie Masse steigt, Körperfett bleibt etwa gleich.</p>${pts.length>1?lineChart(pts,{unit:" %",color:"#e3a83c"}):""}`}
+function waistGoals(){const h=num(nutriProfile().h);const g=[{v:94,l:"Etappe 94 cm",c:"var(--mid)"}];if(h&&h>140&&h<220)g.push({v:Math.round(h/2),l:`Ziel ${Math.round(h/2)} cm`,c:"var(--good)"});return g}
 function waistCard(){
-  const e=Object.entries(S.settings.waist||{}).sort();const last=e[e.length-1];
+  const e=Object.entries(S.settings.waist||{}).sort();const last=e[e.length-1],first=e[0];
   const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
-  return `<div class="card"><h2>Bauchumfang</h2><p class="small muted">Der verlässlichste Fortschrittsmesser bei Rekomposition: 1× pro Woche morgens nüchtern, Maßband auf Höhe des Bauchnabels, entspannt ausatmen.</p>
-   <div class="row"><div class="field" style="flex:1"><label for="n-waist">Heute (cm)</label><input id="n-waist" inputmode="decimal" placeholder="${last?fmt(last[1]):"z. B. 92"}"></div><button class="btn sm" data-act="waistsave" style="align-self:flex-end">Speichern</button></div>
-   ${pts.length>=2?lineChart(pts,{unit:" cm",color:"#e3a83c"}):last?`<p class="small muted">Letzter Wert ${fmt(last[1])} cm am ${shortDate(last[0]+"T12:00")}.</p>`:""}</div>`;
+  const h=num(nutriProfile().h);const G=waistGoals();const fin=G[G.length-1].v;
+  let top="";
+  if(last){const cur=last[1];const diff=first&&e.length>1?cur-first[1]:null;
+    const next=new Date(new Date(last[0]+"T12:00").getTime()+7*DAY_MS);const due=Date.now()>=next.getTime()-12*3600e3;
+    const toGo=Math.max(0,cur-fin);const prog=first?Math.max(0,Math.min(100,(first[1]-cur)/Math.max(0.1,first[1]-fin)*100)):0;
+    const months=toGo>0?toGo/1:0;const eta=months?new Date(Date.now()+months*30.4*DAY_MS).toLocaleDateString("de-DE",{month:"long",year:"numeric"}):null;
+    top=`<div class="row between" style="align-items:flex-end"><div><div class="num" style="font-size:2.2rem;font-weight:700;line-height:1">${fmt(cur)} <span style="font-size:1rem" class="muted">cm</span></div><div class="small muted">${shortDate(last[0]+"T12:00")}${diff!=null?` · ${diff<0?"−":diff>0?"+":"±"}${fmt(Math.abs(diff))} cm seit Start`:""}</div></div>
+      <div style="text-align:right"><div class="num" style="font-size:1.4rem;font-weight:700;color:var(--good)">${fmt(fin)} cm</div><div class="small muted">${toGo>0?`noch ${fmt(Math.round(toGo*10)/10)} cm`:"Ziel erreicht"}</div></div></div>
+     <div class="pbar"><div style="width:${prog.toFixed(0)}%;background:var(--good)"></div></div>
+     <ul class="rules small">
+      <li><b>Etappe 94 cm:</b> unter dieser Grenze liegt das Risiko für Herz-Kreislauf- und Stoffwechselerkrankungen bei Männern nicht mehr erhöht (WHO).</li>
+      ${h?`<li><b>Ziel ${Math.round(h/2)} cm:</b> Bauchumfang höchstens halb so groß wie deine Körpergröße (${h} cm). Das gilt als guter Gesundheitswert.</li>`:`<li>Trag unten deine Körpergröße ein, dann berechnet die App dein Endziel (halbe Körpergröße).</li>`}
+      ${toGo>0?`<li><b>Realistisches Tempo:</b> ca. 1 cm pro Monat bei Rekomposition. Damit wärst du etwa im ${eta} am Ziel.</li>`:""}
+     </ul>
+     <p class="small ${due?"":"muted"}">${due?"<b>Messung fällig.</b> ":"Nächste Messung: "+next.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"numeric"}).replace(/\.$/,"")+". "}1× pro Woche morgens nüchtern, Maßband auf Höhe des Bauchnabels, entspannt ausatmen.</p>`}
+  else top=`<p class="small muted">Der verlässlichste Fortschrittsmesser bei Rekomposition: 1× pro Woche morgens nüchtern, Maßband auf Höhe des Bauchnabels, entspannt ausatmen. Etappenziel 94 cm${h?`, Endziel ${Math.round(h/2)} cm`:""}.</p>`;
+  return `<div class="card"><h2>Bauchumfang</h2>${top}
+   <div class="row"><div class="field" style="flex:1"><label for="n-waist">Heute (cm)</label><input id="n-waist" inputmode="decimal" placeholder="${last?fmt(last[1]):"z. B. 92"}"></div>${h?"":`<div class="field" style="flex:1"><label for="n-h2">Größe cm</label><input id="n-h2" inputmode="numeric" placeholder="z. B. 182" data-n="h"></div>`}<button class="btn sm" data-act="waistsave" style="align-self:flex-end">Speichern</button></div>
+   ${pts.length>=2?lineChart(pts,{unit:" cm",color:"#e3a83c",goals:G}):""}</div>`;
 }
 function dayCard(title,type,T){
   const {meals,tot}=scaleDay(type,T);
@@ -1267,7 +1285,7 @@ document.addEventListener("input",e=>{
   saveDrafts();
 });
 document.addEventListener("change",e=>{
-  if(e.target.dataset.n){const k=e.target.dataset.n;S.settings.nutri=Object.assign(nutriProfile(),{[k]:e.target.value});putSettings();renderErnaehrung();return}
+  if(e.target.dataset.n){const k=e.target.dataset.n;S.settings.nutri=Object.assign(nutriProfile(),{[k]:e.target.value});putSettings();renderErnaehrung();renderFortschritt();return}
   const t=e.target,f=t.dataset.f;if(!f||f==="exsel")return;const d=getDraft(ui.day);
   if(f==="recovery"){d.recovery=t.value;saveDrafts();renderHeute();return}
   if(f==="deload"){d.deload=t.checked;saveDrafts();renderHeute();return}
