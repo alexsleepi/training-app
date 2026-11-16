@@ -1,0 +1,12 @@
+{
+  "name": "training-app",
+  "private": true,
+  "description": "Trainings-App (Offline-Web-App)",
+  "scripts": {
+    "build": "python3 tools/build.py",
+    "test": "node tests/sync.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}

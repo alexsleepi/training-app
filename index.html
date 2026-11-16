@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794811736">
+<meta name="app-version" content="1794811884">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1244,7 +1244,7 @@ document.addEventListener("click",e=>{
   if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}
   if(act==="fopen"){openFocus();return}
   if(act==="keysave"){saveKey($("#k-in").value);return}
-  if(act==="keyreset"){try{localStorage.removeItem("hp3_key")}catch(e){}syncState="nokey";renderAll();ui.tab="heute";document.querySelector('[data-tab="heute"]').click();return}
+  if(act==="keyreset"){try{localStorage.removeItem("hp3_key")}catch(e){}syncState="nokey";renderAll();document.querySelector('[data-tab="heute"]').click();return}
   if(act==="syncnow"){sync(true);return}
   if(act==="rir"){const d=getDraft(ui.day);d.ex[a.dataset.slot].rir=+a.dataset.v;saveDrafts();if(ui.focus)renderFocus();a.parentElement.querySelectorAll(".pill").forEach(b=>b.classList.toggle("on",b===a));return}
   if(act==="deloadon"){S.settings.deloadUntil=Date.now()+7*DAY_MS;putSettings();for(const k in drafts)if(drafts[k]&&!Object.values(drafts[k].ex).some(e=>e.sets.some(x=>x.done)))delete drafts[k];saveDrafts();renderHeute();toast("Entlastungswoche aktiv für 7 Tage.");return}
