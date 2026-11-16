@@ -29,14 +29,21 @@ const grow=(kg0,step,reps)=>k=>[{kg:kg0+k*step,reps},{kg:kg0+k*step,reps}];
  ok('alle Sätze am oberen Ende: Gewicht steigt um den Schritt der Übung',()=>{
   E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3*864e5).toISOString(),day:"A",exercises:[{slot:"A1",name:"Kniebeuge",planned:3,sets:[{kg:80,reps:10},{kg:80,reps:10},{kg:80,reps:10}]}]}]`);
   const sg=E('suggest(PROGRAM.A.ex[0],"Kniebeuge",{deload:false,recovery:"",hrv:""})');assert.equal(sg.kg,"82.5")});
- ok('Wdh. im Bereich, aber nicht oben: Gewicht halten',()=>{
-  E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3*864e5).toISOString(),day:"A",exercises:[{slot:"A1",name:"Kniebeuge",planned:3,sets:[{kg:80,reps:10},{kg:80,reps:9},{kg:80,reps:8}]}]}]`);
-  const sg=E('suggest(PROGRAM.A.ex[0],"Kniebeuge",{deload:false,recovery:"",hrv:""})');assert.equal(sg.kg,"80")});
- ok('Text "ca. 60 Sätze pro Woche" passt zum Plan',()=>{
+const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3*864e5).toISOString(),day:"${slot[0]}",exercises:[{slot:"${slot}",name:"${name}",planned:${sets.length},sets:${JSON.stringify(sets)}}]}]`);
+ const sug=(day,i,name)=>E(`suggest(PROGRAM.${day}.ex[${i}],"${name}",{deload:false,recovery:"",hrv:""})`);
+ const S3=(kg,...r)=>r.map(reps=>({kg,reps}));
+ ok('Grundübung 10 · 9 · 8 bei 6–10: steigern',()=>{last("A1","Kniebeuge",S3(80,10,9,8));const sg=sug("A",0,"Kniebeuge");assert.equal(sg.kg,"82.5");assert.match(sg.html,/Im Schnitt 9 Wdh/)});
+ ok('Grundübung 10 · 9 · 7: halten (Schnitt unter 9)',()=>{last("A1","Kniebeuge",S3(80,10,9,7));assert.equal(sug("A",0,"Kniebeuge").kg,"80")});
+ ok('Grundübung mit Satz unter dem Bereich: halten',()=>{last("A1","Kniebeuge",S3(80,10,10,5));assert.equal(sug("A",0,"Kniebeuge").kg,"80")});
+ ok('Isolation 20 · 19 · 18 · 18 bei 12–20: halten',()=>{last("A5","Seitheben am Kabel",S3(10,20,19,18,18));assert.equal(sug("A",4,"Seitheben am Kabel").kg,"10")});
+ ok('Isolation alle Sätze bei 20: steigern',()=>{last("A5","Seitheben am Kabel",S3(10,20,20,20,20));const sg=sug("A",4,"Seitheben am Kabel");assert.equal(sg.kg,"12.5");assert.match(sg.html,/Alle Sätze am oberen Ende/)});
+ ok('alte Einheit mit 3 geplanten Sätzen zählt nach Umstellung auf 4',()=>{last("A5","Seitheben am Kabel",S3(10,20,20,20));assert.equal(sug("A",4,"Seitheben am Kabel").kg,"12.5")});
+ ok('Schultern: seitlich 8, hinten 4,5 Sätze pro Woche',()=>{const v=E('weeklyVolume()');assert.equal(v.side,8);assert.equal(v.rear,4.5)});
+ ok('Text "ca. 65 Sätze pro Woche" passt zum Plan',()=>{
   const full=E('ORDER.reduce((a,k)=>a+PROGRAM[k].ex.reduce((b,x)=>b+x.sets,0),0)');
   const del=E('ORDER.reduce((a,k)=>a+PROGRAM[k].ex.reduce((b,x)=>b+plannedSets(x,{deload:true}),0),0)');
-  assert.ok(Math.abs(full-60)<=3,`voller Plan ${full}`);assert.ok(Math.abs(del-40)<=3,`Entlastung ${del}`);
-  assert.match(E('document.querySelector("#v-fortschritt").textContent'),/ca\. 60 Sätze pro Woche/)});
+  assert.ok(Math.abs(full-65)<=2,`voller Plan ${full}`);assert.ok(Math.abs(del-40)<=3,`Entlastung ${del}`);
+  assert.match(E('document.querySelector("#v-fortschritt").textContent'),/ca\. 65 Sätze pro Woche/)});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
