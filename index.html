@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794766005">
+<meta name="app-version" content="1794811301">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -177,6 +177,14 @@ details.cue[open] summary{color:var(--accent)}
 ol.steps{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:5px;font-size:.92rem}
 ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:8px}
+.pbar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin:8px 0}.pbar>div{height:100%;border-radius:5px}
+.plist{display:grid;gap:8px;margin-top:10px}
+.pslot{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--ink);font-size:.95rem}
+.pslot.on{border-color:var(--good);background:rgba(60,184,116,.12)}
+.pchk{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--good)}
+.pslot.on .pchk{border-color:var(--good);background:var(--good);color:#0b1a10}
+.pweek{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.pw{height:48px;background:var(--line);border-radius:6px;display:flex;align-items:flex-end;overflow:hidden;margin-bottom:2px}.pw i{display:block;width:100%;border-radius:6px}
 .fig{background:#0b0c0c;border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:8px}
 .fig svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
 .fig .fl{stroke:#3a3b3b;stroke-width:2}
@@ -976,19 +984,6 @@ function scaleDay(type,T){
 }
 function bfHtml(){const mb=Object.assign({},S.settings.bf||{});(withings.rows||[]).forEach(r=>{if(r.bf!=null)mb[r.d]=r.bf});const e=Object.entries(mb).sort();if(!e.length)return "";const [d,bf]=e[e.length-1];const w=latestWeight();const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
   return `<p class="small num">Körperfett ${fmt(bf)} % (${shortDate(d+"T12:00")})${w?` · fettfreie Masse ca. ${fmt(Math.round(w*(1-bf/100)*10)/10)} kg`:""}. Ziel beim Aufbau: fettfreie Masse steigt, Körperfett bleibt etwa gleich.</p>${pts.length>1?lineChart(pts,{unit:" %",color:"#e3a83c"}):""}`}
-function trendText(){
-  const ws=weightSeries();if(ws.length<6)return "Wieg dich 3× pro Woche morgens nüchtern. Nach ca. 3 Wochen sagt dir die App, ob du die Kalorien anpassen solltest.";
-  const now=Date.now();const a=ws.filter(p=>now-p.x<=10*DAY_MS),b=ws.filter(p=>now-p.x>17*DAY_MS&&now-p.x<=31*DAY_MS);
-  if(a.length<2||b.length<2)return "Für einen verlässlichen Trend brauche ich Messungen aus den letzten 10 Tagen und aus der Zeit vor 2–4 Wochen. Einzelwerte schwanken durch Wasser, Salz und Sauna um bis zu 1 kg.";
-  const av=x=>x.reduce((s,p)=>s+p.y,0)/x.length,mid=x=>x.reduce((s,p)=>s+p.x,0)/x.length;
-  const A=av(a),B=av(b),wk=(mid(a)-mid(b))/(7*DAY_MS);const pw=(A-B)/B*100/wk;
-  const g=String(nutriProfile().goal);const [lo,hi]=GOAL_RATE[g]||GOAL_RATE["0"];
-  const rate=x=>`${x>=0?"+":""}${fmt(x)} %`;
-  let rec;if(pw<lo)rec=g==="-300"?`Gewicht fällt schneller als nötig (Ziel ${rate(lo)} bis ${rate(hi)} pro Woche): 150 kcal mehr pro Tag, damit die Muskulatur nicht leidet.`:`Zu langsam: 150 kcal mehr pro Tag (z. B. mehr Reis, Haferflocken oder Kartoffeln).`;
-  else if(pw>hi)rec=g==="-300"?`Gewicht fällt kaum. Zuerst den Bauchumfang prüfen: Sinkt er, läuft die Rekomposition, bleib dabei. Sonst 150 kcal weniger pro Tag.`:`Zu schnell, das wird eher Fett: 150 kcal weniger pro Tag.`;
-  else rec=`Im Zielbereich (${rate(lo)} bis ${rate(hi)} pro Woche). So weitermachen.`;
-  return `Schnitt letzte 10 Tage ${fmt(A)} kg, vor ca. ${Math.round(wk)} Wochen ${fmt(B)} kg, also ${rate(pw)} pro Woche. ${rec}`;
-}
 function waistCard(){
   const e=Object.entries(S.settings.waist||{}).sort();const last=e[e.length-1];
   const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
@@ -1003,45 +998,52 @@ function dayCard(title,type,T){
    ${meals.map(m=>`<div class="meal"><p class="lbl">${esc(m.n)}</p>${m.i.map(x=>`<div class="food"><span>${esc(FOOD[x.key][0])}</span><span class="num">${x.g} g</span><span class="num muted">${Math.round(x.p)} g P</span></div>`).join("")}</div>`).join("")}
   </div>`;
 }
+/* ---------- Ernährung: Eiweiß ---------- */
+const PSRC=[["Magerquark","250 g",30],["Skyr","250 g",28],["Hüttenkäse","200 g",25],["Hähnchen- oder Putenbrust","180 g roh",41],["Lachs","150 g",30],["Thunfisch (Dose)","1 Dose, 130 g",32],["Rinderhack 5 %","150 g roh",32],["Eier","3 Stück",21],["Whey-Shake","30 g + 300 ml Milch",34],["Milch 1,5 %","500 ml",17],["Linsen, gekocht","250 g",23],["Tofu","200 g",30]];
+const PSLOT=["Frühstück","Mittag","Nach dem Training / Snack","Abend oder vor dem Schlafen"];
+function proteinTarget(){const w=latestWeight()||num(nutriProfile().w);if(!w)return null;const t=Math.round(w*1.9/5)*5;return {w,t,lo:Math.round(w*1.8/5)*5,hi:Math.round(w*2.0/5)*5,per:Math.round(t/4/5)*5}}
+function protDay(k){const all=S.settings.protein||{};return Object.assign({done:[false,false,false,false],extra:0},all[k]||{})}
+function protSave(k,v){const all=Object.assign({},S.settings.protein||{});all[k]=v;const keys=Object.keys(all).sort();while(keys.length>60)delete all[keys.shift()];S.settings.protein=all;putSettings()}
+function protSum(d,per){return d.done.filter(Boolean).length*per+(d.extra||0)}
 function renderErnaehrung(){
-  const n=nutriProfile();const T=targets();const lw=latestWeight();
-  const today=new Date();const tday=isTrainDay(today);
-  let h=`<div class="card"><h2>Deine Daten</h2>
-   <div class="row">
-    <div class="field"><label for="n-w">Gewicht kg</label><input id="n-w" type="text" inputmode="decimal" placeholder="${lw?fmt(lw):"z. B. 82"}" value="${esc(n.w)}" data-n="w"></div>
-    <div class="field"><label for="n-h">Größe cm</label><input id="n-h" type="number" inputmode="numeric" placeholder="z. B. 182" value="${esc(n.h)}" data-n="h"></div>
-    <div class="field"><label for="n-age">Alter</label><input id="n-age" type="number" inputmode="numeric" placeholder="z. B. 38" value="${esc(n.age)}" data-n="age"></div>
-   </div>
-   <div class="field"><label for="n-act">Alltag</label><select id="n-act" data-n="act">${Object.entries(ACT).map(([k,v])=>`<option value="${k}" ${String(n.act)===k?"selected":""}>${v}</option>`).join("")}</select></div>
-   <div class="field"><label for="n-goal">Ziel</label><select id="n-goal" data-n="goal">${GOAL.map(([k,v])=>`<option value="${k}" ${String(n.goal)===k?"selected":""}>${v}</option>`).join("")}</select></div>
-   <div class="field"><label for="n-sex">Geschlecht</label><select id="n-sex" data-n="sex"><option value="m" ${n.sex==="m"?"selected":""}>männlich</option><option value="w" ${n.sex==="w"?"selected":""}>weiblich</option></select></div>
-   <p class="small muted">Leer gelassenes Gewicht nimmt automatisch deinen letzten Eintrag${whoop.weight?` (Whoop: ${fmt(whoop.weight)} kg)`:""}.</p></div>`;
-  if(!T){h+=`<div class="card"><p class="empty">Trag Gewicht, Größe und Alter ein. Dann berechnet die App deine Kalorien, Makros und einen Tagesplan für Trainings- und Ruhetage.</p></div>`}
-  else{
-    h+=`<div class="tiles">
-     <div class="tile"><div class="v num">${T.train.k}</div><div class="k">kcal Trainingstag (Di · Fr · So)</div></div>
-     <div class="tile"><div class="v num">${T.rest.k}</div><div class="k">kcal Ruhetag</div></div>
-     <div class="tile"><div class="v num">${T.train.p} g</div><div class="k">Protein täglich (2 g/kg)</div></div>
-     <div class="tile"><div class="v num">${fmt(T.water)} l</div><div class="k">Wasser, +0,5–1 l an Trainings- und Saunatagen</div></div>
-    </div>
-    <div class="card"><h2>So funktioniert's</h2><ul class="rules">
-     <li>Grundumsatz ${T.bmr} kcal, Erhaltungsbedarf ca. ${T.maint} kcal. Darauf kommt dein Ziel-Überschuss, verteilt mit mehr Kohlenhydraten an Trainingstagen.</li>
-     <li>Protein jeden Tag gleich, auf 4–5 Mahlzeiten mit je 30–50 g verteilt.</li>
-     <li>Vor dem Training Kohlenhydrate, danach Protein + Kohlenhydrate. Abends Quark oder Hüttenkäse für die Nacht.</li>
-     <li>Lebensmittel frei tauschbar bei ähnlichen Makros: Reis ↔ Kartoffeln ↔ Nudeln, Hähnchen ↔ Pute ↔ Rind mager ↔ Tofu, Skyr ↔ Magerquark.</li>
-     <li>Kreatin-Monohydrat 3–5 g täglich ist das am besten belegte Supplement für Muskelaufbau. Optional, an jedem Tag gleich.</li></ul></div>
-    ${dayCard(tday?"Heute: Trainingstag":"Trainingstag","train",T.train)}
-    ${dayCard(tday?"Ruhetag":"Heute: Ruhetag","rest",T.rest)}`;
-  }
-  h+=`<div class="card"><h2>Gewicht eintragen</h2>
-   <p class="small muted">${(withings.rows||[]).length?"Gewicht und Körperfett kommen automatisch von deiner Withings-Waage. Eintragen musst du nur, wenn du ohne Waage misst.":"Körperfett liefert Whoop nicht an andere Apps weiter, das trägst du hier ein."}</p>
-   <div class="row"><div class="field"><label for="n-today">Gewicht kg</label><input id="n-today" type="text" inputmode="decimal" placeholder="${lw?fmt(lw):"kg"}"></div><div class="field"><label for="n-bf">Körperfett %</label><input id="n-bf" type="text" inputmode="decimal" placeholder="optional"></div><button class="btn sm" data-act="wsave" style="align-self:flex-end">Speichern</button></div>
-   ${bfHtml()}
-   <p class="small">${esc(trendText())}</p>
-   ${lineChart(weightSeries(),{unit:" kg",color:"#cfcdc4"})}
-  </div>${waistCard()}
-  <p class="small muted">Die Werte sind Richtwerte für gesunde Erwachsene. Bei Vorerkrankungen sprich die Ernährung mit deinem Arzt ab.</p>`;
+  const T=proteinTarget();const k=ymd(new Date());
+  let h="";
+  if(!T){h+=`<div class="card"><h2>Dein Gewicht</h2><p class="small muted">Sobald die Waage oder Whoop ein Gewicht liefert, steht hier dein Eiweißziel. Bis dahin hier eintragen:</p><div class="field"><label for="n-w">Gewicht kg</label><input id="n-w" inputmode="decimal" placeholder="z. B. 84" value="${esc(nutriProfile().w)}" data-n="w"></div></div>`;$("#v-ernaehrung").innerHTML=h;return}
+  const d=protDay(k);const sum=protSum(d,T.per);const pct=Math.min(100,sum/T.t*100);
+  h+=`<div class="card"><div class="row between"><h2>Eiweiß heute</h2><span class="chip acc num">${sum} / ${T.t} g</span></div>
+   <div class="pbar"><div style="width:${pct.toFixed(0)}%;background:${sum>=T.lo?"var(--good)":"var(--accent)"}"></div></div>
+   <p class="small muted num">Ziel ${T.t} g pro Tag (Bereich ${T.lo}–${T.hi} g, ca. 2 g pro kg bei ${fmt(T.w)} kg). Gleich an Trainings- und Ruhetagen.</p>
+   <div class="plist">${PSLOT.map((n,i)=>`<button class="pslot ${d.done[i]?"on":""}" data-act="pslot" data-i="${i}"><span class="pchk">${d.done[i]?"✓":""}</span><span class="pn">${esc(n)}</span><span class="num muted">ca. ${T.per} g</span></button>`).join("")}</div>
+   <div class="row between" style="margin-top:10px"><span class="small">Extra: <b class="num">${d.extra||0} g</b></span><div class="row" style="gap:6px"><button class="btn sec sm" data-act="pextra" data-v="-10">−10 g</button><button class="btn sec sm" data-act="pextra" data-v="10">+10 g</button><button class="btn sec sm" data-act="pextra" data-v="25">+25 g</button></div></div>
+   ${protWeek(T)}</div>
+  <div class="card"><h2>So geht's</h2><ul class="rules">
+   <li><b>Vier Portionen à ca. ${T.per} g,</b> alle 3–5 Stunden. Das nutzt der Körper besser als zwei große Portionen.</li>
+   <li><b>Eine Portion innerhalb von 2 Stunden nach dem Training.</b> Ob 30 Minuten oder 2 Stunden danach, ist praktisch egal.</li>
+   <li><b>Abends Magerquark oder Skyr:</b> wird langsam verdaut und versorgt die Muskeln über Nacht.</li>
+   <li>Der Rest der Ernährung darf locker sein. Achte im Verlauf auf Gewicht und Bauchumfang (Tab Fortschritt): langsam sinkend oder stabil ist richtig.</li></ul></div>
+  <div class="card"><h2>Eiweißquellen</h2><p class="small muted">Typische Portion und ihr Eiweiß.</p>
+   <table class="tbl num"><tbody>${PSRC.map(([n,p,g])=>`<tr><td>${esc(n)}</td><td class="muted">${esc(p)}</td><td style="text-align:right;white-space:nowrap"><b>${g} g</b></td></tr>`).join("")}</tbody></table>
+   <p class="small muted">Beispieltag mit ca. 160 g: Skyr mit Haferflocken, Hähnchen zum Mittag, Whey nach dem Training, Lachs am Abend, Magerquark vor dem Schlafen.</p></div>`;
   $("#v-ernaehrung").innerHTML=h;
+}
+function protWeek(T){const out=[];for(let i=6;i>=0;i--){const dt=new Date(Date.now()-i*DAY_MS);const k=ymd(dt);const d=protDay(k);const s=protSum(d,T.per);out.push({k,s,l:WD[dt.getDay()]})}
+  if(!out.some(x=>x.s>0))return "";
+  const hit=out.filter(x=>x.s>=T.lo).length;
+  return `<p class="lbl" style="margin-top:12px">Letzte 7 Tage · Ziel ${hit}× erreicht</p><div class="pweek">${out.map(x=>`<div><div class="pw"><i style="height:${Math.min(100,x.s/T.t*100).toFixed(0)}%;background:${x.s>=T.lo?"var(--good)":"var(--accent)"}"></i></div><span class="small muted">${x.l}</span></div>`).join("")}</div>`}
+function weightCard(){const lw=latestWeight();
+  return `<div class="card"><h2>Gewicht</h2>
+   <p class="small muted">${(withings.rows||[]).length?"Kommt automatisch von deiner Withings-Waage. Eintragen nur, wenn du ohne Waage misst.":"Wieg dich 3× pro Woche morgens nüchtern."}</p>
+   <div class="row"><div class="field"><label for="n-today">Gewicht kg</label><input id="n-today" type="text" inputmode="decimal" placeholder="${lw?fmt(lw):"kg"}"></div><div class="field"><label for="n-bf">Körperfett %</label><input id="n-bf" type="text" inputmode="decimal" placeholder="optional"></div><button class="btn sm" data-act="wsave" style="align-self:flex-end">Speichern</button></div>
+   <p class="small">${esc(trendText())}</p>
+   ${lineChart(weightSeries(),{unit:" kg",color:"#cfcdc4"})}</div>`}
+function trendText(){
+  const ws=weightSeries();if(ws.length<6)return "Nach ca. 3 Wochen mit Messungen zeigt die App hier deinen Gewichtstrend.";
+  const now=Date.now();const a=ws.filter(p=>now-p.x<=10*DAY_MS),b=ws.filter(p=>now-p.x>17*DAY_MS&&now-p.x<=31*DAY_MS);
+  if(a.length<2||b.length<2)return "Für einen verlässlichen Trend brauche ich Messungen aus den letzten 10 Tagen und von vor 2–4 Wochen. Einzelwerte schwanken durch Wasser, Salz und Sauna um bis zu 1 kg.";
+  const av=x=>x.reduce((s,p)=>s+p.y,0)/x.length,mid=x=>x.reduce((s,p)=>s+p.x,0)/x.length;
+  const A=av(a),B=av(b),wk=(mid(a)-mid(b))/(7*DAY_MS);const pw=(A-B)/B*100/wk;const rate=`${pw>=0?"+":""}${fmt(pw)} %`;
+  const rec=pw<-0.7?"Das ist schneller als nötig: etwas mehr essen, damit die Muskulatur nicht leidet.":pw>0.2?"Das Gewicht steigt. Wenn der Bauchumfang mitwächst, die Portionen etwas verkleinern.":"Passt: langsam sinkend oder stabil.";
+  return `Schnitt letzte 10 Tage ${fmt(A)} kg, vor ca. ${Math.round(wk)} Wochen ${fmt(B)} kg, also ${rate} pro Woche. ${rec}`;
 }
 
 
@@ -1052,12 +1054,12 @@ function renderFortschritt(){
   const thisWeek=s.filter(x=>new Date(x.date).getTime()>=mon).length;
   const recs=s.filter(x=>x.recovery!=null&&now-new Date(x.date)<14*DAY_MS).map(x=>x.recovery);
   const avgRec=recs.length?Math.round(recs.reduce((a,b)=>a+b,0)/recs.length):null;
-  const wk=weekNo();const toDeload=7-(wk%7||7);
+  const DS=deloadStatus();
   let h=`<div class="tiles">
    <div class="tile"><div class="v num">${s.length}</div><div class="k">Trainings gesamt</div></div>
    <div class="tile"><div class="v num">${thisWeek}<span class="muted" style="font-size:1.1rem"> / 3</span></div><div class="k">Diese Woche</div></div>
    <div class="tile"><div class="v num" style="color:${avgRec==null?"var(--muted)":avgRec>=67?"var(--good)":avgRec>=34?"var(--mid)":"var(--bad)"}">${avgRec==null?"–":avgRec+" %"}</div><div class="k">Ø Recovery an Trainingstagen, 14 Tage</div></div>
-   <div class="tile"><div class="v num">W${wk}</div><div class="k">${wk%7===0?"Deload-Woche":"Deload in "+toDeload+" Woche"+(toDeload===1?"":"n")}</div></div>
+   <div class="tile"><div class="v num">${DS.n}</div><div class="k">${DS.due?"Entlastung empfohlen":"Einheiten seit letzter Entlastung"}</div></div>
   </div>`;
 
   const names=[];ORDER.forEach(k=>PROGRAM[k].ex.forEach(ex=>[ex.name,...ex.alts].forEach(n=>{if(!names.includes(n))names.push(n)})));
@@ -1079,10 +1081,9 @@ function renderFortschritt(){
   h+=`<div class="card"><h2>Harte Sätze pro Woche</h2><p class="small muted">Richtwert bei vollem Plan: ca. 50 Sätze pro Woche (Deload ca. 25). Deutlich weniger heißt: Einheiten ausgelassen oder oft rot.</p>${s.length?barChart(weeks):`<p class="empty">Noch keine Wochen erfasst.</p>`}</div>`;
 
   const bw=weightSeries();
-  h+=`<div class="card"><h2>Körpergewicht</h2><p class="small muted">Für Muskelaufbau ideal: langsam steigend, ca. 0,25–0,5 % pro Woche.</p>${lineChart(bw,{unit:" kg",color:"#cfcdc4"})}</div>`;
   const rc=s.filter(x=>x.recovery!=null).map(x=>({x:new Date(x.date).getTime(),y:x.recovery}));
   h+=`<div class="card"><h2>Recovery an Trainingstagen</h2>${lineChart(rc,{unit:" %",color:"var(--good)",fixed:[0,100],bands:[{from:0,to:34,c:"#e5574f"},{from:34,to:67,c:"#e3a83c"},{from:67,to:100,c:"#3cb874"}]})}</div>`;
-  h+=withingsCard();
+  h+=weightCard()+waistCard()+withingsCard();
   h+=whoopHistCard();
   h+=`<div class="card"><h2>Daten sichern</h2><p class="small muted">Kopiert alle Einheiten als JSON, z. B. für eine Tabelle oder um sie mir zur Auswertung zu schicken.</p><p class="small muted">Verbindung zu n8n: ${apiKey()?(S._lastSync?"zuletzt abgeglichen "+new Date(S._lastSync).toLocaleString("de-DE",{weekday:"short",hour:"2-digit",minute:"2-digit"}):"noch nicht abgeglichen"):"nicht verbunden"}.</p><div class="row" style="gap:8px;margin-bottom:10px"><button class="btn sec sm" data-act="syncnow">Jetzt abgleichen</button><button class="btn sec sm" data-act="keyreset">Schlüssel ändern</button></div>
    <button class="btn sec sm" data-act="copy">Alle Daten kopieren</button><textarea id="exportBox" style="display:none" readonly></textarea>
@@ -1238,8 +1239,10 @@ document.addEventListener("click",e=>{
   if(act==="wload"){loadWhoop(true);return}
   if(act==="wpull"){loadWhoop(true,true);loadWithings(true);return}
   if(act==="save"){saveSession();return}
-  if(act==="waistsave"){const v=num($("#n-waist").value);if(!v||v<50||v>180){toast("Bauchumfang bitte in cm.");return}S.settings.waist=Object.assign({},S.settings.waist||{},{[ymd(new Date())]:v});putSettings();renderErnaehrung();toast("Bauchumfang gespeichert.");return}
-  if(act==="wsave"){const v=num($("#n-today").value),bf=num($("#n-bf").value);const k=ymd(new Date());if(bf!=null){if(bf<3||bf>60){toast("Körperfett bitte in % (3–60).");return}S.settings.bf=Object.assign({},S.settings.bf||{},{[k]:bf})}if(v==null&&bf!=null){putSettings();renderErnaehrung();toast("Körperfett gespeichert.");return}if(!v||v<30||v>250){toast("Bitte ein Gewicht in kg eintragen.");return}S.settings.weights=Object.assign({},S.settings.weights||{},{[k]:v});putSettings();renderErnaehrung();renderFortschritt();toast("Gewicht gespeichert.");return}
+  if(act==="pslot"){const T=proteinTarget();const k=ymd(new Date());const d=protDay(k);const i=+a.dataset.i;d.done[i]=!d.done[i];protSave(k,d);renderErnaehrung();return}
+  if(act==="pextra"){const k=ymd(new Date());const d=protDay(k);d.extra=Math.max(0,(d.extra||0)+(+a.dataset.v));protSave(k,d);renderErnaehrung();return}
+  if(act==="waistsave"){const v=num($("#n-waist").value);if(!v||v<50||v>180){toast("Bauchumfang bitte in cm.");return}S.settings.waist=Object.assign({},S.settings.waist||{},{[ymd(new Date())]:v});putSettings();renderFortschritt();toast("Bauchumfang gespeichert.");return}
+  if(act==="wsave"){const v=num($("#n-today").value),bf=num($("#n-bf").value);const k=ymd(new Date());if(bf!=null){if(bf<3||bf>60){toast("Körperfett bitte in % (3–60).");return}S.settings.bf=Object.assign({},S.settings.bf||{},{[k]:bf})}if(v==null&&bf!=null){putSettings();renderFortschritt();toast("Körperfett gespeichert.");return}if(!v||v<30||v>250){toast("Bitte ein Gewicht in kg eintragen.");return}S.settings.weights=Object.assign({},S.settings.weights||{},{[k]:v});putSettings();renderFortschritt();renderFortschritt();toast("Gewicht gespeichert.");return}
   if(act==="reset"){if(ui.resetArm!==ui.day){ui.resetArm=ui.day;a.textContent="Wirklich alles löschen? Nochmal tippen";a.classList.add("danger");setTimeout(()=>{ui.resetArm=null;if(a.isConnected){a.textContent="Eingaben zurücksetzen";a.classList.remove("danger")}},4000);return}
     ui.resetArm=null;delete drafts[ui.day];saveDrafts();applyWhoop();renderHeute();toast("Eingaben zurückgesetzt.");return}
   if(act==="t-plus"){T.end+=15000;tick();return}
