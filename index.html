@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1794811648">
+<meta name="app-version" content="1794811736">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -986,6 +986,22 @@ function scaleDay(type,T){
 function bfHtml(){const mb=Object.assign({},S.settings.bf||{});(withings.rows||[]).forEach(r=>{if(r.bf!=null)mb[r.d]=r.bf});const e=Object.entries(mb).sort();if(!e.length)return "";const [d,bf]=e[e.length-1];const w=latestWeight();const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
   return `<p class="small num">Körperfett ${fmt(bf)} % (${shortDate(d+"T12:00")})${w?` · fettfreie Masse ca. ${fmt(Math.round(w*(1-bf/100)*10)/10)} kg`:""}. Ziel beim Aufbau: fettfreie Masse steigt, Körperfett bleibt etwa gleich.</p>${pts.length>1?lineChart(pts,{unit:" %",color:"#e3a83c"}):""}`}
 function waistGoals(){const h=num(nutriProfile().h);const g=[{v:94,l:"Etappe 94 cm",c:"var(--mid)"}];if(h&&h>140&&h<220)g.push({v:Math.round(h/2),l:`Ziel ${Math.round(h/2)} cm`,c:"var(--good)"});return g}
+const dDE=t=>new Date(t).toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric"});
+function waistPlan(e,G){
+  if(!e.length)return "";const st=new Date(e[0][0]+"T12:00").getTime(),sv=e[0][1];const PACE=0.25;
+  const fin=G[G.length-1].v;if(sv<=fin)return "";
+  const when=v=>st+Math.ceil((sv-v)/PACE)*7*DAY_MS;
+  const ist=t=>{let best=null;e.forEach(([k,v])=>{const d=Math.abs(new Date(k+"T12:00").getTime()-t);if(d<=4*DAY_MS&&(!best||d<best.d))best={d,v,k}});return best};
+  const rows=[];for(let w=0;;w+=4){const t=st+w*7*DAY_MS;const soll=Math.max(fin,Math.round((sv-PACE*w)*10)/10);rows.push({t,soll});if(soll<=fin||rows.length>40)break}
+  const now=Date.now();
+  return `<p class="lbl" style="margin-top:12px">Zieltermine</p>
+   <table class="tbl num"><tbody>${G.map(g=>`<tr><td>${esc(g.l)}</td><td style="text-align:right"><b>${dDE(when(g.v))}</b></td></tr>`).join("")}</tbody></table>
+   <p class="lbl" style="margin-top:12px">Fahrplan · alle 4 Wochen, Tempo 1 cm pro Monat</p>
+   <table class="tbl num"><thead><tr><th>Datum</th><th style="text-align:right">Soll</th><th style="text-align:right">Ist</th></tr></thead><tbody>${rows.map(r=>{const i=ist(r.t);const past=r.t<=now+3*DAY_MS;
+     return `<tr${!past?' class="muted"':""}><td>${dDE(r.t)}</td><td style="text-align:right">${fmt(r.soll)} cm</td><td style="text-align:right">${i?`<b style="color:${i.v<=r.soll+0.3?"var(--good)":"var(--mid)"}">${fmt(i.v)} cm</b>`:past?"–":""}</td></tr>`}).join("")}</tbody></table>
+   <p class="lbl" style="margin-top:12px">Deine Messungen</p>
+   <table class="tbl num"><tbody>${e.slice(-6).reverse().map(([k,v],i,arr)=>{const prev=arr[i+1];const d=prev?v-prev[1]:null;return `<tr><td>${dDE(k+"T12:00")}</td><td style="text-align:right"><b>${fmt(v)} cm</b></td><td style="text-align:right" class="muted">${d==null?"":`${d<0?"−":d>0?"+":"±"}${fmt(Math.abs(Math.round(d*10)/10))}`}</td></tr>`}).join("")}</tbody></table>`;
+}
 function waistCard(){
   const e=Object.entries(S.settings.waist||{}).sort();const last=e[e.length-1],first=e[0];
   const pts=e.map(([k,v])=>({x:new Date(k+"T12:00").getTime(),y:v}));
@@ -1001,8 +1017,7 @@ function waistCard(){
      <ul class="rules small">
       <li><b>Etappe 94 cm:</b> unter dieser Grenze liegt das Risiko für Herz-Kreislauf- und Stoffwechselerkrankungen bei Männern nicht mehr erhöht (WHO).</li>
       ${h?`<li><b>Ziel ${Math.round(h/2)} cm:</b> Bauchumfang höchstens halb so groß wie deine Körpergröße (${h} cm). Das gilt als guter Gesundheitswert.</li>`:`<li>Trag unten deine Körpergröße ein, dann berechnet die App dein Endziel (halbe Körpergröße).</li>`}
-      ${toGo>0?`<li><b>Realistisches Tempo:</b> ca. 1 cm pro Monat bei Rekomposition. Damit wärst du etwa im ${eta} am Ziel.</li>`:""}
-     </ul>
+     </ul>${waistPlan(e,G)}
      <p class="small ${due?"":"muted"}">${due?"<b>Messung fällig.</b> ":"Nächste Messung: "+next.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"numeric"}).replace(/\.$/,"")+". "}1× pro Woche morgens nüchtern, Maßband auf Höhe des Bauchnabels, entspannt ausatmen.</p>`}
   else top=`<p class="small muted">Der verlässlichste Fortschrittsmesser bei Rekomposition: 1× pro Woche morgens nüchtern, Maßband auf Höhe des Bauchnabels, entspannt ausatmen. Etappenziel 94 cm${h?`, Endziel ${Math.round(h/2)} cm`:""}.</p>`;
   return `<div class="card"><h2>Bauchumfang</h2>${top}
