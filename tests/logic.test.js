@@ -49,6 +49,39 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   const inp=w.document.querySelector('input[data-slot="A1"][data-i="0"][data-k="kg"]');assert.equal(inp.value,"82,5");
   E('const d=getDraft("A");d.ex.A1.sets.forEach(x=>{x.kg="82,5";x.reps="8";x.done=true});saveSession()');
   const saved=JSON.parse(E('JSON.stringify(S.sessions[S.sessions.length-1].exercises.find(e=>e.slot==="A1").sets.map(x=>x.kg))'));assert.deepEqual(saved,[82.5,82.5,82.5])});
+ // Supersätze
+ const doneAll=(day,ids)=>E(`(()=>{const d=getDraft("${day}");${JSON.stringify(ids)}.forEach(id=>d.ex[id].sets.forEach(x=>{x.kg="10";x.reps="12";x.done=true}))})()`);
+ ok('Supersatz: nach Seitheben folgt Bizeps mit 40 s, im Fokusmodus springt die Übung um',()=>{
+  E('S.sessions=[];drafts={};ui.day="B"');doneAll("B",["B1","B2","B3","B4","B5"]);
+  E('(()=>{const d=getDraft("B");["B6","B7"].forEach(id=>d.ex[id].sets.forEach(x=>x.kg="8"))})()');
+  E('openFocus()');assert.equal(E('PROGRAM.B.ex[ui.fx].id'),"B6");
+  E('focusAct("fdone",null)');assert.equal(E('PROGRAM.B.ex[ui.fx].id'),"B7");
+  assert.match(w.document.querySelector('#tLbl').textContent,/Wechsel: Bizeps-Curls Kurzhantel/);
+  assert.equal(Math.round(E('(T.end-Date.now())/1000')),40);
+  E('focusAct("fdone",null)');assert.equal(E('PROGRAM.B.ex[ui.fx].id'),"B6");
+  assert.match(w.document.querySelector('#focus').textContent,/Supersatz mit B7/);
+  E('closeFocus();stopTimer()')});
+ ok('Supersatz: ist der Partner fertig, gilt die normale Pause',()=>{
+  E('drafts={}');doneAll("B",["B7"]);const r=E('afterSet("B",PROGRAM.B.ex[5],getDraft("B"))');assert.equal(r.sec,75);assert.equal(r.next,null)});
+ ok('Plan zeigt die Supersatz-Paare',()=>{const t=w.document.querySelector('#v-plan').textContent;
+  for(const x of ["Supersatz mit A6","Supersatz mit A5","Supersatz mit B7","Supersatz mit C6","Supersatz mit C8"])assert.ok(t.includes(x),x)});
+ // Aufwärmen
+ ok('Aufwärmen mit berechneten Gewichten vor den ersten Grundübungen',()=>{
+  last("A1","Kniebeuge",S3(80,10,10,10));E('drafts={};ui.day="A";renderHeute()');
+  const t=w.document.querySelector('article[data-slot="A1"]').textContent;assert.match(t,/Aufwärmen: 42,5 kg × 8 · 62,5 kg × 4/);
+  assert.ok(!w.document.querySelector('article[data-slot="A3"]').textContent.includes("Aufwärmen:"),"nicht bei der dritten Übung")});
+ ok('Aufwärmen: unter 20 kg an der Langhantel steht "leere Stange"',()=>{
+  last("A2","Bankdrücken Langhantel",S3(30,8,8,8));E('drafts={};renderHeute()');
+  assert.match(w.document.querySelector('article[data-slot="A2"]').textContent,/leere Stange × 8 · 22,5 kg × 4/)});
+ ok('Aufwärmen verschwindet nach dem ersten Satz',()=>{
+  E('const d=getDraft("A");d.ex.A1.sets[0].reps="8";d.ex.A1.sets[0].done=true;renderHeute()');
+  assert.ok(!w.document.querySelector('article[data-slot="A1"]').textContent.includes("Aufwärmen:"))});
+ // Geräte-Notiz
+ ok('Geräte-Einstellung notieren, anzeigen und wieder löschen',()=>{
+  w.prompt=()=>"Sitz 4, Polster 2";w.document.querySelector('article[data-slot="A1"] [data-act="gnote"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+  assert.equal(E('S.settings.gnotes["Kniebeuge"]'),"Sitz 4, Polster 2");assert.match(w.document.querySelector('article[data-slot="A1"]').textContent,/⚙ Sitz 4, Polster 2/);
+  w.prompt=()=>"";w.document.querySelector('article[data-slot="A1"] [data-act="gnote"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+  assert.equal(E('S.settings.gnotes["Kniebeuge"]'),undefined)});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));

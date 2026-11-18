@@ -225,6 +225,10 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .fig .hud{fill:#f0c43c;font:700 9.5px system-ui,sans-serif}.fig .hudbar{fill:#f0c43c;opacity:.7}
 .figbar{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:6px}
 .ghost.sm2{padding:6px 10px;font-size:.78rem}
+.ssl{font-size:.82rem;color:var(--accent);font-weight:600;margin:0}
+.warm{font-size:.88rem;background:var(--surface2);border-left:3px solid var(--mid);border-radius:8px;padding:6px 10px;margin:0}
+.gnote{display:flex;gap:8px;align-items:center;font-size:.86rem;color:var(--muted);margin:0}
+.gnote span{color:var(--ink)}
 .figleg{margin-top:6px;font-size:.86rem}
 .figleg p{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
 .musdot{flex:0 0 auto;width:12px;height:12px;border-radius:3px;background:#ff7a3d;margin-top:3px}
@@ -283,24 +287,24 @@ const PROGRAM = {
   A:{title:"Tag A", focus:"Kniebeuge · Bankdrücken · Latzug",
      cardio:{min:"15–20", dev:"Spinning-Bike oder Rad", text:"Zone 2 auf dem Spinning-Bike oder Rad, direkt nach dem Krafttraining. Gleichmäßig treten, Tempo, bei dem du noch ganze Sätze sprechen kannst (Whoop HF-Zone 2)."},
      ex:[
-      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
-      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
+      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
+      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
       {id:"A3",name:"Latzug breit",gear:"Kabelturm, oberer Zug",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5},cue:"Brust raus, Ellbogen Richtung Hüfte ziehen, oben voll in die Dehnung gehen.",alts:["Klimmzüge"]},
       {id:"A4",name:"Beinstrecker",gear:"Beinstrecker-Maschine",sets:2,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{quads:1},cue:"Oben eine Sekunde halten, drei Sekunden ablassen.",alts:["Ausfallschritte Kurzhantel"]},
-      {id:"A5",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:4,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
-      {id:"A6",name:"Trizepsdrücken Seil",gear:"Kabelturm, oberer Zug",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen bleiben am Körper, unten das Seil auseinanderziehen.",alts:["Überkopf-Trizeps Kabel"]},
+      {id:"A5",ss:"a",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:4,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
+      {id:"A6",ss:"a",name:"Trizepsdrücken Seil",gear:"Kabelturm, oberer Zug",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen bleiben am Körper, unten das Seil auseinanderziehen.",alts:["Überkopf-Trizeps Kabel"]},
       {id:"A7",name:"Wadenheben an der Beinpresse",gear:"Technogym Leg Press, Fußballen an der Plattenkante",sets:3,lo:10,hi:20,rest:60,inc:5,iso:true,m:{calves:1},cue:"Unten volle Dehnung 1 s halten, ganz hoch auf die Zehen.",alts:["Wadenheben Smith-Maschine"]}
      ]},
   B:{title:"Tag B", focus:"Kreuzheben · Schrägbank · Rudern",
      cardio:null,
      ex:[
-      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
+      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
       {id:"B2",name:"Schrägbankdrücken Kurzhantel",gear:"Verstellbare Bank, ca. 30°",sets:3,lo:8,hi:12,rest:120,inc:2,m:{chest:1,tri:.5},cue:"Bank flach anstellen, Hanteln tief absenken, oben nicht zusammenschlagen.",alts:["Schrägbankdrücken Smith-Maschine"]},
       {id:"B3",name:"Rudern sitzend eng",gear:"Kabelturm mit Ruderbank",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5,rear:.5},cue:"Aufrecht sitzen, Griff zum Bauchnabel, Schulterblätter zusammen, vorne lang machen.",alts:["Kurzhantel-Rudern einarmig"]},
       {id:"B4",name:"Beinpresse",gear:"Technogym Leg Press",sets:3,lo:10,hi:15,rest:120,inc:5,m:{quads:1,glutes:.5},cue:"Füße mittig, tief gehen ohne dass das Becken abrollt, Knie oben nicht durchdrücken.",alts:["Kniebeuge Smith-Maschine"]},
       {id:"B5",name:"Beinbeuger-Curl am Kabel",gear:"Kabelturm, unterer Zug, Fußschlaufe",sets:3,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{hams:1},cue:"Stehend, ein Bein, Ferse Richtung Gesäß ziehen, Oberschenkel bleibt senkrecht.",alts:["Nordic Curls"]},
-      {id:"B6",name:"Seitheben Kurzhantel",gear:"Kurzhanteln",sets:4,lo:12,hi:20,rest:75,inc:2,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, Arme seitlich bis Schulterhöhe.",alts:["Seitheben am Kabel"]},
-      {id:"B7",name:"Bizeps-Curls Kurzhantel",gear:"Kurzhantelablage",sets:3,lo:10,hi:15,rest:75,inc:2,iso:true,m:{bi:1},cue:"Ellbogen ruhig, unten ganz strecken, ohne Schwung.",alts:["Bizeps-Curls Kabel"]}
+      {id:"B6",ss:"b",name:"Seitheben Kurzhantel",gear:"Kurzhanteln",sets:4,lo:12,hi:20,rest:75,inc:2,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, Arme seitlich bis Schulterhöhe.",alts:["Seitheben am Kabel"]},
+      {id:"B7",ss:"b",name:"Bizeps-Curls Kurzhantel",gear:"Kurzhantelablage",sets:3,lo:10,hi:15,rest:75,inc:2,iso:true,m:{bi:1},cue:"Ellbogen ruhig, unten ganz strecken, ohne Schwung.",alts:["Bizeps-Curls Kabel"]}
      ]},
   C:{title:"Tag C", focus:"Split Squats · Fliegende · Klimmzüge",
      cardio:{min:"15–20", dev:"Laufband mit Steigung", text:"Zone 2 als Gehen mit Steigung auf dem Laufband (ca. 5 km/h, 8–12 %), alternativ Rudergerät oder ruhig schwimmen. Bei roter Recovery nur lockeres Gehen ohne Steigung."},
@@ -309,10 +313,10 @@ const PROGRAM = {
       {id:"C2",name:"Kabel-Fliegende",gear:"Kabelturm, Züge auf Schulterhöhe",sets:3,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{chest:1},cue:"Leicht gebeugte Ellbogen, weite Dehnung, vorne Brust zusammendrücken.",alts:["Kurzhantel-Fliegende"]},
       {id:"C3",name:"Klimmzüge Untergriff",gear:"Rack · 0 kg = Körpergewicht",sets:3,lo:6,hi:12,rest:120,inc:2.5,bw:true,m:{back:1,bi:.5},cue:"Unten ganz aushängen, Brust zur Stange. Zu schwer? Auf Latzug eng tauschen.",alts:["Latzug eng Untergriff"]},
       {id:"C4",name:"Beinbeuger-Curl am Kabel",gear:"Kabelturm, unterer Zug, Fußschlaufe",sets:3,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{hams:1},cue:"Stehend, ein Bein, Ferse Richtung Gesäß ziehen, Oberschenkel bleibt senkrecht.",alts:["Nordic Curls"]},
-      {id:"C5",name:"Face Pulls Seil",gear:"Kabelturm, Stirnhöhe",sets:3,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{rear:1},cue:"Seil zur Stirn, Hände auseinander, Daumen zeigen nach hinten.",alts:["Reverse Flys Kurzhantel"]},
-      {id:"C6",name:"Überkopf-Trizeps Kabel",gear:"Kabelturm, Seil",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen nach vorn oben, tief in die Dehnung, Ellbogen ruhig halten.",alts:["Trizepsdrücken Seil"]},
-      {id:"C7",name:"Wadenheben an der Beinpresse",gear:"Technogym Leg Press, Fußballen an der Plattenkante",sets:3,lo:10,hi:20,rest:60,inc:5,iso:true,m:{calves:1},cue:"Unten volle Dehnung 1 s halten, ganz hoch auf die Zehen.",alts:["Wadenheben Smith-Maschine"]},
-      {id:"C8",name:"Kabel-Crunch",gear:"Kabelturm, Seil oben",sets:2,lo:10,hi:15,rest:60,inc:5,iso:true,m:{abs:1},cue:"Kniend, Rippen Richtung Becken einrollen, Hüfte bleibt stehen.",alts:["Abduktoren"]}
+      {id:"C5",ss:"c",name:"Face Pulls Seil",gear:"Kabelturm, Stirnhöhe",sets:3,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{rear:1},cue:"Seil zur Stirn, Hände auseinander, Daumen zeigen nach hinten.",alts:["Reverse Flys Kurzhantel"]},
+      {id:"C6",ss:"c",name:"Überkopf-Trizeps Kabel",gear:"Kabelturm, Seil",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen nach vorn oben, tief in die Dehnung, Ellbogen ruhig halten.",alts:["Trizepsdrücken Seil"]},
+      {id:"C7",ss:"d",name:"Wadenheben an der Beinpresse",gear:"Technogym Leg Press, Fußballen an der Plattenkante",sets:3,lo:10,hi:20,rest:60,inc:5,iso:true,m:{calves:1},cue:"Unten volle Dehnung 1 s halten, ganz hoch auf die Zehen.",alts:["Wadenheben Smith-Maschine"]},
+      {id:"C8",ss:"d",name:"Kabel-Crunch",gear:"Kabelturm, Seil oben",sets:2,lo:10,hi:15,rest:60,inc:5,iso:true,m:{abs:1},cue:"Kniend, Rippen Richtung Becken einrollen, Hüfte bleibt stehen.",alts:["Abduktoren"]}
      ]}
 };
 const MUSCLES=[["chest","Brust"],["back","Rücken (Lat)"],["quads","Quadrizeps"],["hams","Beinbeuger"],["glutes","Gesäß"],["side","Seitliche Schulter"],["rear","Hintere Schulter"],["tri","Trizeps"],["bi","Bizeps"],["calves","Waden"],["abs","Bauch"]];
@@ -405,7 +409,7 @@ function suggest(ex,name,d){
      Isolationsübungen: erst, wenn alle Sätze das obere Ende schaffen (kleine Gewichte, große Sprünge). */
   const avgR=work.reduce((a,s)=>a+(s.reps||0),0)/Math.max(1,work.length);
   const allTop=work.length>=Math.min(ex.sets,lp.ex.planned||ex.sets)&&(ex.iso?work.every(s=>s.reps>=ex.hi):!below&&avgR>=ex.hi-1);
-  const topTxt=ex.iso?"Alle Sätze am oberen Ende":`Im Schnitt ${fmt(avgR)} Wdh., nah am oberen Ende`;
+  const topTxt=ex.iso||work.every(s=>s.reps>=ex.hi)?"Alle Sätze am oberen Ende":`Im Schnitt ${fmt(avgR)} Wdh., nah am oberen Ende`;
   const z=dayZone(d);const rir=lp.ex.rir;const rirTxt=rir!=null?` · Reserve ${rir>=4?"4+":rir}`:"";
   const last2=`${last}${rirTxt}`;
   if(d.deload){const dk=roundTo(top*0.9,ex.inc);return {kg:String(dk),html:`${last2}<br>Entlastung: <b>${fmt(dk)} kg</b> (ca. −10 %), halbe Sätze, 3–4 Wdh. Reserve.`}}
@@ -419,6 +423,26 @@ function suggest(ex,name,d){
   return {kg:String(top),html:`${last2}<br>Ziel heute: <b>${fmt(top)} kg</b>, pro Satz +1 Wdh.`};
 }
 
+/* Supersätze: zwei Übungen mit gleichem ss im Wechsel. Nach jedem Satz kurze Pause, dann der Partner. */
+const SS_SWITCH=40;
+function partnerOf(day,ex){return ex.ss?PROGRAM[day].ex.find(x=>x!==ex&&x.ss===ex.ss)||null:null}
+function afterSet(day,ex,d){const e=d.ex[ex.id],pt=partnerOf(day,ex);
+  if(pt&&d.ex[pt.id].sets.some(z=>!z.done))return {sec:SS_SWITCH,label:`Wechsel: ${d.ex[pt.id].name}`,next:pt};
+  const last=!e.sets.some(z=>!z.done);return {sec:ex.rest,label:last?"Pause bis zur nächsten Übung":`Satzpause ${e.name}`,next:null}}
+function ssHtml(day,ex,d){const pt=partnerOf(day,ex);if(!pt)return "";return `<p class="ssl">Supersatz mit ${pt.id} ${esc(d.ex[pt.id].name)} · im Wechsel, ${SS_SWITCH} s Pause dazwischen</p>`}
+function restTxt(day,ex){return partnerOf(day,ex)?`Pause im Wechsel ${mmss(SS_SWITCH)}`:`Pause ${mmss(ex.rest)}`}
+/* Aufwärmen: vor den ersten beiden Grundübungen des Tages (ohne Isolation und Körpergewicht) */
+function warmIds(day){return PROGRAM[day].ex.filter(x=>!x.iso&&!x.bw).slice(0,2).map(x=>x.id)}
+function warmupHtml(day,ex,d){const e=d.ex[ex.id];if(!warmIds(day).includes(ex.id)||e.sets.some(z=>z.done))return "";
+  const base=num(e.sets[0]&&e.sets[0].kg)??num(e.sugKg);
+  if(!base)return `<p class="warm"><b>Aufwärmen:</b> 2 Sätze mit ca. 50 % × 8 und 75 % × 4 deines Arbeitsgewichts.</p>`;
+  const bar=ex.bar&&e.name===ex.name;const w=f=>{const v=roundTo(base*f,ex.inc);return bar&&v<20?"leere Stange":fmt(v)+" kg"};
+  return `<p class="warm"><b>Aufwärmen:</b> ${w(0.5)} × 8 · ${w(0.75)} × 4, dann Arbeitssätze.</p>`}
+/* Geräte-Einstellung je Übung (z. B. Sitz 4, Polster 2), gespeichert in settings.gnotes */
+function gnote(name){return (S.settings.gnotes||{})[name]||""}
+function gnoteHtml(name){const n=gnote(name);return n?`<p class="gnote"><span>⚙ ${esc(n)}</span><button class="ghost sm2" data-act="gnote" data-name="${esc(name)}">ändern</button></p>`:`<p class="gnote"><button class="ghost sm2" data-act="gnote" data-name="${esc(name)}">+ Geräte-Einstellung notieren</button></p>`}
+function editGnote(name){const cur=gnote(name);const v=window.prompt(`Geräte-Einstellung für ${name} (z. B. Sitz 4, Polster 2):`,cur);if(v==null)return false;
+  const t=String(v).trim().slice(0,80);const all=Object.assign({},S.settings.gnotes||{});if(t)all[name]=t;else delete all[name];S.settings.gnotes=all;putSettings();return true}
 function getDraft(day){
   let d=drafts[day];
   if(!d){d=drafts[day]={created:ymd(new Date()),recovery:"",sleep:"",hrv:"",deload:deloadActive(),ex:{},cardio:{done:false,min:"",hr:"",type:day==="C"?"Laufband (Steigung)":"Spinning-Bike"},sauna:"",strain:"",bw:"",notes:""}}
@@ -464,14 +488,15 @@ function renderHeute(){
   {const DS=deloadStatus();if(DS.due&&!d.deload)h+=`<div class="banner"><b>Entlastung empfohlen.</b> ${esc(DS.why)} Eine Woche mit halben Sätzen und ca. −10 % Gewicht, danach geht es stärker weiter. <div class="row" style="margin-top:8px"><button class="btn sm" data-act="deloadon">Diese Woche entlasten</button></div></div>`;}
   h+=`<div id="offnote">${offNoteHtml()}</div>`;
   h+=`<button class="btn fx-start" data-act="fopen">Fokusmodus starten · eine Übung pro Bildschirm</button>`;
-  h+=`<p class="small muted">Aufwärmen: 5 min locker auf Rudergerät oder Rad, dann vor den ersten beiden Übungen 2 Aufwärmsätze mit ca. 50 % und 75 % des Arbeitsgewichts.</p>`;
+  h+=`<p class="small muted">Aufwärmen: 5 min locker auf Rudergerät oder Rad. Die Aufwärmsätze stehen bei den ersten Übungen.</p>`;
 
   P.ex.forEach(ex=>{
     const e=d.ex[ex.id];const name=e.name;const sg=suggest(ex,name,d);const n=e.sets.length;
     const hasAlt=ex.alts.length>0;
     h+=`<article class="card" data-slot="${ex.id}">
      <div class="ex-head"><span class="ex-no">${ex.id}</span><div class="t"><h3>${esc(name)}</h3><p class="gear">${esc(name===ex.name?ex.gear:"Alternative zu "+ex.name)}</p></div>${hasAlt?`<button class="swap" data-act="swap" data-slot="${ex.id}">Tauschen</button>`:""}</div>
-     <p class="target num">${n} × ${ex.lo}–${ex.hi} Wdh. · ${rirText(d,ex)} · Pause ${mmss(ex.rest)}</p>
+     ${gnoteHtml(name)}
+     <p class="target num">${n} × ${ex.lo}–${ex.hi} Wdh. · ${rirText(d,ex)} · ${restTxt(day,ex)}</p>${ssHtml(day,ex,d)}${warmupHtml(day,ex,d)}
      <p class="sugg">${sg.html}</p>
      <div class="sets">${e.sets.map((s,i)=>`<div class="set ${s.done?"done":""}" data-slot="${ex.id}" data-i="${i}">
         <span class="n num">${i+1}</span>
@@ -517,16 +542,17 @@ function renderPlan(){
   let h=`<div class="card"><h2>Deine Woche</h2>
    <p>Training <b>Di · Fr · So</b>, dazwischen immer mindestens ein Ruhetag. Die App wählt automatisch die nächste Einheit A → B → C. Fällt ein Termin aus, machst du beim nächsten einfach dort weiter.</p>
    <div>${WEEK.map(x=>`<div class="wk ${TRAIN_WD.includes(x.wd)?"tr":""} ${x.wd===tw?"now":""}"><b>${WD[x.wd]}</b><span><b style="font-family:var(--body);font-size:.93rem">${x.t}</b><br><span class="small muted">${x.d}</span></span></div>`).join("")}</div>
-   <p class="small muted">Dauer pro Einheit: ca. 70–85 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
+   <p class="small muted">Dauer pro Einheit: ca. 65–80 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
    <table class="tbl num"><tbody>${(()=>{const v=weeklyVolume();return MUSCLES.map(([k,l])=>`<tr><td>${l}</td><td style="text-align:right">${fmt(v[k]||0)}</td><td style="width:45%"><div style="height:6px;border-radius:3px;background:${(v[k]||0)>=8?"var(--good)":(v[k]||0)>=5?"var(--mid)":"var(--muted)"};width:${Math.min(100,(v[k]||0)/14*100)}%"></div></td></tr>`).join("")})()}</tbody></table>
    <p class="small muted">Richtwert für Muskelaufbau: ca. 8–16 Sätze pro großer Muskelgruppe. Waden und Bauch brauchen weniger.</p></div>`;
   ORDER.forEach(k=>{const P=PROGRAM[k];
     h+=`<div class="card"><div class="row between"><h2>${P.title}</h2><span class="small muted">${P.focus}</span></div><div>`+
-    P.ex.map(ex=>`<div class="plan-ex"><span class="c">${ex.id}</span><span>${esc(exName(ex))}<br><span class="small muted">${esc(ex.gear)}</span></span><span class="num small">${ex.sets}×${ex.lo}–${ex.hi}</span></div>`).join("")+
+    P.ex.map(ex=>`<div class="plan-ex"><span class="c">${ex.id}</span><span>${esc(exName(ex))}<br><span class="small muted">${esc(ex.gear)}</span>${ex.ss?`<br><span class="ssl">Supersatz mit ${partnerOf(k,ex).id}</span>`:""}</span><span class="num small">${ex.sets}×${ex.lo}–${ex.hi}</span></div>`).join("")+
     (P.cardio?`<div class="plan-ex"><span class="c">+</span><span>Cardio Zone 2<br><span class="small muted">${P.cardio.dev}</span></span><span class="num small">${P.cardio.min} min</span></div>`:"")+`</div></div>`});
   h+=`<div class="card"><h2>Progression</h2><ul class="rules">
     <li><b>Doppelte Progression:</b> Bleib beim Gewicht und bau Wiederholungen auf. <b>Grundübungen</b> steigerst du, sobald du im Schnitt höchstens 1 Wdh. unter dem oberen Ende liegst und kein Satz unter dem Bereich ist (z. B. 10 · 9 · 8 bei 6–10). <b>Isolationsübungen</b> erst, wenn alle Sätze das obere Ende schaffen, weil dort jeder Schritt ein großer Sprung ist. Der Schritt steht bei jeder Übung: meist +2,5 kg, Kurzhanteln +2 kg, Beinpresse, Latzug und Rudern +5 kg. Die App rechnet das für dich aus.</li>
     <li><b>Früher steigern:</b> Hattest du im letzten Satz noch 3 oder mehr Wdh. Reserve, geht das Gewicht schon beim nächsten Mal hoch.</li>
+    <li><b>Supersätze:</b> Kleine Übungen für verschiedene Muskeln machst du im Wechsel (z. B. Seitheben und Trizeps), mit 40 s Pause dazwischen. Jeder Muskel hat trotzdem rund 2 Minuten Pause, die Einheit wird ein paar Minuten kürzer.</li>
     <li><b>Zurückgehen:</b> Zweimal in Folge unter dem Wiederholungsbereich, dann ca. 8 % leichter und sauber wieder aufbauen.</li>
     <li><b>Intensität:</b> Arbeitssätze enden 1–2 Wdh. vor dem Versagen (RIR 1–2). Technik bleibt sauber.</li>
     <li><b>Entlastung nach Bedarf:</b> Die App empfiehlt sie ab 15 Einheiten, wenn zwei Grundübungen seit 3 Einheiten nicht stärker werden. Eine reicht, wenn zusätzlich dein HRV-Wochenschnitt unter dem Monatsschnitt liegt. Spätestens nach 24 Einheiten (ca. 8 Wochen). Dann eine Woche halbe Sätze und ca. 10 % weniger Gewicht.</li>
@@ -1132,8 +1158,9 @@ function renderFocus(){
   const ex=P.ex[ui.fx],e=d.ex[ex.id],sg=suggest(ex,e.name,d);const i=fxCur(d,ex);
   const prog=P.ex.map((x,k)=>{const ee=d.ex[x.id];const all=ee.sets.every(z=>z.done);return `<i class="${all?"d":k===ui.fx?"c":""}"></i>`}).join("");
   let h=`<div class="fx-top"><button class="fx-x" data-act="fclose">Schließen</button><div class="prog">${prog}</div><span class="small muted num">${ui.fx+1}/${n}</span></div>
-   <h2 class="fx-name">${esc(e.name)}</h2><p class="fx-meta num">${e.sets.length} × ${ex.lo}–${ex.hi} Wdh. · ${rirText(d,ex)} · Pause ${mmss(ex.rest)}</p>
-   <div class="fx-sug">${sg.html}</div>`;
+   <h2 class="fx-name">${esc(e.name)}</h2><p class="fx-meta num">${e.sets.length} × ${ex.lo}–${ex.hi} Wdh. · ${rirText(d,ex)} · ${restTxt(day,ex)}</p>
+   ${ssHtml(day,ex,d)}${gnoteHtml(e.name)}
+   <div class="fx-sug">${sg.html}</div>${warmupHtml(day,ex,d)}`;
   if(i<0){h+=rirAsk(e,ex)+`<p class="fx-setno">Alle Sätze erledigt</p><p class="small muted" style="text-align:center">${ui.fx<n-1?"Weiter zur nächsten Übung.":"Krafttraining fertig. Unten speichern oder Cardio eintragen."}</p>`;
     h+=ui.fx<n-1?`<button class="btn fx-done" data-act="fnext">Nächste Übung: ${esc(d.ex[P.ex[ui.fx+1].id].name)}</button>`:`<button class="btn fx-done" data-act="fclose">Zum Abschluss</button>`;
     h+=`<button class="ghost" style="margin-top:8px" data-act="addset" data-slot="${ex.id}" data-focus="1">+ Extra-Satz</button>`}
@@ -1162,7 +1189,7 @@ function focusAct(act,a){
   if(act==="fdone"){if(v.kg==null){toast("Gewicht mit + einstellen.");return}if(!(v.reps>0)){toast("Wiederholungen mit + einstellen.");return}
     st.kg=String(v.kg);st.reps=String(v.reps);st.done=true;ui.fset=null;
     const next=e.sets[i+1];if(next&&(next.kg===""||next.kg==null))next.kg=st.kg;saveDrafts();
-    const last=!e.sets.some(x=>!x.done);startTimer(ex.rest,last?"Pause bis zur nächsten Übung":`Satzpause ${e.name}`);
+    const r=afterSet(ui.day,ex,d);startTimer(r.sec,r.label);if(r.next){ui.fx=P.ex.indexOf(r.next);$("#focus").scrollTop=0}
     renderFocus();return}
 }
 
@@ -1204,6 +1231,7 @@ document.addEventListener("click",e=>{
   const a=e.target.closest("[data-act]");if(!a)return;const act=a.dataset.act;
   if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(err){}}else if(actx.state!=="running")actx.resume().catch(()=>{});
   if(act==="fopen"){openFocus();return}
+  if(act==="gnote"){if(editGnote(a.dataset.name)){renderHeute();if(ui.focus)renderFocus()}return}
   if(act==="keysave"){saveKey($("#k-in").value);return}
   if(act==="keyreset"){try{localStorage.removeItem("hp3_key")}catch(e){}syncState="nokey";renderAll();document.querySelector('[data-tab="heute"]').click();return}
   if(act==="syncnow"){sync(true);return}
@@ -1226,7 +1254,7 @@ document.addEventListener("click",e=>{
     {const exd=PROGRAM[ui.day].ex.find(x=>x.id===slot);if(!st.done&&num(st.kg)==null&&!(exd&&exd.bw)){row.querySelector('[data-k=kg]').focus();toast("Trag das Gewicht ein (bei Körpergewicht 0).");return}}
     st.done=!st.done;row.classList.toggle("done",st.done);a.setAttribute("aria-pressed",st.done);saveDrafts();
     if(st.done){const ex=PROGRAM[ui.day].ex.find(x=>x.id===slot);const next=d.ex[slot].sets[i+1];if(next&&!next.kg){next.kg=st.kg;const inp=document.querySelector(`input[data-slot="${slot}"][data-i="${i+1}"][data-k="kg"]`);if(inp)inp.value=kgTxt(st.kg)}
-      const last=i===d.ex[slot].sets.length-1;startTimer(ex.rest,last?"Pause bis zur nächsten Übung":`Satzpause ${d.ex[slot].name}`);if(d.ex[slot].sets.every(x=>x.done)){const y=window.scrollY;renderHeute();window.scrollTo(0,y)}}
+      const r=afterSet(ui.day,ex,d);startTimer(r.sec,r.label);if(d.ex[slot].sets.every(x=>x.done)){const y=window.scrollY;renderHeute();window.scrollTo(0,y)}}
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}
   if(act==="figmode"||act==="figplay"||act==="figslow"){figAct(act,a);return}
