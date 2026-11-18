@@ -82,6 +82,10 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   assert.equal(E('S.settings.gnotes["Kniebeuge"]'),"Sitz 4, Polster 2");assert.match(w.document.querySelector('article[data-slot="A1"]').textContent,/⚙ Sitz 4, Polster 2/);
   w.prompt=()=>"";w.document.querySelector('article[data-slot="A1"] [data-act="gnote"]').dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
   assert.equal(E('S.settings.gnotes["Kniebeuge"]'),undefined)});
+ ok('Beinbeuger: sitzende Maschine an Tag B und C, Kabel und Nordic als Ausweichübung, mit Animation',()=>{
+  for(const [d,i] of [["B",4],["C",3]]){const ex=E(`PROGRAM.${d}.ex[${i}]`);assert.equal(ex.name,"Beinbeuger-Curl sitzend");assert.deepEqual([...ex.alts],["Beinbeuger-Curl am Kabel","Nordic Curls"])}
+  assert.equal(E('PAT["Beinbeuger-Curl sitzend"]'),"legcurlseat");assert.ok(E('!!FIG.legcurlseat&&!!TECH["Beinbeuger-Curl sitzend"]'));
+  assert.equal(E('weeklyVolume().hams'),9)});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
