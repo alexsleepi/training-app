@@ -194,10 +194,14 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .fig svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
 .fig .fl{stroke:#3a3b3b;stroke-width:2}
 .fig .limb{stroke:#f2f1ec;stroke-width:6.5;stroke-linecap:round}
+.fig .limb.th{stroke-width:9.5}.fig .limb.sn{stroke-width:7.2}.fig .limb.ua{stroke-width:7.2}.fig .limb.fa{stroke-width:5.8}
+.fig .limb.far.th{stroke-width:8.5}.fig .limb.far.sn{stroke-width:6.4}.fig .limb.far.ua{stroke-width:6.4}.fig .limb.far.fa{stroke-width:5.2}
+.fig .hand{fill:#f2f1ec}.fig .hand.far{fill:#a9a8a2}
+.fig .trk{stroke:#f0c43c;stroke-width:1.5;stroke-dasharray:.1 4;stroke-linecap:round;fill:none;opacity:.7}.fig .trke{fill:#f0c43c;opacity:.7}
 .fig .limb.far{stroke:#a9a8a2;stroke-width:5.5}
 .fig .limb.neck{stroke-width:5}
 .fig .limb.foot{stroke-width:5}
-.fig .torso{stroke:#f2f1ec;stroke-width:11;stroke-linecap:round}
+.fig .torso{stroke:#f2f1ec;stroke-width:12.5;stroke-linecap:round}
 .fig .torsoF{fill:#f2f1ec;stroke:#f2f1ec;stroke-width:6;stroke-linejoin:round}
 .fig .joint{fill:#0b0c0c}
 .fig .head{fill:#f2f1ec}
@@ -229,6 +233,8 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .warm{font-size:.88rem;background:var(--surface2);border-left:3px solid var(--mid);border-radius:8px;padding:6px 10px;margin:0}
 .gnote{display:flex;gap:8px;align-items:center;font-size:.86rem;color:var(--muted);margin:0}
 .gnote span{color:var(--ink)}
+.figcoach{margin-top:8px;background:var(--surface2);border-left:3px solid var(--accent);border-radius:8px;padding:7px 10px;min-height:4.4em;font-size:.92rem;line-height:1.35}
+.figcoach b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
 .figleg{margin-top:6px;font-size:.86rem}
 .figleg p{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
 .musdot{flex:0 0 auto;width:12px;height:12px;border-radius:3px;background:#ff7a3d;margin-top:3px}
@@ -287,8 +293,8 @@ const PROGRAM = {
   A:{title:"Tag A", focus:"Kniebeuge · Bankdrücken · Latzug",
      cardio:{min:"15–20", dev:"Spinning-Bike oder Rad", text:"Zone 2 auf dem Spinning-Bike oder Rad, direkt nach dem Krafttraining. Gleichmäßig treten, Tempo, bei dem du noch ganze Sätze sprechen kannst (Whoop HF-Zone 2)."},
      ex:[
-      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
-      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
+      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
+      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
       {id:"A3",name:"Latzug breit",gear:"Kabelturm, oberer Zug",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5},cue:"Brust raus, Ellbogen Richtung Hüfte ziehen, oben voll in die Dehnung gehen.",alts:["Klimmzüge"]},
       {id:"A4",name:"Beinstrecker",gear:"Beinstrecker-Maschine",sets:2,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{quads:1},cue:"Oben eine Sekunde halten, drei Sekunden ablassen.",alts:["Ausfallschritte Kurzhantel"]},
       {id:"A5",ss:"a",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:4,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
@@ -298,7 +304,7 @@ const PROGRAM = {
   B:{title:"Tag B", focus:"Kreuzheben · Schrägbank · Rudern",
      cardio:null,
      ex:[
-      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",bar:true,sets:3,lo:6,hi:10,rest:150,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
+      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
       {id:"B2",name:"Schrägbankdrücken Kurzhantel",gear:"Verstellbare Bank, ca. 30°",sets:3,lo:8,hi:12,rest:120,inc:2,m:{chest:1,tri:.5},cue:"Bank flach anstellen, Hanteln tief absenken, oben nicht zusammenschlagen.",alts:["Schrägbankdrücken Smith-Maschine"]},
       {id:"B3",name:"Rudern sitzend eng",gear:"Kabelturm mit Ruderbank",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5,rear:.5},cue:"Aufrecht sitzen, Griff zum Bauchnabel, Schulterblätter zusammen, vorne lang machen.",alts:["Kurzhantel-Rudern einarmig"]},
       {id:"B4",name:"Beinpresse",gear:"Technogym Leg Press",sets:3,lo:10,hi:15,rest:120,inc:5,m:{quads:1,glutes:.5},cue:"Füße mittig, tief gehen ohne dass das Becken abrollt, Knie oben nicht durchdrücken.",alts:["Kniebeuge Smith-Maschine"]},
@@ -772,14 +778,14 @@ const legextEq=p=>{const pv=[104,100];const d=[p.an[0]-pv[0],p.an[1]-pv[1]];
 const benchEq=(p,kind)=>EQ.bench(28,124,104)+(kind==="bar"?SVGL(50,40,50,152,"frm")+SVGL(50,48,58,48,"frm")+EQ.plate(p.ha[0],p.ha[1]):kind==="smith"?EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1]):EQ.dbSide(p.ha[0],p.ha[1]));
 const inclEq=(p,kind)=>SVGP([[44,50],[52,46],[112,112],[104,118]],"padf")+SVGR(98,110,30,8,"pad",3)+SVGL(100,118,96,152,"frm")+SVGL(124,118,128,152,"frm")+(kind==="smith"?EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1],11):EQ.dbSide(p.ha[0],p.ha[1]));
 const FIG={
- squat:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[102,119],el:[88,54],ha:[98,40]},{hd:[118,66],sh:[106,80],hp:[74,112],kn:[126,120],el:[92,92],ha:[104,76]},
+ squat:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[102,119],el:[88,54],ha:[98,40]},{hd:[116,69],sh:[106,80],hp:[78,112],kn:[108,120],el:[92,92],ha:[104,76]},
    {eq:p=>EQ.smith(p.ha[0]+2)+EQ.plate(p.ha[0]+2,p.ha[1]),ph:[["Runter",2.5],["unten",0.4],["Hochdrücken",1.2],["oben",0.6]],track:"ha",hl:[["hp","kn",0.1,0.95]],mus:"Quadrizeps · Gesäß",cues:[["kn","Knie folgen den Zehen"],["hp","Hüfte nach hinten-unten, mind. parallel"]]}),
  squatbar:null,
  legpress:F(LP,{kn:[100,96],an:[136,80]},{kn:[90,76],an:[114,92]},
    {eq:p=>legpressEq(p),ph:[["Beugen",2.5],["unten",0.4],["Wegdrücken",1.2],["oben",0.5]],track:"an",hl:[["hp","kn",0.1,0.95]],mus:"Quadrizeps · Gesäß",cues:[["kn","Knie oben nicht durchdrücken"],["hp","Becken bleibt am Polster"]],foot:"plate"}),
  calfpress:F(Object.assign({},LP,{kn:[102,94],an:[138,76]}),{to:[135,61]},{to:[148,64]},
    {eq:p=>legpressEq(p,"to"),ph:[["Hochdrücken",1],["oben halten",1],["Absenken",2],["Dehnung halten",1]],track:"to",hl:[["kn","an",0.15,0.95]],mus:"Waden",cues:[["an","Unten volle Dehnung"],["kn","Knie bleiben fast gestreckt"]],foot:"to"}),
- calfsmith:F({hd:[100,22],sh:[100,36],hp:[100,82],el:[90,46],ha:[100,32]},{kn:[101,114],an:[100,142],to:[114,146]},{kn:[101,104],an:[102,130],to:[114,146]},
+ calfsmith:F({to:[112,145]},{hd:[100,28],sh:[100,42],hp:[100,88],el:[90,52],ha:[100,38],kn:[100,120],an:[99,150]},{hd:[101,11],sh:[101,25],hp:[101,71],el:[91,35],ha:[101,21],kn:[102,103],an:[102,133]},
    {eq:p=>EQ.smith(p.ha[0])+EQ.plate(p.ha[0],p.ha[1])+SVGR(106,146,36,6,"pad",1),ph:[["Hoch",1],["oben halten",1],["Absenken",2],["Dehnung",1]],track:"an",hl:[["kn","an",0.15,0.95]],mus:"Waden",cues:[["an","Ferse tief, dann ganz hoch"]],foot:"to"}),
  bench:F({hd:[38,94],sh:[54,98],hp:[108,100],kn:[138,100],an:[142,150]},{el:[56,74],ha:[58,50]},{el:[66,114],ha:[66,90]},
    {eq:p=>benchEq(p,"bar"),ph:[["Absenken",2.5],["an der Brust",0.4],["Drücken",1.2],["oben",0.5]],track:"ha",hl:[["sh","hp",0,0.32],["sh","el",0,0.9]],mus:"Brust · Trizeps",cues:[["sh","Schulterblätter zusammen und runter"],["ha","Stange zur unteren Brust"]]}),
@@ -787,30 +793,30 @@ const FIG={
  incline:F({hd:[46,52],sh:[58,64],hp:[102,106],kn:[134,104],an:[140,150]},{el:[78,44],ha:[86,24]},{el:[52,88],ha:[70,66]},
    {eq:p=>inclEq(p,"db"),ph:PH_DOWN,track:"ha",hl:[["sh","hp",0,0.3],["sh","el",0,0.9]],mus:"obere Brust · vordere Schulter",cues:[["el","Hanteln tief absenken"],["sh","Bank flach, ca. 30°"]]}),
  inclinesmith:null,
- latpull:F({hp:[86,116],sh:[84,72],hd:[88,58],kn:[118,112],an:[120,148]},{el:[92,40],ha:[96,16]},{el:[74,96],ha:[92,72]},
+ latpull:F({hp:[86,116],sh:[84,72],hd:[88,58],kn:[118,112],an:[120,148]},{el:[92,40],ha:[96,16]},{el:[84,105],ha:[96,84]},
    {eq:p=>EQ.tower(150,18,[[159,8],[96,8]])+SVGL(96,8,150,8,"frm")+cab(96,8,p.ha)+SVGL(p.ha[0]-16,p.ha[1],p.ha[0]+16,p.ha[1],"barH")+SVGR(66,120,44,8,"pad",3)+SVGR(106,98,20,8,"pad",4)+SVGL(88,128,88,152,"frm"),
     ph:PH_PULL,track:"ha",hl:[["sh","hp",0.12,0.62],["sh","el",0,0.5]],mus:"Latissimus · Bizeps",cues:[["el","Ellbogen Richtung Hüfte"],["sh","Brust raus, nicht zurücklehnen"]]}),
- pullup:F({ha:[100,16]},{el:[100,32],sh:[100,50],hd:[104,40],hp:[100,98],kn:[104,124],an:[100,146]},{el:[84,42],sh:[98,30],hd:[106,12],hp:[98,78],kn:[102,104],an:[98,126]},
-   {eq:p=>SVGL(54,10,54,152,"frm")+SVGL(152,10,152,152,"frm")+SVGL(54,16,152,16,"barH"),ph:[["Hochziehen",1.2],["oben",0.5],["Ablassen",2.5],["aushängen",0.6]],track:"sh",hl:[["sh","hp",0.12,0.62],["sh","el",0,0.6]],mus:"Latissimus · Bizeps",cues:[["sh","Brust zur Stange"],["el","Unten ganz aushängen"]]}),
+ pullup:F({ha:[100,22]},{el:[100,42],sh:[100,62],hd:[104,49],hp:[100,108],kn:[106,133],an:[90,150]},{el:[96,44],sh:[92,25],hd:[99,10],hp:[94,71],kn:[100,96],an:[84,113]},
+   {eq:p=>SVGL(54,10,54,152,"frm")+SVGL(152,10,152,152,"frm")+SVGL(54,22,152,22,"barH"),ph:[["Hochziehen",1.2],["oben",0.5],["Ablassen",2.5],["aushängen",0.6]],track:"sh",hl:[["sh","hp",0.12,0.62],["sh","el",0,0.6]],mus:"Latissimus · Bizeps",cues:[["sh","Brust zur Stange"],["el","Unten ganz aushängen"]]}),
  row:F({hp:[64,112],kn:[100,96],an:[132,116]},{sh:[80,70],hd:[90,58],el:[104,78],ha:[126,84]},{sh:[66,68],hd:[72,54],el:[48,90],ha:[80,96]},
    {eq:p=>EQ.tower(176,20,[[180,104]])+cab(180,104,p.ha)+SVGP([[p.ha[0]-3,p.ha[1]-6],[p.ha[0]+5,p.ha[1]],[p.ha[0]-3,p.ha[1]+6]],"vh")+SVGR(38,118,58,8,"pad",3)+SVGL(66,126,66,152,"frm")+SVGR(134,104,6,24,"pad",2)+SVGL(96,140,176,140,"frm"),
     ph:PH_PULL,track:"ha",hl:[["sh","hp",0.1,0.65],["sh","el",0,0.5]],mus:"oberer Rücken · Latissimus",cues:[["sh","Schulterblätter zusammen"],["hp","Aufrecht bleiben, nicht schaukeln"]]}),
  dbrow:F({hp:[70,90],sh:[118,86],hd:[134,82],kn:[84,122],an:[88,150],kn2:[64,102],an2:[42,102],el2:[120,96],ha2:[120,104]},{el:[124,112],ha:[124,132]},{el:[98,74],ha:[110,94]},
    {eq:p=>EQ.bench(36,128,104)+EQ.dbSide(p.ha[0],p.ha[1]),ph:PH_PULL,track:"ha",hl:[["sh","hp",0.05,0.6],["sh","el",0,0.5]],mus:"Latissimus · oberer Rücken",cues:[["el","Ellbogen nach hinten-oben"],["sh","Rücken gerade, Schulter nicht drehen"]]}),
- hinge:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],el:[100,66],ha:[100,88]},{hd:[140,74],sh:[126,72],hp:[74,90],kn:[104,120],el:[124,96],ha:[118,118]},
+ hinge:F({an:[98,150]},{hd:[102,30],sh:[100,44],hp:[98,88],kn:[100,119],el:[100,66],ha:[100,88]},{hd:[135,73],sh:[122,78],hp:[80,92],kn:[102,120],el:[118,101],ha:[112,123]},
    {eq:p=>EQ.plate(p.ha[0],p.ha[1]),ph:[["Hüfte zurück",2.5],["Dehnung",0.4],["Hochkommen",1.2],["oben",0.6]],track:"ha",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger · Gesäß",cues:[["sh","Rücken neutral"],["ha","Stange nah am Bein"]]}),
  hingedb:null,
  hyper:F({an:[150,138],kn:[126,118],hp:[100,98]},{sh:[62,66],hd:[50,56],el:[74,78],ha:[66,72]},{sh:[78,140],hd:[70,151],el:[90,130],ha:[84,122]},
    {eq:p=>SVGP([[88,106],[94,100],[114,86],[108,92]],"pad")+SVGL(100,104,150,152,"frm")+SVGL(96,152,124,112,"frm")+SVGC(146,132,5,"roller")+SVGR(150,136,8,12,"pad",2),floor:158,
     ph:[["Absenken",2],["unten",0.3],["Hochkommen",1.2],["oben halten",1]],track:"sh",hl:[["hp","kn",0.05,0.9],["sh","hp",0.6,1]],mus:"Gesäß · Beinbeuger · unterer Rücken",cues:[["hp","Bewegung aus der Hüfte"],["sh","Oben nicht überstrecken"]]}),
- legcurl:F({hd:[104,26],sh:[102,40],hp:[100,84],el:[114,60],ha:[126,64],kn:[100,114],kn2:[101,117],an2:[101,150]},{an:[100,146]},{an:[74,104]},
+ legcurl:F({hd:[104,26],sh:[102,40],hp:[100,84],el:[114,60],ha:[126,64],kn:[100,114],kn2:[101,117],an2:[101,150]},{an:[100,146]},{an:[70,103]},
    {eq:p=>EQ.tower(128,18,[[132,146]])+cab(132,146,p.an)+SVGC(p.an[0],p.an[1],4,"roller"),ph:[["Beugen",1],["oben halten",1],["Strecken",3],["unten",0.4]],track:"an",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger",cues:[["kn","Oberschenkel bleibt senkrecht"],["hp","Hüfte nicht abknicken"]]}),
  legcurlseat:F({hp:[88,100],sh:[96,57],hd:[100,43],kn:[124,98],el:[106,78],ha:[118,88]},{an:[160,112]},{an:[116,138]},
    {eq:p=>{const pv=[126,98];const v=[p.an[0]-p.kn[0],p.an[1]-p.kn[1]],L=Math.hypot(v[0],v[1])||1;const r=[p.an[0]-v[1]/L*7,p.an[1]+v[0]/L*7];
      return SVGR(60,102,70,8,"pad",3)+SVGP([[54,102],[62,102],[66,44],[58,44]],"padf")+SVGR(104,84,30,7,"pad",3)+SVGL(84,110,84,152,"frm")+SVGL(60,152,118,152,"frm")+SVGL(132,84,132,152,"frm")+
      SVGL(pv[0],pv[1],r[0],r[1],"lever")+SVGC(pv[0],pv[1],3,"pul")+SVGC(r[0],r[1],6,"roller")},
     ph:[["Beugen",1],["unten halten",1],["Strecken",3],["",0.4]],track:"an",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger",cues:[["kn","Knie auf Höhe der Drehachse"],["sh","Oberkörper leicht nach vorn"]]}),
- nordic:F({kn:[100,146],an:[70,146]},{hp:[100,102],sh:[100,58],hd:[100,44],el:[106,80],ha:[114,92]},{hp:[134,118],sh:[166,90],hd:[178,82],el:[172,114],ha:[170,134]},
+ nordic:F({kn:[100,146],an:[70,146]},{hp:[100,102],sh:[100,58],hd:[100,44],el:[106,80],ha:[118,96]},{hp:[134,118],sh:[166,90],hd:[178,82],el:[172,114],ha:[170,134]},
    {eq:p=>SVGR(56,148,120,5,"pad",2)+SVGC(70,140,5,"roller")+SVGL(64,134,64,152,"frm"),ph:[["Langsam nach vorn",4],["abfangen",0.5],["zurück",1.5],["",0.6]],track:"sh",hl:[["hp","kn",0.05,0.95]],mus:"Beinbeuger",cues:[["hp","Hüfte gestreckt, Körper gerade"],["an","Fersen fest fixiert"]]}),
  legext:F({hp:[70,100],sh:[62,56],hd:[64,42],kn:[104,100],el:[62,80],ha:[76,104]},{an:[108,138]},{an:[142,98]},
    {eq:legextEq,ph:[["Strecken",1],["oben halten",1],["Ablassen",3],["unten",0.3]],track:"an",hl:[["hp","kn",0.08,0.95]],mus:"Quadrizeps",cues:[["an","Oben 1 s halten"],["hp","Gesäß bleibt auf dem Sitz"]]}),
@@ -818,7 +824,7 @@ const FIG={
    {eq:p=>SVGR(30,112,40,8,"pad",3)+SVGL(36,120,36,152,"frm")+SVGL(64,120,64,152,"frm")+EQ.dbSide(p.ha[0],p.ha[1]),ph:[["Runter",2.5],["unten",0.3],["Hochdrücken",1.2],["oben",0.5]],track:"hp",hl:[["hp","kn",0.05,0.95]],mus:"Quadrizeps · Gesäß (vorderes Bein)",cues:[["kn","Vorderes Knie stabil über dem Fuß"],["sh","Oberkörper leicht nach vorn"]]}),
  lateral:F(FRONT,{elL:[80,66],haL:[82,88],elR:[120,66],haR:[118,88]},{elL:[64,46],haL:[44,48],elR:[136,46],haR:[156,48]},
    {eq:p=>EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),ph:PH_ISO,track:"haR",hl:[["shL","elL",0,0.45],["shR","elR",0,0.45]],mus:"Seitliche Schulter",cues:[["elR","Ellbogen führt, bis Schulterhöhe"],["shL","Schultern unten lassen"]]}),
- latcable:F(Object.assign({},FRONT,{elL:[72,62],haL:[54,72]}),{elR:[120,68],haR:[112,90]},{elR:[136,46],haR:[156,50]},
+ latcable:F(Object.assign({},FRONT,{elL:[72,62],haL:[54,72]}),{elR:[120,68],haR:[112,90]},{elR:[138,46],haR:[161,49]},
    {eq:p=>EQ.tower(30,18,[[46,146]])+cab(46,146,p.haR)+SVGC(p.haR[0],p.haR[1],3,"pul"),ph:PH_ISO,track:"haR",hl:[["shR","elR",0,0.45]],mus:"Seitliche Schulter",cues:[["elR","Ellbogen führt, bis Schulterhöhe"],["haL","Mit der freien Hand festhalten"]]}),
  fly:F(FRONT,{elL:[64,52],haL:[42,62],elR:[136,52],haR:[158,62]},{elL:[84,64],haL:[96,72],elR:[116,64],haR:[104,72]},
    {eq:p=>SVGR(0,4,12,148,"frame",3)+SVGR(188,4,12,148,"frame",3)+EQ.pulley(10,30)+EQ.pulley(190,30)+cab(10,30,p.haL)+cab(190,30,p.haR)+SVGC(p.haL[0],p.haL[1],3,"pul")+SVGC(p.haR[0],p.haR[1],3,"pul"),
@@ -835,13 +841,50 @@ const FIG={
    {eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),ph:[["Curlen",1],["oben",0.5],["Senken",2.5],["unten",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Bizeps",cues:[["el","Ellbogen bleibt am Körper"]]}),
  curlcable:F({hd:[100,30],sh:[98,44],hp:[96,88],kn:[98,119],an:[96,150],el:[96,70]},{ha:[100,96]},{ha:[112,50]},
    {eq:p=>EQ.tower(148,18,[[152,146]])+cab(152,146,p.ha)+SVGL(p.ha[0],p.ha[1]-4,p.ha[0],p.ha[1]+4,"barH"),ph:[["Curlen",1],["oben",0.5],["Senken",2.5],["unten",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Bizeps",cues:[["el","Ellbogen bleibt am Körper"]]}),
- pushdown:F({an:[96,150],kn:[98,119],hp:[94,88],sh:[102,46],hd:[106,32],el:[104,72]},{ha:[124,60]},{ha:[112,98]},
+ pushdown:F({an:[96,150],kn:[98,119],hp:[94,88],sh:[102,46],hd:[106,32],el:[104,72]},{ha:[125,61]},{ha:[111,95]},
    {eq:p=>EQ.tower(136,18,[[140,8]])+cab(140,8,p.ha)+EQ.rope(p.ha),ph:[["Drücken",1],["unten halten",0.5],["Zurück",2.5],["",0.3]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Trizeps",cues:[["el","Ellbogen bleiben am Körper"],["ha","Unten Seil auseinanderziehen"]]}),
- ohtri:F({an:[110,150],kn:[108,119],hp:[110,88],sh:[104,46],hd:[108,32],el:[112,24]},{ha:[92,40]},{ha:[138,10]},
+ ohtri:F({an:[110,150],kn:[108,119],hp:[110,88],sh:[104,46],hd:[108,32],el:[112,24]},{ha:[92,40]},{ha:[135,12]},
    {eq:p=>EQ.tower(14,18,[[30,60]])+cab(30,60,p.ha)+EQ.rope(p.ha),ph:[["Strecken",1],["oben",0.5],["Zurück in Dehnung",2.5],["Dehnung",0.4]],track:"ha",hl:[["sh","el",0.1,0.95]],mus:"Trizeps (langer Kopf)",cues:[["el","Ellbogen nach vorn oben, ruhig halten"]]}),
- crunch:F({kn:[110,148],an:[78,148],hp:[108,106]},{sh:[112,64],hd:[118,50],el:[124,58],ha:[120,46]},{sh:[146,104],hd:[156,116],el:[150,120],ha:[146,108]},
+ crunch:F({kn:[110,148],an:[78,148],hp:[108,106]},{sh:[112,64],hd:[118,50],el:[130,78],ha:[122,56]},{sh:[140,78],hd:[154,72],el:[144,100],ha:[153,79]},
    {eq:p=>EQ.tower(166,18,[[170,8]])+cab(170,8,p.ha)+EQ.rope(p.ha)+SVGR(60,148,70,4,"pad",2),ph:[["Einrollen",1],["halten",0.6],["Aufrollen",2],["",0.3]],track:"sh",hl:[["sh","hp",0.25,0.95]],mus:"Bauch",cues:[["hp","Hüfte bleibt stehen"],["sh","Rippen Richtung Becken"]]})
 };
+/* Anweisung je Bewegungsphase (passend zu ph: 4 Phasen) und zusätzliche Markierungen */
+const TIPS={
+ squat:["Hüfte nach hinten-unten, Knie nach außen über die Zehen","Oberschenkel mindestens waagerecht, Rücken gerade","Aus dem ganzen Fuß hochdrücken, Brust bleibt oben","Bauch neu anspannen, tief Luft holen"],
+ legpress:["Kontrolliert beugen, Knie Richtung Schultern","Becken bleibt am Polster, nicht einrollen","Über die Fersen wegdrücken","Knie nicht ganz durchdrücken"],
+ calfpress:["Über die Fußballen ganz hochdrücken","Waden fest anspannen","Fersen langsam tief sinken lassen","Dehnung halten, nicht wippen"],
+ calfsmith:["Über die Fußballen ganz hochdrücken","Waden fest anspannen","Fersen langsam tief sinken lassen","Dehnung halten, nicht wippen"],
+ bench:["Langsam zur unteren Brust senken, Ellbogen 45–70° vom Körper","Kurz berühren, nicht abprallen lassen","Gerade hochdrücken, Füße fest in den Boden","Arme strecken, Schulterblätter bleiben hinten"],
+ incline:["Tief neben die obere Brust senken","Dehnung in der Brust spüren","Hochdrücken und leicht zusammenführen","Oben nicht zusammenschlagen, Spannung halten"],
+ latpull:["Ellbogen nach unten Richtung Hüfte ziehen","Stange zur oberen Brust, Schulterblätter zusammen","Langsam nach oben führen lassen","Arme lang, Schultern gehen mit nach oben"],
+ pullup:["Schulterblätter runter, Brust zur Stange ziehen","Kinn über die Stange","Langsam ablassen, nicht fallen","Ganz aushängen, Arme lang"],
+ row:["Griff zum Bauchnabel, Ellbogen eng am Körper","Schulterblätter zusammendrücken","Arme langsam nach vorn strecken","Schultern nach vorn ziehen lassen, Rücken bleibt gerade"],
+ dbrow:["Ellbogen nach hinten-oben zur Hüfte ziehen","Schulterblatt zur Wirbelsäule","Hantel langsam ablassen","Arm lang, Schulter sinkt leicht"],
+ hinge:["Hüfte nach hinten schieben, Gewicht gleitet am Bein","Deutliche Dehnung im Beinbeuger, Rücken gerade","Hüfte nach vorn drücken, Gesäß anspannen","Aufrecht stehen, nicht nach hinten lehnen"],
+ hyper:["Aus der Hüfte abklappen, Rücken gerade","Dehnung im Beinbeuger","Gesäß anspannen und hochkommen","Körper in einer Linie, nicht überstrecken"],
+ legcurlseat:["Fersen kraftvoll unter den Sitz ziehen","Beinbeuger fest anspannen","Langsam strecken, Gewicht bremsen","Fast gestreckt, Gewicht nicht absetzen"],
+ legcurl:["Ferse Richtung Gesäß ziehen","Kurz fest anspannen","Langsam strecken","Bein fast gestreckt, Spannung halten"],
+ nordic:["Körper gerade, so langsam wie möglich nach vorn sinken","Mit den Händen abfangen","Mit den Armen abdrücken und zurück","Hüfte gestreckt, Spannung aufbauen"],
+ legext:["Beine kraftvoll strecken","Oberschenkel fest anspannen","Langsam ablassen","Gewicht nicht absetzen"],
+ split:["Gerade nach unten sinken, vorderes Knie stabil","Hinteres Knie knapp über dem Boden","Über die vordere Ferse hochdrücken","Hüfte gerade, Spannung halten"],
+ lateral:["Arme seitlich heben, die Ellbogen führen","Bis Schulterhöhe, Schultern unten lassen","Langsam ablassen, nicht fallen lassen","Spannung halten, kein Schwung"],
+ latcable:["Arm seitlich heben, der Ellbogen führt","Bis Schulterhöhe, Schulter unten lassen","Langsam ablassen, nicht fallen lassen","Spannung halten, kein Schwung"],
+ fly:["Arme im weiten Bogen nach vorn führen","Hände vor der Brust, Brust zusammendrücken","Langsam öffnen, Ellbogen leicht gebeugt","Weite Dehnung, Schultern bleiben hinten"],
+ facepull:["Seil zur Stirn ziehen, Ellbogen hoch und weit","Hände auseinander, Daumen nach hinten","Langsam nach vorn führen","Arme lang, Schultern unten"],
+ abduct:["Knie kraftvoll nach außen drücken","Kurz halten","Langsam zurückführen","Gewicht nicht aufsetzen"],
+ press:["Hanteln gerade nach oben drücken","Arme fast gestreckt","Langsam bis auf Ohrhöhe senken","Unterarme senkrecht"],
+ curl:["Unterarm beugen, Ellbogen bleibt am Körper","Bizeps fest anspannen","Langsam senken","Arm ganz strecken"],
+ curlcable:["Unterarm beugen, Ellbogen bleibt am Körper","Bizeps fest anspannen","Langsam senken","Arm ganz strecken"],
+ pushdown:["Seil nach unten drücken, Ellbogen fest am Körper","Arme strecken, Seil auseinanderziehen","Langsam zurück bis Brusthöhe","Ellbogen bleiben vorn"],
+ ohtri:["Arme nach vorn-oben strecken","Trizeps fest anspannen","Langsam zurück hinter den Kopf","Tiefe Dehnung, Ellbogen ruhig"],
+ crunch:["Rippen Richtung Becken einrollen","Bauch fest anspannen","Langsam aufrollen","Rücken lang, Hüfte bleibt stehen"]
+};
+const XCUES={squat:[["el","Brust oben, Rücken gerade"]],bench:[["el","Ellbogen 45–70° zum Körper, nicht ganz abspreizen"]],hinge:[["kn","Knie leicht gebeugt, bleiben ruhig"]],row:[["el","Ellbogen eng am Körper"]],
+ latpull:[["hp","Oberschenkel fest unter dem Polster"]],split:[["hp","Hüfte gerade nach unten"]],legpress:[["an","Füße schulterbreit, ganze Sohle auf der Platte"]],pullup:[["hp","Kein Schwung aus den Beinen"]],curl:[["sh","Schulter bleibt hinten"]]};
+Object.keys(TIPS).forEach(k=>{if(FIG[k])FIG[k].tips=TIPS[k]});
+Object.keys(XCUES).forEach(k=>{if(FIG[k])FIG[k].cues=(FIG[k].cues||[]).concat(XCUES[k])});
+/* Von vorn gesehen und zum Betrachter hin bewegt: Punkte geradlinig verschieben (perspektivische Verkürzung) */
+["fly","abduct"].forEach(k=>{FIG[k].lin=true});
 /* Varianten mit anderem Gerät */
 FIG.benchsmith=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"smith")});
 FIG.benchdb=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"db"),cues:[["sh","Schulterblätter zusammen"],["ha","Hanteln tief, oben nicht zusammenschlagen"]]});
@@ -850,22 +893,58 @@ FIG.hingedb=Object.assign({},FIG.hinge,{eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),cues:[[
 FIG.squatbar=Object.assign({},FIG.squat,{eq:p=>SVGL(66,20,66,152,"frm")+SVGL(140,20,140,152,"frm")+EQ.plate(p.ha[0]+2,p.ha[1])});
 FIG.dbfly=Object.assign({},FIG.fly,{eq:p=>SVGR(88,14,24,86,"padf",4)+EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),note:"Von oben gesehen, du liegst auf der Flachbank."});
 const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"legpress","Beinpresse einbeinig":"legpress","Bankdrücken Langhantel":"bench","Bankdrücken Smith-Maschine":"benchsmith","Kurzhantel-Bankdrücken":"benchdb","Schrägbankdrücken Kurzhantel":"incline","Schrägbankdrücken Smith-Maschine":"inclinesmith","Kurzhantel-Fliegende":"dbfly","Kabel-Fliegende":"fly","Latzug breit":"latpull","Latzug eng Untergriff":"latpull","Klimmzüge":"pullup","Klimmzüge Untergriff":"pullup","Rudern sitzend eng":"row","Kurzhantel-Rudern einarmig":"dbrow","Rumänisches Kreuzheben":"hinge","Rumänisches Kreuzheben Kurzhantel":"hingedb","Hyperextension":"hyper","Beinstrecker":"legext","Bulgarische Split Squats":"split","Ausfallschritte Kurzhantel":"split","Seitheben am Kabel":"latcable","Seitheben Kurzhantel":"lateral","Face Pulls Seil":"facepull","Abduktoren":"abduct","Schulterdrücken Kurzhantel":"press","Bizeps-Curls Kurzhantel":"curl","Bizeps-Curls Kabel":"curlcable","Trizepsdrücken Seil":"pushdown","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch","Wadenheben an der Beinpresse":"calfpress","Wadenheben Smith-Maschine":"calfsmith","Beinbeuger-Curl sitzend":"legcurlseat","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"nordic"};
-const PAIRS=[["hp","kn"],["kn","an"],["sh","el"],["el","ha"],["hp","kn2"],["kn2","an2"],["sh","el2"],["el2","ha2"],["an","to"],["hpL","hpR"],["hpL","knL"],["knL","anL"],["hpR","knR"],["knR","anR"],["shL","elL"],["elL","haL"],["shR","elR"],["elR","haR"]];
+const PAIRS_FAR=[["hp","kn2"],["kn2","an2"],["sh","el2"],["el2","ha2"]];
+const PAIRS=[["hp","kn"],["kn","an"],["an","to"],["sh","el"],["el","ha"],["hpL","hpR"],["hpL","knL"],["knL","anL"],["hpR","knR"],["knR","anR"],["shL","elL"],["elL","haL"],["shR","elR"],["elR","haR"]];
+const SEGK={kn:"th",an:"sn",el:"ua",ha:"fa"};
 const fx=n=>(+n).toFixed(1);
+/* Figur mit Volumen: Oberschenkel und Oberarm dicker als Unterschenkel und Unterarm, Hände, hintere Gliedmaßen dunkler */
 function figBody(p,cls,f){
   let h=`<g class="${cls}">`;
+  const seg=([a,b],far)=>{if(!p[a]||!p[b])return "";const k=SEGK[b.replace(/[2LR]$/,"")];return SVGL(p[a][0],p[a][1],p[b][0],p[b][1],"limb"+(k?" "+k:"")+(far?" far":""))};
+  PAIRS_FAR.forEach(x=>{h+=seg(x,true)});
+  if(p.ha2)h+=SVGC(p.ha2[0],p.ha2[1],3,"hand far");
   if(p.nk){h+=SVGP([p.shL,p.shR,p.hpR||p.hp,p.hpL||p.hp],"torsoF")}else if(p.sh&&p.hp)h+=SVGL(p.sh[0],p.sh[1],p.hp[0],p.hp[1],"torso");
-  PAIRS.forEach(([a,b])=>{if(p[a]&&p[b]){const back=(a.endsWith("2")||b.endsWith("2"));h+=SVGL(p[a][0],p[a][1],p[b][0],p[b][1],back?"limb far":"limb")}});
+  PAIRS.forEach(x=>{h+=seg(x,false)});
   const base=p.nk||p.sh;
   if(base&&p.hd){const dx=base[0]-p.hd[0],dy=base[1]-p.hd[1],d=Math.hypot(dx,dy)||1;h+=SVGL(p.hd[0]+dx/d*8,p.hd[1]+dy/d*8,base[0],base[1],"limb neck")}
   if(p.an&&!p.nk&&!p.to&&!(f&&f.foot))h+=SVGL(p.an[0],p.an[1],p.an[0]+11,p.an[1],"limb foot");
   if(f&&f.foot==="plate"&&p.an)h+=SVGL(p.an[0],p.an[1],p.an[0]-PERP[0]*11,p.an[1]-PERP[1]*11,"limb foot");
   ["kn","el","kn2","knL","knR","elL","elR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],2.2,"joint")});
+  ["ha","haL","haR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],3.3,"hand")});
   if(p.hd)h+=`<circle cx="${fx(p.hd[0])}" cy="${fx(p.hd[1])}" r="8.5" class="head"/>`;
   return h+"</g>";
 }
 function segPart(p,a,b,f0,f1){const A=p[a],B=p[b];if(!A||!B)return "";return SVGL(A[0]+(B[0]-A[0])*f0,A[1]+(B[1]-A[1])*f0,A[0]+(B[0]-A[0])*f1,A[1]+(B[1]-A[1])*f1,"mus")}
-function lerpPose(a,b,t){const o={};for(const k in a){o[k]=b[k]?[a[k][0]+(b[k][0]-a[k][0])*t,a[k][1]+(b[k][1]-a[k][1])*t]:a[k]}for(const k in b)if(!o[k])o[k]=b[k];return o}
+/* Starres Skelett: Gliedmaßen behalten ihre Länge. Gelenke drehen sich (polar), geführte Hände und Füße
+   (Stange, Boden, Schlitten) werden per Zwei-Gelenk-Lösung erreicht. Vorher wurden Punkte geradlinig verschoben. */
+const LIMBS=[["hp","kn","an"],["hp","kn2","an2"],["sh","el","ha"],["sh","el2","ha2"],["hpL","knL","anL"],["hpR","knR","anR"],["shL","elL","haL"],["shR","elR","haR"]];
+const dist2=(A,B)=>Math.hypot(B[0]-A[0],B[1]-A[1]);
+const still=(f,k)=>!f.a[k]||!f.b[k]||dist2(f.a[k],f.b[k])<0.6;
+function polar(Pa,Ca,Pb,Cb,Pt,t){const aa=Math.atan2(Ca[1]-Pa[1],Ca[0]-Pa[0]);let d=Math.atan2(Cb[1]-Pb[1],Cb[0]-Pb[0])-aa;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+  const la=dist2(Pa,Ca),L=la+(dist2(Pb,Cb)-la)*t,an=aa+d*t;return [Pt[0]+Math.cos(an)*L,Pt[1]+Math.sin(an)*L]}
+function limbSpec(f,R,M,E){const key=R+M;f._ik=f._ik||{};if(f._ik[key])return f._ik[key];
+  const m=p=>({l1:dist2(p[R],p[M]),l2:dist2(p[M],p[E]),d:dist2(p[R],p[E]),s:(p[E][0]-p[R][0])*(p[M][1]-p[R][1])-(p[E][1]-p[R][1])*(p[M][0]-p[R][0])});
+  const A=m(f.a),B=m(f.b);const ext=x=>x.d/(x.l1+x.l2||1);const S=ext(A)>=ext(B)?A:B,N=S===A?B:A;
+  let l1=S.l1,l2=S.l2;const need=Math.max(A.d,B.d)*1.002;if(l1+l2<need){const q=need/(l1+l2);l1*=q;l2*=q}
+  const sg=Math.abs(N.s)>1?Math.sign(N.s):Math.abs(S.s)>1?Math.sign(S.s):1;
+  return f._ik[key]={l1,l2,sg,rigid:Math.abs(ext(A)-ext(B))<0.06}}
+function solveIK(Rp,Ep,sp){const dx=Ep[0]-Rp[0],dy=Ep[1]-Rp[1];let d=Math.hypot(dx,dy)||0.001;const ux=dx/d,uy=dy/d;
+  d=Math.max(Math.abs(sp.l1-sp.l2)+0.01,Math.min(d,sp.l1+sp.l2-0.01));
+  const a=(sp.l1*sp.l1-sp.l2*sp.l2+d*d)/(2*d),h=Math.sqrt(Math.max(0,sp.l1*sp.l1-a*a));return [Rp[0]+ux*a-uy*h*sp.sg,Rp[1]+uy*a+ux*h*sp.sg]}
+function poseAt(f,t){const a=f.a,b=f.b,o={};
+  for(const k in a){o[k]=b[k]?[a[k][0]+(b[k][0]-a[k][0])*t,a[k][1]+(b[k][1]-a[k][1])*t]:a[k]}for(const k in b)if(!o[k])o[k]=b[k];
+  if(f.lin)return o;
+  const P=(par,ch)=>{if(a[par]&&a[ch]&&b[par]&&b[ch])o[ch]=polar(a[par],a[ch],b[par],b[ch],o[par],t)};
+  if(a.kn&&still(f,"kn")&&still(f,"an")&&!still(f,"hp"))P("kn","hp");
+  P("hp","sh");P("sh","hd");
+  LIMBS.forEach(([R,M,E])=>{if(!a[R]||!a[M]||!b[M])return;
+    if(!a[E]||!b[E]){P(R,M);return}
+    if(still(f,M)&&still(f,E))return;
+    const sp=limbSpec(f,R,M,E);
+    if(sp.rigid||(still(f,R)&&still(f,M))){if(!still(f,M)||!still(f,R))P(R,M);P(M,E);return}
+    o[M]=solveIK(o[R],o[E],sp)});
+  P("an","to");
+  return o}
 const ease=x=>x<0.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
 function phaseAt(f,sec){
   const ph=f.ph||PH_DOWN;const tot=ph.reduce((s,x)=>s+x[1],0);let r=sec%tot;
@@ -878,35 +957,43 @@ function arrowSvg(from,to){const dx=to[0]-from[0],dy=to[1]-from[1],d=Math.hypot(
 function drawFig(svg,t,info){
   const f=FIG[svg.dataset.fig];if(!f)return;const fl=f.floor||152;
   const stat=reduceMotion||svg.dataset.static;
-  const p=stat?f.b:lerpPose(f.a,f.b,t);
+  const p=stat?poseAt(f,1):poseAt(f,t);
   let h=SVGL(0,fl,200,fl,"fl");
-  if(stat){h+=(f.eq?`<g class="gh">${f.eq(f.a)}</g>`:"")+figBody(f.a,"bd gh",f)}
+  if(stat){const p0=poseAt(f,0);h+=(f.eq?`<g class="gh">${f.eq(p0)}</g>`:"")+figBody(p0,"bd gh",f)}
+  if(f.track){const pts=[];for(let q=0;q<=10;q++){const j=poseAt(f,q/10)[f.track];if(j)pts.push(j)}
+    if(pts.length>1&&dist2(pts[0],pts[pts.length-1])>6)h+=`<polyline class="trk" points="${pts.map(j=>fx(j[0])+","+fx(j[1])).join(" ")}"/>`+SVGC(pts[0][0],pts[0][1],1.8,"trke")+SVGC(pts[pts.length-1][0],pts[pts.length-1][1],1.8,"trke")}
   h+=(f.eq?f.eq(p):"")+figBody(p,"bd",f);
   (f.hl||[]).forEach(x=>{h+=segPart(p,x[0],x[1],x[2],x[3])});
   (f.cues||[]).forEach((c,i)=>{const j=p[c[0]];if(j)h+=`<g class="cuem"><circle cx="${fx(j[0]+9)}" cy="${fx(j[1]-9)}" r="6"/><text x="${fx(j[0]+9)}" y="${fx(j[1]-6.6)}">${i+1}</text></g>`});
-  if(!stat&&info&&f.track&&info.i%2===0){const j0=p[f.track];const p2=lerpPose(f.a,f.b,info.i===0?Math.min(1,t+0.06):Math.max(0,t-0.06));const j1=p2[f.track];if(j0&&j1)h+=arrowSvg(j0,j1)}
+  if(!stat&&info&&f.track&&info.i%2===0){const j0=p[f.track];const p2=poseAt(f,info.i===0?Math.min(1,t+0.06):Math.max(0,t-0.06));const j1=p2[f.track];if(j0&&j1)h+=arrowSvg(j0,j1)}
   if(stat)h+=`<text class="hud" x="6" y="13">Grau = Start · Weiß = Endposition</text>`;
   else if(info){const sym=info.i===0||info.i===2?(info.i===0?"▶":"◀"):"‖";h+=`<text class="hud" x="6" y="13">${sym} ${esc(info.label)}${info.dur>=0.8?` · ${String(info.dur).replace(".",",")} s`:""}</text><rect class="hudbar" x="6" y="17" width="${fx(60*info.q)}" height="2.5" rx="1"/>`}
   svg.innerHTML=h;
 }
+/* Text zur aktuellen Phase: Name, Atmung (ausatmen in der anstrengenden, kürzeren Phase) und Anweisung */
+function coachTxt(f,i){const ph=f.ph||PH_DOWN;const con=ph[0][1]<=ph[2][1]?0:2,ecc=con===0?2:0;const tips=f.tips||[];
+  if(i==null)return ["Start und Ende",[0,2].map(k=>tips[k]?`${ph[k][0]}: ${tips[k]}`:"").filter(Boolean).join(" · ")];
+  return [(ph[i][0]||"Kurz halten")+(i===con?" · ausatmen":i===ecc?" · einatmen":""),tips[i]||""]}
+function setCoach(svg,i){const f=FIG[svg.dataset.fig],c=svg.parentElement&&svg.parentElement.querySelector(".figcoach");if(!f||!c)return;const x=coachTxt(f,i);c.firstElementChild.textContent=x[0];c.lastElementChild.textContent=x[1]}
 const ANIM=new Set();let animRun=false;
 function animLoop(now){
   if(!ANIM.size){animRun=false;return}
   ANIM.forEach(svg=>{if(!svg.isConnected){ANIM.delete(svg);return}const f=FIG[svg.dataset.fig];if(!f)return;
     const st=svg._st||(svg._st={t0:now,acc:0,last:now});const slow=svg.dataset.slow?0.5:1;
     if(!svg.dataset.paused)st.acc+=(now-st.last)/1000*slow;st.last=now;
-    const info=phaseAt(f,st.acc);drawFig(svg,info.t,info)});
+    const info=phaseAt(f,st.acc);drawFig(svg,info.t,info);if(svg._phi!==info.i){svg._phi=info.i;setCoach(svg,info.i)}});
   requestAnimationFrame(animLoop);
 }
 function startAnim(svg){if(reduceMotion||svg.dataset.static)return;ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}
 function figHtml(name){const k=PAT[name];const f=k&&FIG[k];if(!f)return "";
   return `<div class="fig"><svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
+  <div class="figcoach"><b>${esc(coachTxt(f,0)[0])}</b><span>${esc(coachTxt(f,0)[1])}</span></div>
   <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button><button class="ghost sm2" data-act="figmode">Start/Ende</button></div>
-  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}<p class="muted small">Pfeil = Bewegungsrichtung. Oben links: aktuelle Phase und Tempo.</p></div></div>`}
+  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
 function figAct(act,a){const svg=a.closest(".fig").querySelector("svg");
   if(act==="figplay"){if(svg.dataset.paused){delete svg.dataset.paused;a.textContent="Pause"}else{svg.dataset.paused="1";a.textContent="Weiter"}return}
   if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}
-  if(act==="figmode"){if(svg.dataset.static){delete svg.dataset.static;a.textContent="Start/Ende";startAnim(svg)}else{svg.dataset.static="1";ANIM.delete(svg);a.textContent="Animation";drawFig(svg,1)}}}
+  if(act==="figmode"){if(svg.dataset.static){delete svg.dataset.static;a.textContent="Start/Ende";svg._phi=null;startAnim(svg)}else{svg.dataset.static="1";ANIM.delete(svg);a.textContent="Animation";drawFig(svg,1);setCoach(svg,null)}}}
 document.addEventListener("toggle",e=>{
   const d=e.target;if(!d.classList||!d.classList.contains("cue"))return;
   d.querySelectorAll("svg.anim").forEach(svg=>{
