@@ -909,7 +909,17 @@ const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"
 /* Fotos zu Start und Endposition (src/img/<schlüssel>-a.webp und -b.webp), je Übungsname. KI-erzeugt, siehe docs/bilder.md. */
 const PHOTO={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Bankdrücken Langhantel":"bench","Latzug breit":"latpull","Beinstrecker":"legext","Seitheben am Kabel":"latcable","Trizepsdrücken Seil":"pushdown",
  "Wadenheben an der Beinpresse":"calfpress","Rumänisches Kreuzheben":"hinge","Schrägbankdrücken Kurzhantel":"incline","Rudern sitzend eng":"row","Beinpresse":"legpress","Beinbeuger-Curl sitzend":"legcurlseat",
- "Seitheben Kurzhantel":"lateral","Bizeps-Curls Kurzhantel":"curl","Bulgarische Split Squats":"split","Kabel-Fliegende":"fly","Klimmzüge Untergriff":"pullup","Face Pulls Seil":"facepull","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch"};
+ "Seitheben Kurzhantel":"lateral","Bizeps-Curls Kurzhantel":"curl","Bulgarische Split Squats":"split","Kabel-Fliegende":"fly","Klimmzüge Untergriff":"pullup","Face Pulls Seil":"facepull","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch",
+ /* Ausweichübungen */
+ "Bankdrücken Smith-Maschine":"benchsmith","Kurzhantel-Bankdrücken":"benchdb","Klimmzüge":"pullupwide","Ausfallschritte Kurzhantel":"lunge","Wadenheben Smith-Maschine":"calfsmith","Rumänisches Kreuzheben Kurzhantel":"hingedb",
+ "Hyperextension":"hyper","Schrägbankdrücken Smith-Maschine":"inclinesmith","Kurzhantel-Rudern einarmig":"dbrow","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"nordic","Bizeps-Curls Kabel":"curlcable",
+ "Beinpresse einbeinig":"legpress1","Kurzhantel-Fliegende":"dbfly","Latzug eng Untergriff":"latpullclose","Reverse Flys Kurzhantel":"revfly","Abduktoren":"abduct"};
+/* Eigene Bildunterschriften [Start, Endposition], wo die Hinweise der Figur nicht passen oder es keine Figur gibt */
+const PCAP={revfly:["Oberkörper fast waagerecht, Rücken gerade, Arme hängen","Arme seitlich bis Schulterhöhe, Schulterblätter zusammen"],nordic:[null,"Körper bleibt eine gerade Linie, so langsam wie möglich bremsen"],
+ lunge:["Aufrecht stehen, Hanteln hängen seitlich","Vorderes Knie über dem Fuß, hinteres Knie knapp über dem Boden"],legpress1:[null,"Ein Fuß auf der Platte, Becken bleibt am Polster"]};
+const PHOTO_NOTE=`<p class="muted small">Fotos: KI-erzeugt und geprüft. Die Geräte in deinem Studio können anders aussehen.</p>`;
+function photoHtml(name,tips){const ph=PHOTO[name];if(!ph)return "";const pc=PCAP[ph]||[];
+  return `<div class="figphotos">${[["a","Start",3,0],["b","Endposition",1,1]].map(([x,l,i,j])=>`<figure><img src="img/${ph}-${x}.webp" width="800" height="640" alt="${l}: ${esc(name)}" loading="lazy" onerror="this.closest('figure').hidden=true"><figcaption><b>${l}</b>${esc(pc[j]||tips[i]||"")}</figcaption></figure>`).join("")}</div>`}
 const fx=n=>(+n).toFixed(1);
 /* Körperformen statt Strichen: Gliedmaßen verjüngen sich, jede Einheit (Bein, Arm, Rumpf mit Kopf) hat eine dunkle Kontur.
    So heben sich Arme vor dem Rumpf und Beine voneinander ab. Die kleine Nase zeigt die Blickrichtung. */
@@ -1009,16 +1019,17 @@ function animLoop(now){
   requestAnimationFrame(animLoop);
 }
 function startAnim(svg){if(reduceMotion||svg.dataset.static)return;ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}
-function figHtml(name){const k=PAT[name];const f=k&&FIG[k];if(!f)return "";
+function figHtml(name){const k=PAT[name];const f=k&&FIG[k];
+  if(!f)return PHOTO[name]?`<div class="fig">${photoHtml(name,[])}${PHOTO_NOTE}</div>`:"";  /* Übung ohne Animation: nur Fotos */
   const tips=f.tips||[],ph=PHOTO[name];
   const cap=(l,i)=>`<figcaption><b>${l}</b>${esc(tips[i]||"")}</figcaption>`;
-  const photos=ph?`<div class="figphotos">${[["a","Start",3],["b","Endposition",1]].map(([x,l,i])=>`<figure><img src="img/${ph}-${x}.webp" width="800" height="640" alt="${l}: ${esc(name)}" loading="lazy" onerror="this.closest('figure').hidden=true">${cap(l,i)}</figure>`).join("")}</div>`:"";
+  const photos=photoHtml(name,tips);
   const stills=ph?"":`<div class="figstills"><figure>${stillSvg(k,0,"Start")}${cap("Start",3)}</figure><figure>${stillSvg(k,1,"Endposition")}${cap("Endposition",1)}</figure></div>`;
   return `<div class="fig">${photos}<svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
   <div class="figcoach"><b>${esc(coachTxt(f,reduceMotion?null:0)[0])}</b><span>${esc(coachTxt(f,reduceMotion?null:0)[1])}</span></div>
   <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button></div>
   ${stills}
-  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}${ph?`<p class="muted small">Fotos: KI-erzeugt und geprüft. Die Geräte in deinem Studio können anders aussehen.</p>`:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
+  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}${ph?PHOTO_NOTE:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
 function figAct(act,a){const svg=a.closest(".fig").querySelector("svg");
   if(act==="figplay"){if(svg.dataset.paused){delete svg.dataset.paused;a.textContent="Pause"}else{svg.dataset.paused="1";a.textContent="Weiter"}return}
   if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}}

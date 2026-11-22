@@ -113,12 +113,17 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   assert.equal(w.document.querySelectorAll('article[data-slot="A1"] .figstills').length,0,"keine doppelten Standbilder");
   assert.ok(w.document.querySelector('article[data-slot="A1"] .fig svg.anim'),"Animation bleibt")});
  ok('Übung ohne Foto zeigt gezeichnete Standbilder',()=>{
-  const d=w.document.createElement('div');d.innerHTML=E('figHtml("Nordic Curls")');const f=d.querySelectorAll('.figstills figure');assert.equal(f.length,2);
+  const d=w.document.createElement('div');d.innerHTML=E('(()=>{const k=PHOTO["Nordic Curls"];delete PHOTO["Nordic Curls"];const h=figHtml("Nordic Curls");PHOTO["Nordic Curls"]=k;return h})()');const f=d.querySelectorAll('.figstills figure');assert.equal(f.length,2);
   assert.ok(f[0].querySelector('svg path.bf')&&f[1].querySelector('svg path.bf'),"Figur gezeichnet");assert.equal(d.querySelectorAll('.figphotos').length,0)});
- ok('Fotos: alle Übungen des Plans haben zwei Bilder, die Dateien liegen lokal und im Offline-Speicher',()=>{
+ ok('Ausweichübung ohne Animation zeigt trotzdem ihre Fotos mit eigener Unterschrift',()=>{
+  const d=w.document.createElement('div');d.innerHTML=E('figHtml("Reverse Flys Kurzhantel")');const f=d.querySelectorAll('.figphotos figure');assert.equal(f.length,2);
+  assert.equal(f[0].querySelector('img').getAttribute('src'),'img/revfly-a.webp');assert.match(f[1].textContent,/Arme seitlich bis Schulterhöhe/);assert.equal(d.querySelectorAll('svg').length,0);
+  const n=w.document.createElement('div');n.innerHTML=E('figHtml("Nordic Curls")');assert.match(n.querySelectorAll('.figphotos figure')[1].textContent,/gerade Linie/)});
+ ok('Fotos: alle Übungen und Ausweichübungen haben zwei Bilder, die Dateien liegen lokal und im Offline-Speicher',()=>{
   const fs=require('fs'),path=require('path'),root=path.join(__dirname,'..');const sw=fs.readFileSync(path.join(root,'sw.js'),'utf8');
   const names=JSON.parse(E('JSON.stringify(ORDER.flatMap(d=>PROGRAM[d].ex.map(x=>x.name)))'));const PH=JSON.parse(E('JSON.stringify(PHOTO)'));
   names.forEach(n=>assert.ok(PH[n],"Foto fehlt: "+n));
+  JSON.parse(E('JSON.stringify(ORDER.flatMap(d=>PROGRAM[d].ex.flatMap(x=>x.alts)))')).forEach(n=>assert.ok(PH[n],"Foto für Ausweichübung fehlt: "+n));
   new Set(Object.values(PH)).forEach(k=>["a","b"].forEach(x=>{const f=`img/${k}-${x}.webp`;
     assert.ok(fs.statSync(path.join(root,f)).size>3000,f);assert.ok(fs.existsSync(path.join(root,'src',f)),"src/"+f);assert.ok(sw.includes(`"${f}"`),"nicht im Service Worker: "+f)}));
   assert.equal(fs.readdirSync(path.join(root,'img')).length,new Set(Object.values(PH)).size*2,"keine überzähligen Bilder")});

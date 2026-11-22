@@ -1,6 +1,6 @@
 # Übungsfotos
 
-Zu jeder Übung des Plans gibt es zwei Fotos: Start (`-a`) und Endposition (`-b`). Sie liegen in `src/img/` als WebP (800 × 640 px, zusammen ca. 660 KB), der Build kopiert sie nach `img/`, der Service Worker speichert sie offline. Die Zuordnung Übungsname → Bildschlüssel steht in `PHOTO` in `src/app.html`. Übungen ohne Eintrag zeigen stattdessen die gezeichneten Standbilder.
+Zu jeder Übung und Ausweichübung gibt es zwei Fotos: Start (`-a`) und Endposition (`-b`). Sie liegen in `src/img/` als WebP (800 × 640 px, zusammen ca. 1,2 MB), der Build kopiert sie nach `img/`, der Service Worker speichert sie offline. Die Zuordnung Übungsname → Bildschlüssel steht in `PHOTO` in `src/app.html`. Übungen ohne Eintrag zeigen stattdessen die gezeichneten Standbilder.
 
 Die Bilder sind KI-erzeugt (Higgsfield, Modell `gpt_image_2_6`, Qualität `high`, Auflösung `1k`, Seitenverhältnis 5:4, ca. 1,25 Credits pro Bild). Das Repo ist öffentlich, die Bilder also auch.
 
@@ -18,6 +18,8 @@ Die Bilder sind KI-erzeugt (Higgsfield, Modell `gpt_image_2_6`, Qualität `high`
 4. **Verkleinern:** auf 800 px Breite, WebP mit Qualität 80, nach `src/img/<schlüssel>-a.webp` und `-b.webp`.
 5. In `PHOTO` eintragen, `python3 tools/build.py`, `npm test`. Ein Test prüft, dass jede Übung des Plans zwei Bilder hat und alle im Service Worker stehen.
 
-## Noch ohne Fotos
+## Stand
 
-Die Ausweichübungen (z. B. Kurzhantel-Bankdrücken, Klimmzüge im Obergriff, Nordic Curls, Hyperextension).
+Alle 20 Übungen des Plans und alle 17 Ausweichübungen haben Fotos (74 Bilder, ca. 1,2 MB). „Reverse Flys Kurzhantel“ hat keine Animation und zeigt nur die Fotos. Eigene Bildunterschriften stehen in `PCAP`.
+
+Weitere Fehler der KI, die neu erzeugt wurden: Hyperextension (Oberkörper hing in der Endposition zu wenig nach unten).
