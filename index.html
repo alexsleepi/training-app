@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1795249840">
+<meta name="app-version" content="1795335121">
 <style>
 /* Schriften liegen lokal (src/fonts, SIL Open Font License), damit die App offline gleich aussieht. */
 @font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
@@ -193,19 +193,12 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .fig{background:#0b0c0c;border:1px solid var(--line);border-radius:12px;padding:8px;margin-top:8px}
 .fig svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
 .fig .fl{stroke:#3a3b3b;stroke-width:2}
-.fig .limb{stroke:#f2f1ec;stroke-width:6.5;stroke-linecap:round}
-.fig .limb.th{stroke-width:9.5}.fig .limb.sn{stroke-width:7.2}.fig .limb.ua{stroke-width:7.2}.fig .limb.fa{stroke-width:5.8}
-.fig .limb.far.th{stroke-width:8.5}.fig .limb.far.sn{stroke-width:6.4}.fig .limb.far.ua{stroke-width:6.4}.fig .limb.far.fa{stroke-width:5.2}
-.fig .hand{fill:#f2f1ec}.fig .hand.far{fill:#a9a8a2}
 .fig .trk{stroke:#f0c43c;stroke-width:1.5;stroke-dasharray:.1 4;stroke-linecap:round;fill:none;opacity:.7}.fig .trke{fill:#f0c43c;opacity:.7}
-.fig .limb.far{stroke:#a9a8a2;stroke-width:5.5}
-.fig .limb.neck{stroke-width:5}
-.fig .limb.foot{stroke-width:5}
-.fig .torso{stroke:#f2f1ec;stroke-width:12.5;stroke-linecap:round}
-.fig .torsoF{fill:#f2f1ec;stroke:#f2f1ec;stroke-width:6;stroke-linejoin:round}
-.fig .joint{fill:#0b0c0c}
-.fig .head{fill:#f2f1ec}
-.fig .mus{stroke:#ff7a3d;stroke-width:6.5;stroke-linecap:round;opacity:.95}
+.fig .bo{fill:#0b0c0c;stroke:#0b0c0c;stroke-width:2.6;stroke-linejoin:round}
+.fig .bf{fill:#f2f1ec}.fig .bf.far{fill:#9f9e98}
+.fig .bo.tf{stroke-width:8.6}.fig .bf.tf{stroke:#f2f1ec;stroke-width:6;stroke-linejoin:round}
+.fig .joint{fill:#0b0c0c;opacity:.5}
+.fig .mus{stroke:#ff7a3d;stroke-width:5.4;stroke-linecap:round;opacity:.95}
 .fig .gh{opacity:.25}
 .fig .frm{stroke:#6d6c67;stroke-width:3;stroke-linecap:round;fill:none}
 .fig .frame{fill:#1d1e1e;stroke:#55554f;stroke-width:1.5}
@@ -235,6 +228,10 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .gnote span{color:var(--ink)}
 .figcoach{margin-top:8px;background:var(--surface2);border-left:3px solid var(--accent);border-radius:8px;padding:7px 10px;min-height:4.4em;font-size:.92rem;line-height:1.35}
 .figcoach b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.figstills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.figstills figure{margin:0;background:#0b0c0c;border:1px solid var(--line);border-radius:10px;padding:4px}
+.figstills figcaption{font-size:.8rem;line-height:1.3;padding:2px 4px 4px;color:var(--muted)}
+.figstills figcaption b{display:block;color:var(--ink);font-size:.84rem}
 .figleg{margin-top:6px;font-size:.86rem}
 .figleg p{margin:4px 0;display:flex;gap:8px;align-items:flex-start}
 .musdot{flex:0 0 auto;width:12px;height:12px;border-radius:3px;background:#ff7a3d;margin-top:3px}
@@ -293,9 +290,9 @@ const PROGRAM = {
   A:{title:"Tag A", focus:"Kniebeuge · Bankdrücken · Latzug",
      cardio:{min:"15–20", dev:"Spinning-Bike oder Rad", text:"Zone 2 auf dem Spinning-Bike oder Rad, direkt nach dem Krafttraining. Gleichmäßig treten, Tempo, bei dem du noch ganze Sätze sprechen kannst (Whoop HF-Zone 2)."},
      ex:[
-      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
-      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
-      {id:"A3",name:"Latzug breit",gear:"Kabelturm, oberer Zug",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5},cue:"Brust raus, Ellbogen Richtung Hüfte ziehen, oben voll in die Dehnung gehen.",alts:["Klimmzüge"]},
+      {id:"A1",name:"Kniebeuge",gear:"Smith-Maschine oder Rack",bar:true,sets:3,lo:6,hi:10,rest:90,inc:2.5,m:{quads:1,glutes:.5},cue:"Füße hüftbreit, runter bis Oberschenkel mindestens parallel, Knie folgen den Zehen, Rumpf fest.",alts:["Beinpresse"]},
+      {id:"A2",name:"Bankdrücken Langhantel",gear:"Bankdrückstation",bar:true,sets:3,lo:6,hi:10,rest:90,inc:2.5,m:{chest:1,tri:.5},cue:"Schulterblätter zusammen und runter, Stange kontrolliert zur unteren Brust, Füße fest am Boden.",alts:["Bankdrücken Smith-Maschine","Kurzhantel-Bankdrücken"]},
+      {id:"A3",name:"Latzug breit",gear:"Kabelturm, oberer Zug",sets:3,lo:8,hi:12,rest:90,inc:5,m:{back:1,bi:.5},cue:"Brust raus, Ellbogen Richtung Hüfte ziehen, oben voll in die Dehnung gehen.",alts:["Klimmzüge"]},
       {id:"A4",name:"Beinstrecker",gear:"Beinstrecker-Maschine",sets:2,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{quads:1},cue:"Oben eine Sekunde halten, drei Sekunden ablassen.",alts:["Ausfallschritte Kurzhantel"]},
       {id:"A5",ss:"a",name:"Seitheben am Kabel",gear:"Kabelturm, unterer Zug",sets:4,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, der Ellbogen führt, bis Schulterhöhe.",alts:["Seitheben Kurzhantel"]},
       {id:"A6",ss:"a",name:"Trizepsdrücken Seil",gear:"Kabelturm, oberer Zug",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen bleiben am Körper, unten das Seil auseinanderziehen.",alts:["Überkopf-Trizeps Kabel"]},
@@ -304,10 +301,10 @@ const PROGRAM = {
   B:{title:"Tag B", focus:"Kreuzheben · Schrägbank · Rudern",
      cardio:null,
      ex:[
-      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",bar:true,sets:3,lo:6,hi:10,rest:120,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
-      {id:"B2",name:"Schrägbankdrücken Kurzhantel",gear:"Verstellbare Bank, ca. 30°",sets:3,lo:8,hi:12,rest:120,inc:2,m:{chest:1,tri:.5},cue:"Bank flach anstellen, Hanteln tief absenken, oben nicht zusammenschlagen.",alts:["Schrägbankdrücken Smith-Maschine"]},
-      {id:"B3",name:"Rudern sitzend eng",gear:"Kabelturm mit Ruderbank",sets:3,lo:8,hi:12,rest:120,inc:5,m:{back:1,bi:.5,rear:.5},cue:"Aufrecht sitzen, Griff zum Bauchnabel, Schulterblätter zusammen, vorne lang machen.",alts:["Kurzhantel-Rudern einarmig"]},
-      {id:"B4",name:"Beinpresse",gear:"Technogym Leg Press",sets:3,lo:10,hi:15,rest:120,inc:5,m:{quads:1,glutes:.5},cue:"Füße mittig, tief gehen ohne dass das Becken abrollt, Knie oben nicht durchdrücken.",alts:["Kniebeuge Smith-Maschine"]},
+      {id:"B1",name:"Rumänisches Kreuzheben",gear:"Langhantel",bar:true,sets:3,lo:6,hi:10,rest:90,inc:2.5,m:{hams:1,glutes:.5},cue:"Hüfte nach hinten schieben, Stange nah am Bein, Rücken neutral, bis deutliche Dehnung im Beinbeuger.",alts:["Rumänisches Kreuzheben Kurzhantel","Hyperextension"]},
+      {id:"B2",name:"Schrägbankdrücken Kurzhantel",gear:"Verstellbare Bank, ca. 30°",sets:3,lo:8,hi:12,rest:90,inc:2,m:{chest:1,tri:.5},cue:"Bank flach anstellen, Hanteln tief absenken, oben nicht zusammenschlagen.",alts:["Schrägbankdrücken Smith-Maschine"]},
+      {id:"B3",name:"Rudern sitzend eng",gear:"Kabelturm mit Ruderbank",sets:3,lo:8,hi:12,rest:90,inc:5,m:{back:1,bi:.5,rear:.5},cue:"Aufrecht sitzen, Griff zum Bauchnabel, Schulterblätter zusammen, vorne lang machen.",alts:["Kurzhantel-Rudern einarmig"]},
+      {id:"B4",name:"Beinpresse",gear:"Technogym Leg Press",sets:3,lo:10,hi:15,rest:90,inc:5,m:{quads:1,glutes:.5},cue:"Füße mittig, tief gehen ohne dass das Becken abrollt, Knie oben nicht durchdrücken.",alts:["Kniebeuge Smith-Maschine"]},
       {id:"B5",name:"Beinbeuger-Curl sitzend",gear:"Beinbeuger-Maschine (sitzend)",sets:3,lo:8,hi:12,rest:90,inc:5,iso:true,m:{hams:1},cue:"Knie auf Höhe der Drehachse, Oberkörper leicht nach vorn, Fersen unter den Sitz ziehen, langsam strecken.",alts:["Beinbeuger-Curl am Kabel","Nordic Curls"]},
       {id:"B6",ss:"b",name:"Seitheben Kurzhantel",gear:"Kurzhanteln",sets:4,lo:12,hi:20,rest:75,inc:2,iso:true,m:{side:1},cue:"Leicht nach vorn geneigt, Arme seitlich bis Schulterhöhe.",alts:["Seitheben am Kabel"]},
       {id:"B7",ss:"b",name:"Bizeps-Curls Kurzhantel",gear:"Kurzhantelablage",sets:3,lo:10,hi:15,rest:75,inc:2,iso:true,m:{bi:1},cue:"Ellbogen ruhig, unten ganz strecken, ohne Schwung.",alts:["Bizeps-Curls Kabel"]}
@@ -315,9 +312,9 @@ const PROGRAM = {
   C:{title:"Tag C", focus:"Split Squats · Fliegende · Klimmzüge",
      cardio:{min:"15–20", dev:"Laufband mit Steigung", text:"Zone 2 als Gehen mit Steigung auf dem Laufband (ca. 5 km/h, 8–12 %), alternativ Rudergerät oder ruhig schwimmen. Bei roter Recovery nur lockeres Gehen ohne Steigung."},
      ex:[
-      {id:"C1",name:"Bulgarische Split Squats",gear:"Kurzhanteln + Bank",sets:3,lo:8,hi:12,rest:120,inc:2,m:{quads:1,glutes:.5},cue:"Wiederholungen pro Bein. Oberkörper leicht nach vorn für mehr Gesäß, kontrolliert absenken.",alts:["Beinpresse einbeinig"]},
+      {id:"C1",name:"Bulgarische Split Squats",gear:"Kurzhanteln + Bank",sets:3,lo:8,hi:12,rest:90,inc:2,m:{quads:1,glutes:.5},cue:"Wiederholungen pro Bein. Oberkörper leicht nach vorn für mehr Gesäß, kontrolliert absenken.",alts:["Beinpresse einbeinig"]},
       {id:"C2",name:"Kabel-Fliegende",gear:"Kabelturm, Züge auf Schulterhöhe",sets:3,lo:10,hi:15,rest:90,inc:2.5,iso:true,m:{chest:1},cue:"Leicht gebeugte Ellbogen, weite Dehnung, vorne Brust zusammendrücken.",alts:["Kurzhantel-Fliegende"]},
-      {id:"C3",name:"Klimmzüge Untergriff",gear:"Rack · 0 kg = Körpergewicht",sets:3,lo:6,hi:12,rest:120,inc:2.5,bw:true,m:{back:1,bi:.5},cue:"Unten ganz aushängen, Brust zur Stange. Zu schwer? Auf Latzug eng tauschen.",alts:["Latzug eng Untergriff"]},
+      {id:"C3",name:"Klimmzüge Untergriff",gear:"Rack · 0 kg = Körpergewicht",sets:3,lo:6,hi:12,rest:90,inc:2.5,bw:true,m:{back:1,bi:.5},cue:"Unten ganz aushängen, Brust zur Stange. Zu schwer? Auf Latzug eng tauschen.",alts:["Latzug eng Untergriff"]},
       {id:"C4",name:"Beinbeuger-Curl sitzend",gear:"Beinbeuger-Maschine (sitzend)",sets:3,lo:10,hi:15,rest:75,inc:5,iso:true,m:{hams:1},cue:"Knie auf Höhe der Drehachse, Oberkörper leicht nach vorn, Fersen unter den Sitz ziehen, langsam strecken.",alts:["Beinbeuger-Curl am Kabel","Nordic Curls"]},
       {id:"C5",ss:"c",name:"Face Pulls Seil",gear:"Kabelturm, Stirnhöhe",sets:3,lo:12,hi:20,rest:75,inc:2.5,iso:true,m:{rear:1},cue:"Seil zur Stirn, Hände auseinander, Daumen zeigen nach hinten.",alts:["Reverse Flys Kurzhantel"]},
       {id:"C6",ss:"c",name:"Überkopf-Trizeps Kabel",gear:"Kabelturm, Seil",sets:2,lo:10,hi:15,rest:75,inc:2.5,iso:true,m:{tri:1},cue:"Ellbogen nach vorn oben, tief in die Dehnung, Ellbogen ruhig halten.",alts:["Trizepsdrücken Seil"]},
@@ -548,7 +545,7 @@ function renderPlan(){
   let h=`<div class="card"><h2>Deine Woche</h2>
    <p>Training <b>Di · Fr · So</b>, dazwischen immer mindestens ein Ruhetag. Die App wählt automatisch die nächste Einheit A → B → C. Fällt ein Termin aus, machst du beim nächsten einfach dort weiter.</p>
    <div>${WEEK.map(x=>`<div class="wk ${TRAIN_WD.includes(x.wd)?"tr":""} ${x.wd===tw?"now":""}"><b>${WD[x.wd]}</b><span><b style="font-family:var(--body);font-size:.93rem">${x.t}</b><br><span class="small muted">${x.d}</span></span></div>`).join("")}</div>
-   <p class="small muted">Dauer pro Einheit: ca. 65–80 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
+   <p class="small muted">Dauer pro Einheit: ca. 60–75 min inklusive Cardio. Harte Sätze pro Muskel und Woche (Grundübungen zählen für Hilfsmuskeln halb):</p>
    <table class="tbl num"><tbody>${(()=>{const v=weeklyVolume();return MUSCLES.map(([k,l])=>`<tr><td>${l}</td><td style="text-align:right">${fmt(v[k]||0)}</td><td style="width:45%"><div style="height:6px;border-radius:3px;background:${(v[k]||0)>=8?"var(--good)":(v[k]||0)>=5?"var(--mid)":"var(--muted)"};width:${Math.min(100,(v[k]||0)/14*100)}%"></div></td></tr>`).join("")})()}</tbody></table>
    <p class="small muted">Richtwert für Muskelaufbau: ca. 8–16 Sätze pro großer Muskelgruppe. Waden und Bauch brauchen weniger.</p></div>`;
   ORDER.forEach(k=>{const P=PROGRAM[k];
@@ -885,6 +882,7 @@ Object.keys(TIPS).forEach(k=>{if(FIG[k])FIG[k].tips=TIPS[k]});
 Object.keys(XCUES).forEach(k=>{if(FIG[k])FIG[k].cues=(FIG[k].cues||[]).concat(XCUES[k])});
 /* Von vorn gesehen und zum Betrachter hin bewegt: Punkte geradlinig verschieben (perspektivische Verkürzung) */
 ["fly","abduct"].forEach(k=>{FIG[k].lin=true});
+FIG.hyper.flip=true; /* liegt mit dem Gesicht nach unten, Blick nach links */
 /* Varianten mit anderem Gerät */
 FIG.benchsmith=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"smith")});
 FIG.benchdb=Object.assign({},FIG.bench,{eq:p=>benchEq(p,"db"),cues:[["sh","Schulterblätter zusammen"],["ha","Hanteln tief, oben nicht zusammenschlagen"]]});
@@ -893,25 +891,31 @@ FIG.hingedb=Object.assign({},FIG.hinge,{eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),cues:[[
 FIG.squatbar=Object.assign({},FIG.squat,{eq:p=>SVGL(66,20,66,152,"frm")+SVGL(140,20,140,152,"frm")+EQ.plate(p.ha[0]+2,p.ha[1])});
 FIG.dbfly=Object.assign({},FIG.fly,{eq:p=>SVGR(88,14,24,86,"padf",4)+EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),note:"Von oben gesehen, du liegst auf der Flachbank."});
 const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"legpress","Beinpresse einbeinig":"legpress","Bankdrücken Langhantel":"bench","Bankdrücken Smith-Maschine":"benchsmith","Kurzhantel-Bankdrücken":"benchdb","Schrägbankdrücken Kurzhantel":"incline","Schrägbankdrücken Smith-Maschine":"inclinesmith","Kurzhantel-Fliegende":"dbfly","Kabel-Fliegende":"fly","Latzug breit":"latpull","Latzug eng Untergriff":"latpull","Klimmzüge":"pullup","Klimmzüge Untergriff":"pullup","Rudern sitzend eng":"row","Kurzhantel-Rudern einarmig":"dbrow","Rumänisches Kreuzheben":"hinge","Rumänisches Kreuzheben Kurzhantel":"hingedb","Hyperextension":"hyper","Beinstrecker":"legext","Bulgarische Split Squats":"split","Ausfallschritte Kurzhantel":"split","Seitheben am Kabel":"latcable","Seitheben Kurzhantel":"lateral","Face Pulls Seil":"facepull","Abduktoren":"abduct","Schulterdrücken Kurzhantel":"press","Bizeps-Curls Kurzhantel":"curl","Bizeps-Curls Kabel":"curlcable","Trizepsdrücken Seil":"pushdown","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch","Wadenheben an der Beinpresse":"calfpress","Wadenheben Smith-Maschine":"calfsmith","Beinbeuger-Curl sitzend":"legcurlseat","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"nordic"};
-const PAIRS_FAR=[["hp","kn2"],["kn2","an2"],["sh","el2"],["el2","ha2"]];
-const PAIRS=[["hp","kn"],["kn","an"],["an","to"],["sh","el"],["el","ha"],["hpL","hpR"],["hpL","knL"],["knL","anL"],["hpR","knR"],["knR","anR"],["shL","elL"],["elL","haL"],["shR","elR"],["elR","haR"]];
-const SEGK={kn:"th",an:"sn",el:"ua",ha:"fa"};
 const fx=n=>(+n).toFixed(1);
-/* Figur mit Volumen: Oberschenkel und Oberarm dicker als Unterschenkel und Unterarm, Hände, hintere Gliedmaßen dunkler */
+/* Körperformen statt Strichen: Gliedmaßen verjüngen sich, jede Einheit (Bein, Arm, Rumpf mit Kopf) hat eine dunkle Kontur.
+   So heben sich Arme vor dem Rumpf und Beine voneinander ab. Die kleine Nase zeigt die Blickrichtung. */
+const capS=(A,B,ra,rb)=>{const dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hypot(dx,dy)||1,nx=-dy/d,ny=dx/d;
+  const D=`M${fx(A[0]+nx*ra)} ${fx(A[1]+ny*ra)}L${fx(B[0]+nx*rb)} ${fx(B[1]+ny*rb)}A${rb} ${rb} 0 0 0 ${fx(B[0]-nx*rb)} ${fx(B[1]-ny*rb)}L${fx(A[0]-nx*ra)} ${fx(A[1]-ny*ra)}A${ra} ${ra} 0 0 0 ${fx(A[0]+nx*ra)} ${fx(A[1]+ny*ra)}Z`;
+  return c=>`<path d="${D}" class="${c}"/>`};
+const dotS=(P,r)=>c=>SVGC(P[0],P[1],r,c);
+const unit=(shapes,far)=>shapes.map(f=>f("bo")).join("")+shapes.map(f=>f(far?"bf far":"bf")).join("");
+const BW={th:[5.7,4.3],sn:[4.1,2.9],ua:[4.1,3.3],fa:[3.2,2.5]};
 function figBody(p,cls,f){
   let h=`<g class="${cls}">`;
-  const seg=([a,b],far)=>{if(!p[a]||!p[b])return "";const k=SEGK[b.replace(/[2LR]$/,"")];return SVGL(p[a][0],p[a][1],p[b][0],p[b][1],"limb"+(k?" "+k:"")+(far?" far":""))};
-  PAIRS_FAR.forEach(x=>{h+=seg(x,true)});
-  if(p.ha2)h+=SVGC(p.ha2[0],p.ha2[1],3,"hand far");
-  if(p.nk){h+=SVGP([p.shL,p.shR,p.hpR||p.hp,p.hpL||p.hp],"torsoF")}else if(p.sh&&p.hp)h+=SVGL(p.sh[0],p.sh[1],p.hp[0],p.hp[1],"torso");
-  PAIRS.forEach(x=>{h+=seg(x,false)});
+  const leg=(H,K,A,T,far)=>{const q=[];if(p[H]&&p[K])q.push(capS(p[H],p[K],BW.th[0],BW.th[1]));if(p[K]&&p[A])q.push(capS(p[K],p[A],BW.sn[0],BW.sn[1]));
+    if(p[A]&&!far){if(T&&p[T])q.push(capS(p[A],p[T],2.9,2.4));else if(f&&f.foot==="plate")q.push(capS(p[A],[p[A][0]-PERP[0]*11,p[A][1]-PERP[1]*11],2.9,2.4));else if(!p.nk&&!(f&&f.foot))q.push(capS(p[A],[p[A][0]+11,p[A][1]],2.9,2.4))}
+    return q.length?unit(q,far):""};
+  const arm=(S,E,H,far)=>{const q=[];if(p[S]&&p[E])q.push(capS(p[S],p[E],BW.ua[0],BW.ua[1]));if(p[E]&&p[H]){q.push(capS(p[E],p[H],BW.fa[0],BW.fa[1]));q.push(dotS(p[H],3.3))}return q.length?unit(q,far):""};
+  h+=arm("sh","el2","ha2",true)+leg("hp","kn2","an2",null,true);
+  const t=[];
+  if(p.nk)t.push(c=>SVGP([p.shL,p.shR,p.hpR||p.hp,p.hpL||p.hp],c+" tf"));else if(p.sh&&p.hp)t.push(capS(p.sh,p.hp,7.4,6.3));
   const base=p.nk||p.sh;
-  if(base&&p.hd){const dx=base[0]-p.hd[0],dy=base[1]-p.hd[1],d=Math.hypot(dx,dy)||1;h+=SVGL(p.hd[0]+dx/d*8,p.hd[1]+dy/d*8,base[0],base[1],"limb neck")}
-  if(p.an&&!p.nk&&!p.to&&!(f&&f.foot))h+=SVGL(p.an[0],p.an[1],p.an[0]+11,p.an[1],"limb foot");
-  if(f&&f.foot==="plate"&&p.an)h+=SVGL(p.an[0],p.an[1],p.an[0]-PERP[0]*11,p.an[1]-PERP[1]*11,"limb foot");
-  ["kn","el","kn2","knL","knR","elL","elR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],2.2,"joint")});
-  ["ha","haL","haR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],3.3,"hand")});
-  if(p.hd)h+=`<circle cx="${fx(p.hd[0])}" cy="${fx(p.hd[1])}" r="8.5" class="head"/>`;
+  if(base&&p.hd){t.push(capS(base,p.hd,2.8,2.8));t.push(dotS(p.hd,8.5));
+    if(!p.nk){const dx=p.hd[0]-base[0],dy=p.hd[1]-base[1],d=Math.hypot(dx,dy)||1,sg=f&&f.flip?-1:1;t.push(dotS([p.hd[0]-dy/d*8.3*sg,p.hd[1]+dx/d*8.3*sg],2.3))}}
+  if(t.length)h+=unit(t,false);
+  h+=leg("hp","kn","an","to",false)+leg("hpL","knL","anL",null,false)+leg("hpR","knR","anR",null,false);
+  h+=arm("sh","el","ha",false)+arm("shL","elL","haL",false)+arm("shR","elR","haR",false);
+  ["kn","el","knL","knR","elL","elR"].forEach(k=>{if(p[k])h+=SVGC(p[k][0],p[k][1],1.6,"joint")});
   return h+"</g>";
 }
 function segPart(p,a,b,f0,f1){const A=p[a],B=p[b];if(!A||!B)return "";return SVGL(A[0]+(B[0]-A[0])*f0,A[1]+(B[1]-A[1])*f0,A[0]+(B[0]-A[0])*f1,A[1]+(B[1]-A[1])*f1,"mus")}
@@ -954,6 +958,8 @@ const reduceMotion=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)
 function arrowSvg(from,to){const dx=to[0]-from[0],dy=to[1]-from[1],d=Math.hypot(dx,dy);if(d<0.05)return "";const ux=dx/d,uy=dy/d;
   const s=[from[0]+ux*9,from[1]+uy*9],e=[from[0]+ux*24,from[1]+uy*24];const l=[e[0]-ux*6-uy*4,e[1]-uy*6+ux*4],r=[e[0]-ux*6+uy*4,e[1]-uy*6-ux*4];
   return SVGL(s[0],s[1],e[0],e[1],"arw")+SVGP([e,l,r],"arwh")}
+function figScene(f,p){let h=(f.eq?f.eq(p):"")+figBody(p,"bd",f);(f.hl||[]).forEach(x=>{h+=segPart(p,x[0],x[1],x[2],x[3])});return h}
+function stillSvg(k,t,label){const f=FIG[k],fl=f.floor||152;return `<svg viewBox="0 0 200 160" role="img" aria-label="${label}">${SVGL(0,fl,200,fl,"fl")}${figScene(f,poseAt(f,t))}</svg>`}
 function drawFig(svg,t,info){
   const f=FIG[svg.dataset.fig];if(!f)return;const fl=f.floor||152;
   const stat=reduceMotion||svg.dataset.static;
@@ -962,8 +968,7 @@ function drawFig(svg,t,info){
   if(stat){const p0=poseAt(f,0);h+=(f.eq?`<g class="gh">${f.eq(p0)}</g>`:"")+figBody(p0,"bd gh",f)}
   if(f.track){const pts=[];for(let q=0;q<=10;q++){const j=poseAt(f,q/10)[f.track];if(j)pts.push(j)}
     if(pts.length>1&&dist2(pts[0],pts[pts.length-1])>6)h+=`<polyline class="trk" points="${pts.map(j=>fx(j[0])+","+fx(j[1])).join(" ")}"/>`+SVGC(pts[0][0],pts[0][1],1.8,"trke")+SVGC(pts[pts.length-1][0],pts[pts.length-1][1],1.8,"trke")}
-  h+=(f.eq?f.eq(p):"")+figBody(p,"bd",f);
-  (f.hl||[]).forEach(x=>{h+=segPart(p,x[0],x[1],x[2],x[3])});
+  h+=figScene(f,p);
   (f.cues||[]).forEach((c,i)=>{const j=p[c[0]];if(j)h+=`<g class="cuem"><circle cx="${fx(j[0]+9)}" cy="${fx(j[1]-9)}" r="6"/><text x="${fx(j[0]+9)}" y="${fx(j[1]-6.6)}">${i+1}</text></g>`});
   if(!stat&&info&&f.track&&info.i%2===0){const j0=p[f.track];const p2=poseAt(f,info.i===0?Math.min(1,t+0.06):Math.max(0,t-0.06));const j1=p2[f.track];if(j0&&j1)h+=arrowSvg(j0,j1)}
   if(stat)h+=`<text class="hud" x="6" y="13">Grau = Start · Weiß = Endposition</text>`;
@@ -987,13 +992,13 @@ function animLoop(now){
 function startAnim(svg){if(reduceMotion||svg.dataset.static)return;ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}
 function figHtml(name){const k=PAT[name];const f=k&&FIG[k];if(!f)return "";
   return `<div class="fig"><svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
-  <div class="figcoach"><b>${esc(coachTxt(f,0)[0])}</b><span>${esc(coachTxt(f,0)[1])}</span></div>
-  <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button><button class="ghost sm2" data-act="figmode">Start/Ende</button></div>
+  <div class="figcoach"><b>${esc(coachTxt(f,reduceMotion?null:0)[0])}</b><span>${esc(coachTxt(f,reduceMotion?null:0)[1])}</span></div>
+  <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button></div>
+  <div class="figstills"><figure>${stillSvg(k,0,"Start")}<figcaption><b>Start</b>${esc((f.tips||[])[3]||"")}</figcaption></figure><figure>${stillSvg(k,1,"Endposition")}<figcaption><b>Endposition</b>${esc((f.tips||[])[1]||"")}</figcaption></figure></div>
   <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
 function figAct(act,a){const svg=a.closest(".fig").querySelector("svg");
   if(act==="figplay"){if(svg.dataset.paused){delete svg.dataset.paused;a.textContent="Pause"}else{svg.dataset.paused="1";a.textContent="Weiter"}return}
-  if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}
-  if(act==="figmode"){if(svg.dataset.static){delete svg.dataset.static;a.textContent="Start/Ende";svg._phi=null;startAnim(svg)}else{svg.dataset.static="1";ANIM.delete(svg);a.textContent="Animation";drawFig(svg,1);setCoach(svg,null)}}}
+  if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}}
 document.addEventListener("toggle",e=>{
   const d=e.target;if(!d.classList||!d.classList.contains("cue"))return;
   d.querySelectorAll("svg.anim").forEach(svg=>{
@@ -1350,7 +1355,7 @@ document.addEventListener("click",e=>{
       const r=afterSet(ui.day,ex,d);startTimer(r.sec,r.label);if(d.ex[slot].sets.every(x=>x.done)){const y=window.scrollY;renderHeute();window.scrollTo(0,y)}}
     return}
   if(act==="addset"){const d=getDraft(ui.day);const e=d.ex[a.dataset.slot];const l=e.sets[e.sets.length-1];e.sets.push({kg:l?l.kg:"",reps:"",done:false,extra:true});saveDrafts();if(ui.focus)renderFocus();else renderHeute();return}
-  if(act==="figmode"||act==="figplay"||act==="figslow"){figAct(act,a);return}
+  if(act==="figplay"||act==="figslow"){figAct(act,a);return}
   if(act==="wload"||act==="wpull"){sync(true);return}
   if(act==="save"){saveSession();return}
   if(act==="pslot"){const T=proteinTarget();const k=ymd(new Date());const d=protDay(k);const i=+a.dataset.i;d.done[i]=!d.done[i];protSave(k,d);renderErnaehrung();return}

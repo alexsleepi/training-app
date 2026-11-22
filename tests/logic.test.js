@@ -104,8 +104,12 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   assert.deepEqual(JSON.parse(E('JSON.stringify(coachTxt(FIG.squat,0))')),["Runter · einatmen","Hüfte nach hinten-unten, Knie nach außen über die Zehen"]);
   assert.equal(E('coachTxt(FIG.squat,2)[0]'),"Hochdrücken · ausatmen");assert.equal(E('coachTxt(FIG.latpull,0)[0]'),"Ziehen · ausatmen");assert.equal(E('coachTxt(FIG.nordic,0)[0]'),"Langsam nach vorn · einatmen");
   E('ui.day="A";drafts={};renderHeute()');const c=w.document.querySelector('article[data-slot="A1"] .figcoach');assert.ok(c&&c.textContent.includes("Runter"))});
- ok('Pausen der ersten Übungen sind 2:00',()=>{assert.equal(E('Math.max(...ORDER.map(d=>Math.max(...PROGRAM[d].ex.map(x=>x.rest))))'),120);
-  for(const [d,i] of [["A",0],["A",1],["B",0]])assert.equal(E(`PROGRAM.${d}.ex[${i}].rest`),120)});
+ ok('Keine Pause ist länger als 1:30',()=>{assert.equal(E('Math.max(...ORDER.map(d=>Math.max(...PROGRAM[d].ex.map(x=>x.rest))))'),90);
+  for(const [d,i] of [["A",0],["A",1],["B",0]])assert.equal(E(`PROGRAM.${d}.ex[${i}].rest`),90)});
+ ok('Ausführung zeigt Standbilder für Start und Endposition mit Hinweis',()=>{
+  E('ui.day="A";drafts={};renderHeute()');const f=w.document.querySelectorAll('article[data-slot="A1"] .figstills figure');assert.equal(f.length,2);
+  assert.match(f[0].textContent,/^Start/);assert.match(f[1].textContent,/Endposition.*Oberschenkel mindestens waagerecht/);
+  assert.ok(f[0].querySelector('svg path.bf')&&f[1].querySelector('svg path.bf'),"Figur gezeichnet")});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
