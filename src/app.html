@@ -80,6 +80,14 @@ input::placeholder,textarea::placeholder{color:#5f5f5b}
 .chip.bad{background:rgba(229,87,79,.18);color:var(--bad)}
 .chip.acc{background:var(--accent);color:var(--accent-ink)}
 
+.wchk{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:12px}
+.wchk.good{border-left-color:var(--good)}.wchk.mid{border-left-color:var(--mid)}.wchk.bad{border-left-color:var(--bad)}
+.wchk summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:.9rem}
+.wchk summary::-webkit-details-marker{display:none}
+.wchk .wt{flex:1;min-width:0;font-weight:600}
+.wchk .wmore{font-size:.78rem;color:var(--muted)}
+.wchk[open] .wmore{color:var(--accent)}
+.wchk .wbody{display:flex;flex-direction:column;gap:10px;padding:10px 12px 12px;border-top:1px solid var(--line)}
 .toggle{display:flex;align-items:center;gap:10px;font-size:.92rem}
 .toggle input{width:20px;height:20px;accent-color:var(--accent)}
 
@@ -477,7 +485,8 @@ function renderHeute(){
   if(d.created&&d.created!==today){const any=Object.values(d.ex).some(e=>e.sets.some(x=>x.done||x.reps!==""));
     if(!any){delete drafts[day];saveDrafts();return renderHeute()}
     h+=`<div class="banner"><b>Angefangenes Training vom ${shortDate(d.created+"T12:00")}.</b> Recovery und Vorschläge stammen von damals. <div class="row" style="margin-top:8px"><button class="btn sm" data-act="draftkeep">Fortsetzen</button><button class="btn sec sm" data-act="draftdrop">Verwerfen, neu starten</button></div></div>`}
-  h+=`<div class="card"><div class="row between"><h2>Whoop-Check</h2>${z?`<span class="chip ${z}">${esc(d.recovery)} %</span>`:`<span class="chip">offen</span>`}</div>
+  /* Whoop-Check als schmale Zeile; Felder, Begründung und Entlastung stehen aufklappbar dahinter */
+  h+=`<details class="wchk ${z||""}" data-k="whoop"><summary><span class="chip ${z||""}">${num(d.recovery)!=null?esc(d.recovery)+" %":z?"HRV":"offen"}</span><span class="wt">${z?zoneTxt[z][0]:"Whoop: Recovery fehlt noch"}${d.deload?" · Entlastung":""}</span><span class="wmore">Details</span></summary><div class="wbody">
    <div class="row">
     <div class="field"><label for="f-rec">Recovery %</label><input id="f-rec" type="number" inputmode="numeric" min="0" max="100" placeholder="z. B. 72" value="${esc(d.recovery)}" data-f="recovery"></div>
     <div class="field"><label for="f-sleep">Schlaf %</label><input id="f-sleep" type="number" inputmode="numeric" min="0" max="100" placeholder="optional" value="${esc(d.sleep)}" data-f="sleep"></div>
@@ -486,7 +495,7 @@ function renderHeute(){
    ${z?`<div class="zone ${z}"><strong>${zoneTxt[z][0]}</strong><span class="small">${zoneTxt[z][1]}</span>${RD.why?`<span class="small muted" style="display:block;margin-top:4px">Grund: ${esc(RD.why)}</span>`:""}</div>`:`<p class="small muted">Recovery kommt automatisch aus Whoop (über n8n). Sonst hier von Hand eintragen.</p>`}
    <p class="small wstat" id="wstat">${whoopStatusHtml()}</p>
    <label class="toggle"><input type="checkbox" id="f-deload" data-f="deload" ${d.deload?"checked":""}> Entlastungswoche (halbe Sätze, ca. 10 % leichter)</label>
-  </div>`;
+  </div></details>`;
 
   {const DS=deloadStatus();if(DS.due&&!d.deload)h+=`<div class="banner"><b>Entlastung empfohlen.</b> ${esc(DS.why)} Eine Woche mit halben Sätzen und ca. −10 % Gewicht, danach geht es stärker weiter. <div class="row" style="margin-top:8px"><button class="btn sm" data-act="deloadon">Diese Woche entlasten</button></div></div>`;}
   h+=`<div id="offnote">${offNoteHtml()}</div>`;
