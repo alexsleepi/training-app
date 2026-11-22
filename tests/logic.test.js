@@ -110,6 +110,12 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   E('ui.day="A";drafts={};renderHeute()');const f=w.document.querySelectorAll('article[data-slot="A1"] .figstills figure');assert.equal(f.length,2);
   assert.match(f[0].textContent,/^Start/);assert.match(f[1].textContent,/Endposition.*Oberschenkel mindestens waagerecht/);
   assert.ok(f[0].querySelector('svg path.bf')&&f[1].querySelector('svg path.bf'),"Figur gezeichnet")});
+ ok('Whoop-Check ist eine schmale, zugeklappte Zeile mit Wert und Ampel',()=>{
+  E('S.sessions=[];drafts={};ui.day="A";renderHeute()');let d=w.document.querySelector('#v-heute details.wchk');assert.ok(d&&!d.open);
+  assert.match(d.querySelector('summary').textContent,/offen.*Recovery fehlt noch/);assert.ok(d.querySelector('#f-rec')&&d.querySelector('#f-deload')&&d.querySelector('#wstat'),"Felder bleiben erreichbar");
+  E('getDraft("A").recovery="72";renderHeute()');d=w.document.querySelector('#v-heute details.wchk');
+  assert.match(d.querySelector('summary').textContent,/72 %.*Grün – voll trainieren/);assert.ok(d.classList.contains("good"));
+  d.open=true;E('getDraft("A").deload=true;renderHeute()');d=w.document.querySelector('#v-heute details.wchk');assert.ok(d.open,"bleibt offen");assert.match(d.querySelector('summary').textContent,/Entlastung/)});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
