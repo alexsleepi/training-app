@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Training">
 <meta name="theme-color" content="#111212">
-<meta name="app-version" content="1795336028">
+<meta name="app-version" content="1795338220">
 <style>
 /* Schriften liegen lokal (src/fonts, SIL Open Font License), damit die App offline gleich aussieht. */
 @font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
@@ -236,6 +236,12 @@ ul.errs{margin:0;padding-left:18px;font-size:.9rem;color:#e7b1ad}
 .gnote span{color:var(--ink)}
 .figcoach{margin-top:8px;background:var(--surface2);border-left:3px solid var(--accent);border-radius:8px;padding:7px 10px;min-height:4.4em;font-size:.92rem;line-height:1.35}
 .figcoach b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.figphotos{display:grid;gap:8px;margin-bottom:10px}
+.figphotos figure,.figstills figure{margin:0}
+.figphotos figure{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#111212}
+.figphotos img{display:block;width:100%;height:auto}
+.figphotos figcaption{padding:6px 10px 8px;font-size:.86rem;line-height:1.3;color:var(--muted)}
+.figphotos figcaption b{display:block;color:var(--ink);font-size:.9rem}
 .figstills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .figstills figure{margin:0;background:#0b0c0c;border:1px solid var(--line);border-radius:10px;padding:4px}
 .figstills figcaption{font-size:.8rem;line-height:1.3;padding:2px 4px 4px;color:var(--muted)}
@@ -900,6 +906,10 @@ FIG.hingedb=Object.assign({},FIG.hinge,{eq:p=>EQ.dbSide(p.ha[0],p.ha[1]),cues:[[
 FIG.squatbar=Object.assign({},FIG.squat,{eq:p=>SVGL(66,20,66,152,"frm")+SVGL(140,20,140,152,"frm")+EQ.plate(p.ha[0]+2,p.ha[1])});
 FIG.dbfly=Object.assign({},FIG.fly,{eq:p=>SVGR(88,14,24,86,"padf",4)+EQ.dbFront(p.haL[0],p.haL[1])+EQ.dbFront(p.haR[0],p.haR[1]),note:"Von oben gesehen, du liegst auf der Flachbank."});
 const PAT={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Beinpresse":"legpress","Beinpresse einbeinig":"legpress","Bankdrücken Langhantel":"bench","Bankdrücken Smith-Maschine":"benchsmith","Kurzhantel-Bankdrücken":"benchdb","Schrägbankdrücken Kurzhantel":"incline","Schrägbankdrücken Smith-Maschine":"inclinesmith","Kurzhantel-Fliegende":"dbfly","Kabel-Fliegende":"fly","Latzug breit":"latpull","Latzug eng Untergriff":"latpull","Klimmzüge":"pullup","Klimmzüge Untergriff":"pullup","Rudern sitzend eng":"row","Kurzhantel-Rudern einarmig":"dbrow","Rumänisches Kreuzheben":"hinge","Rumänisches Kreuzheben Kurzhantel":"hingedb","Hyperextension":"hyper","Beinstrecker":"legext","Bulgarische Split Squats":"split","Ausfallschritte Kurzhantel":"split","Seitheben am Kabel":"latcable","Seitheben Kurzhantel":"lateral","Face Pulls Seil":"facepull","Abduktoren":"abduct","Schulterdrücken Kurzhantel":"press","Bizeps-Curls Kurzhantel":"curl","Bizeps-Curls Kabel":"curlcable","Trizepsdrücken Seil":"pushdown","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch","Wadenheben an der Beinpresse":"calfpress","Wadenheben Smith-Maschine":"calfsmith","Beinbeuger-Curl sitzend":"legcurlseat","Beinbeuger-Curl am Kabel":"legcurl","Nordic Curls":"nordic"};
+/* Fotos zu Start und Endposition (src/img/<schlüssel>-a.webp und -b.webp), je Übungsname. KI-erzeugt, siehe docs/bilder.md. */
+const PHOTO={"Kniebeuge":"squat","Kniebeuge Smith-Maschine":"squat","Bankdrücken Langhantel":"bench","Latzug breit":"latpull","Beinstrecker":"legext","Seitheben am Kabel":"latcable","Trizepsdrücken Seil":"pushdown",
+ "Wadenheben an der Beinpresse":"calfpress","Rumänisches Kreuzheben":"hinge","Schrägbankdrücken Kurzhantel":"incline","Rudern sitzend eng":"row","Beinpresse":"legpress","Beinbeuger-Curl sitzend":"legcurlseat",
+ "Seitheben Kurzhantel":"lateral","Bizeps-Curls Kurzhantel":"curl","Bulgarische Split Squats":"split","Kabel-Fliegende":"fly","Klimmzüge Untergriff":"pullup","Face Pulls Seil":"facepull","Überkopf-Trizeps Kabel":"ohtri","Kabel-Crunch":"crunch"};
 const fx=n=>(+n).toFixed(1);
 /* Körperformen statt Strichen: Gliedmaßen verjüngen sich, jede Einheit (Bein, Arm, Rumpf mit Kopf) hat eine dunkle Kontur.
    So heben sich Arme vor dem Rumpf und Beine voneinander ab. Die kleine Nase zeigt die Blickrichtung. */
@@ -1000,11 +1010,15 @@ function animLoop(now){
 }
 function startAnim(svg){if(reduceMotion||svg.dataset.static)return;ANIM.add(svg);if(!animRun){animRun=true;requestAnimationFrame(animLoop)}}
 function figHtml(name){const k=PAT[name];const f=k&&FIG[k];if(!f)return "";
-  return `<div class="fig"><svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
+  const tips=f.tips||[],ph=PHOTO[name];
+  const cap=(l,i)=>`<figcaption><b>${l}</b>${esc(tips[i]||"")}</figcaption>`;
+  const photos=ph?`<div class="figphotos">${[["a","Start",3],["b","Endposition",1]].map(([x,l,i])=>`<figure><img src="img/${ph}-${x}.webp" width="800" height="640" alt="${l}: ${esc(name)}" loading="lazy" onerror="this.closest('figure').hidden=true">${cap(l,i)}</figure>`).join("")}</div>`:"";
+  const stills=ph?"":`<div class="figstills"><figure>${stillSvg(k,0,"Start")}${cap("Start",3)}</figure><figure>${stillSvg(k,1,"Endposition")}${cap("Endposition",1)}</figure></div>`;
+  return `<div class="fig">${photos}<svg class="anim" data-fig="${k}" viewBox="0 0 200 160" role="img" aria-label="Bewegungsablauf ${esc(name)}"></svg>
   <div class="figcoach"><b>${esc(coachTxt(f,reduceMotion?null:0)[0])}</b><span>${esc(coachTxt(f,reduceMotion?null:0)[1])}</span></div>
   <div class="figbar"><button class="ghost sm2" data-act="figplay">Pause</button><button class="ghost sm2" data-act="figslow">Zeitlupe</button></div>
-  <div class="figstills"><figure>${stillSvg(k,0,"Start")}<figcaption><b>Start</b>${esc((f.tips||[])[3]||"")}</figcaption></figure><figure>${stillSvg(k,1,"Endposition")}<figcaption><b>Endposition</b>${esc((f.tips||[])[1]||"")}</figcaption></figure></div>
-  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
+  ${stills}
+  <div class="figleg"><p><span class="musdot"></span><b>Arbeitet:</b> ${esc(f.mus||"")}</p>${(f.cues||[]).map((c,i)=>`<p><span class="cuen">${i+1}</span>${esc(c[1])}</p>`).join("")}${f.note?`<p class="muted">${esc(f.note)}</p>`:""}${ph?`<p class="muted small">Fotos: KI-erzeugt und geprüft. Die Geräte in deinem Studio können anders aussehen.</p>`:""}<p class="muted small">Grüner Pfeil = Bewegungsrichtung. Gepunktete Linie = Weg des Gewichts. Gelber Kasten = was du gerade tun sollst.</p></div></div>`}
 function figAct(act,a){const svg=a.closest(".fig").querySelector("svg");
   if(act==="figplay"){if(svg.dataset.paused){delete svg.dataset.paused;a.textContent="Pause"}else{svg.dataset.paused="1";a.textContent="Weiter"}return}
   if(act==="figslow"){if(svg.dataset.slow){delete svg.dataset.slow;a.textContent="Zeitlupe"}else{svg.dataset.slow="1";a.textContent="Normal"}return}}

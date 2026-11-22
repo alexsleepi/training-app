@@ -1,6 +1,9 @@
-const C="training-v1795336028";const SHELL=["./","manifest.json","icon.png","fonts/barlow-condensed-latin-600-normal.woff2","fonts/barlow-condensed-latin-700-normal.woff2","fonts/barlow-latin-400-normal.woff2","fonts/barlow-latin-500-normal.woff2","fonts/barlow-latin-600-normal.woff2","fonts/barlow-latin-700-normal.woff2"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+const C="training-v1795338220",A="training-assets-986d29edb4";const SHELL=["./","manifest.json","icon.png"];
+/* Schriften und Fotos ändern sich selten: eigener Speicher, der App-Updates überlebt. Sein Name ändert sich nur, wenn sich eine Datei ändert. */
+const ASSETS=["fonts/barlow-condensed-latin-600-normal.woff2","fonts/barlow-condensed-latin-700-normal.woff2","fonts/barlow-latin-400-normal.woff2","fonts/barlow-latin-500-normal.woff2","fonts/barlow-latin-600-normal.woff2","fonts/barlow-latin-700-normal.woff2","img/bench-a.webp","img/bench-b.webp","img/calfpress-a.webp","img/calfpress-b.webp","img/crunch-a.webp","img/crunch-b.webp","img/curl-a.webp","img/curl-b.webp","img/facepull-a.webp","img/facepull-b.webp","img/fly-a.webp","img/fly-b.webp","img/hinge-a.webp","img/hinge-b.webp","img/incline-a.webp","img/incline-b.webp","img/latcable-a.webp","img/latcable-b.webp","img/lateral-a.webp","img/lateral-b.webp","img/latpull-a.webp","img/latpull-b.webp","img/legcurlseat-a.webp","img/legcurlseat-b.webp","img/legext-a.webp","img/legext-b.webp","img/legpress-a.webp","img/legpress-b.webp","img/ohtri-a.webp","img/ohtri-b.webp","img/pullup-a.webp","img/pullup-b.webp","img/pushdown-a.webp","img/pushdown-b.webp","img/row-a.webp","img/row-b.webp","img/split-a.webp","img/split-b.webp","img/squat-a.webp","img/squat-b.webp"];
+self.addEventListener("install",e=>{e.waitUntil(Promise.all([caches.open(C).then(c=>c.addAll(SHELL)),
+  caches.open(A).then(async c=>{const have=new Set((await c.keys()).map(r=>r.url));await c.addAll(ASSETS.filter(u=>!have.has(new URL(u,self.registration.scope).href)))})]).then(()=>self.skipWaiting()))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C&&k!==A).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 /* Version aus <meta name="app-version"> der Seite */
 const verOf=t=>{const m=/name="app-version" content="([^"]*)"/.exec(t||"");return m?m[1]:""};
 /* Holt die Seite im Hintergrund. Ist sie neuer als die gespeicherte, wird sie gespeichert und die App bekommt Bescheid. */
@@ -22,5 +25,5 @@ self.addEventListener("fetch",e=>{
       const res=await refresh(scope,c,null);
       return res||new Response("Offline und noch nicht gespeichert. Öffne die App einmal mit Internet.",{status:503,headers:{"Content-Type":"text/plain; charset=utf-8"}})})());
     return}
-  e.respondWith(caches.open(C).then(c=>c.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok)c.put(r,res.clone());return res}))));
+  e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(/\/(fonts|img)\//.test(u.pathname)?A:C).then(c=>c.put(r,cp))}return res})));
 });

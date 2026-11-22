@@ -7,14 +7,16 @@ Persönliche Krafttrainings-App von Alexander (Muskelaufbau, 3× pro Woche Di/Fr
 ```
 src/app.html          Quelle der App (HTML, CSS, JS). Marken: /*@SYNC@*/ (dort kommt sync.js hin) und __VER__ (Version).
 src/sync.js           Abgleich mit n8n per Schlüssel (API-Adresse, Schlüsselkarte, Service-Worker-Anmeldung, Update-Hinweis).
-src/sw.template.js    Service Worker (Speicher zuerst, Aktualisierung im Hintergrund). __VER__ und __FONTS__ setzt der Build.
+src/sw.template.js    Service Worker (Speicher zuerst, Aktualisierung im Hintergrund). __VER__, __ASSETS__ und __AHASH__ setzt der Build. Schriften und Fotos liegen in einem eigenen Speicher, der App-Updates überlebt.
 src/icon.png          App-Icon (erzeugt mit tools/icon.py)
 src/fonts/            Schrift Barlow als woff2 (SIL Open Font License), wird nach fonts/ kopiert und vom Service Worker gecacht
+src/img/              Übungsfotos Start/Endposition als WebP (KI-erzeugt, siehe docs/bilder.md), werden nach img/ kopiert und offline gespeichert
 tools/build.py        Baut aus src/ die veröffentlichte App ins Repo-Root (fügt sync.js ein, setzt Version, kopiert Dateien)
-index.html, sw.js, manifest.json, icon.png, fonts/   GEBAUTE Dateien → nie direkt bearbeiten
+index.html, sw.js, manifest.json, icon.png, fonts/, img/   GEBAUTE Dateien → nie direkt bearbeiten
 tests/sync.test.js    jsdom-Test für Schlüssel, Abgleich, Löschen, Nachsichern (n8n wird simuliert)
 tests/logic.test.js   jsdom-Test für Entlastung, Progression, Wochensätze, keine externen Quellen
 docs/n8n.md           Die n8n-Workflows und Datentabellen
+docs/bilder.md        Wie die Übungsfotos erzeugt, geprüft und eingebaut werden
 ```
 
 Veröffentlicht über GitHub Pages: https://alexsleepi.github.io/training-app/ (Branch `main`, Root). Ein Push auf `main` ist das Deployment.
@@ -35,7 +37,7 @@ Veröffentlicht über GitHub Pages: https://alexsleepi.github.io/training-app/ (
 - **Daten:** Geräte-Einstellungen je Übungsname liegen in `settings.gnotes`. Alles liegt lokal im localStorage (`hp3_*`) und wird über n8n gesichert. Einheiten haben IDs `s_<zahl>`, Löschungen laufen über Grabsteine (`settings.deleted`) plus `_delPending`. Bestehende Daten nie verwerfen; Formatänderungen abwärtskompatibel halten.
 - **Fachliche Basis:** Ganzkörper A/B/C, doppelte Progression (Grundübungen steigen bei Schnitt ≥ oberes Ende − 1 ohne Satz unter dem Bereich, Isolationsübungen erst wenn alle Sätze oben sind; `suggest()`), Supersätze für kleine Übungen (Feld `ss`, 40 s Wechselpause, `afterSet()`), Aufwärmsätze aus dem Arbeitsgewicht (`warmupHtml()`), Reserve (RIR) im letzten Satz, Entlastung nach Bedarf (`deloadStatus()`), Tagesform aus HRV relativ zum eigenen 30-Tage-Schnitt (`readiness()`). Ernährung bewusst minimal: nur Eiweißziel (~1,9 g/kg) mit vier Portionen. Ziel aktuell Rekomposition.
 - **Geräte im Studio:** Technogym-Beinpresse, Bankdrückstation, Smith-Maschine/Rack mit verstellbarer Bank, Kabelturm (4 Stapel) mit Latzug- und Ruderbank, Beinstrecker (Scheiben), Abduktor, 45°-Hyperextension, Beinbeuger-Maschine (sitzend), Kurzhanteln, Rudergerät, Spinning-Bike, Laufband, Pool, Sauna.
-- **Animationen:** Reines SVG in `src/app.html` (Objekt `FIG`, Zuordnung `PAT`, Zeichnen in `drawFig`). Koordinaten im Rahmen 200×160, Boden bei y=152. Die Posen `a`/`b` sind Zielpunkte: `poseAt()` rechnet daraus ein starres Skelett (Gelenke drehen sich, geführte Hände und Füße per Zwei-Gelenk-Lösung), damit Gliedmaßen ihre Länge behalten. `TIPS` enthält je Figur vier Anweisungen passend zu den Phasen `ph`; sie erscheinen im gelben Kasten unter der Animation. Die Figur besteht aus Körperformen mit dunkler Kontur (`figBody`: Einheiten Bein, Arm, Rumpf mit Kopf), unter der Animation stehen Standbilder für Start und Endposition (`stillSvg`). Ein Test prüft die Gliedlängen aller Figuren. Von vorn gezeichnete Figuren mit Verkürzung (`lin`) bleiben geradlinig.
+- **Animationen:** Reines SVG in `src/app.html` (Objekt `FIG`, Zuordnung `PAT`, Zeichnen in `drawFig`). Koordinaten im Rahmen 200×160, Boden bei y=152. Die Posen `a`/`b` sind Zielpunkte: `poseAt()` rechnet daraus ein starres Skelett (Gelenke drehen sich, geführte Hände und Füße per Zwei-Gelenk-Lösung), damit Gliedmaßen ihre Länge behalten. `TIPS` enthält je Figur vier Anweisungen passend zu den Phasen `ph`; sie erscheinen im gelben Kasten unter der Animation. Die Figur besteht aus Körperformen mit dunkler Kontur (`figBody`: Einheiten Bein, Arm, Rumpf mit Kopf), über der Animation stehen Fotos für Start und Endposition (`PHOTO`, je Übungsname); Übungen ohne Foto zeigen gezeichnete Standbilder (`stillSvg`). Ein Test prüft die Gliedlängen aller Figuren. Von vorn gezeichnete Figuren mit Verkürzung (`lin`) bleiben geradlinig.
 - Sprache in der App: Deutsch, kurze klare Sätze, Zahlen mit Komma.
 
 ## n8n
@@ -47,4 +49,4 @@ Siehe `docs/n8n.md`. Für Änderungen an n8n braucht Claude Code den n8n-MCP-Con
 - Auf dem iPhone noch nicht real getestet: Offline-Start, Bildschirm bleibt an (Wake Lock), Piepton am Pausenende. Der Piepton ist bei Stummschalter stumm und kommt bei gesperrtem Bildschirm erst nach dem Entsperren (Grenze von Web-Apps).
 - Überwachung in n8n: Fehler meldet „Fehler-Melder Training“, fehlende neue Daten meldet „Daten-Wächter Training“ (beides per Mail, siehe docs/n8n.md).
 - n8n-Ausführungskontingent prüfen (Whoop ~7×/Tag, Withings 4×/Tag, App-Abgleich).
-- Optional: echte Übungsvideos statt SVG (eigene Aufnahmen oder KI-generiert, offline gecacht).
+- Fotos gibt es für die 20 Übungen des Plans, die Ausweichübungen haben noch keine (siehe docs/bilder.md).

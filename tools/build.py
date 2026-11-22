@@ -2,11 +2,11 @@
 """Baut die App (GitHub Pages) aus src/.
 
 src/app.html ist die Quelle. Der Build fügt src/sync.js an der Marke /*@SYNC@*/ ein,
-setzt die Version (__VER__) und schreibt index.html, sw.js, manifest.json, icon.png und fonts/ ins Repo-Root.
+setzt die Version (__VER__) und schreibt index.html, sw.js, manifest.json, icon.png, fonts/ und img/ ins Repo-Root.
 
 Aufruf:  python3 tools/build.py
 """
-import json, shutil, time
+import hashlib, json, shutil, time
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
@@ -20,15 +20,23 @@ assert "__VER__" not in sync and "/*@SYNC@*/" not in sync
 s = s.replace("/*@SYNC@*/", sync).replace("__VER__", ver)
 
 (ROOT / "index.html").write_text(s, encoding="utf-8")
-fonts = sorted(f.name for f in (SRC / "fonts").glob("*.woff2"))
-assert fonts, "Keine Schriften in src/fonts"
-(ROOT / "fonts").mkdir(exist_ok=True)
-for f in (ROOT / "fonts").iterdir():
-    f.unlink()
-for f in (SRC / "fonts").iterdir():
-    shutil.copy(f, ROOT / "fonts" / f.name)
-(ROOT / "sw.js").write_text((SRC / "sw.template.js").read_text().replace("__VER__", ver)
-                            .replace("__FONTS__", ",".join(json.dumps("fonts/" + f) for f in fonts)))
+# Schriften und Fotos kopieren; ihre Liste und eine Prüfsumme gehen in den Service Worker
+assets = []
+h = hashlib.sha1()
+for sub, pat in (("fonts", "*.woff2"), ("img", "*.webp")):
+    names = sorted(f.name for f in (SRC / sub).glob(pat))
+    assert names, f"Keine Dateien in src/{sub}"
+    (ROOT / sub).mkdir(exist_ok=True)
+    for f in (ROOT / sub).iterdir():
+        f.unlink()
+    for f in sorted((SRC / sub).iterdir()):
+        shutil.copy(f, ROOT / sub / f.name)
+    for n in names:
+        assets.append(f"{sub}/{n}")
+        h.update(n.encode()); h.update((SRC / sub / n).read_bytes())
+(ROOT / "sw.js").write_text((SRC / "sw.template.js").read_text(encoding="utf-8").replace("__VER__", ver)
+                            .replace("__AHASH__", h.hexdigest()[:10])
+                            .replace("__ASSETS__", ",".join(json.dumps(a) for a in assets)), encoding="utf-8")
 m = {"name": "Hypertrophie 3×", "short_name": "Training", "id": "./", "start_url": "./", "scope": "./", "display": "standalone",
      "orientation": "portrait", "background_color": "#111212", "theme_color": "#111212", "lang": "de",
      "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
