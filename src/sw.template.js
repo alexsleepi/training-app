@@ -1,6 +1,9 @@
-const C="training-v__VER__";const SHELL=["./","manifest.json","icon.png",__FONTS__];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+const C="training-v__VER__",A="training-assets-__AHASH__";const SHELL=["./","manifest.json","icon.png"];
+/* Schriften und Fotos ändern sich selten: eigener Speicher, der App-Updates überlebt. Sein Name ändert sich nur, wenn sich eine Datei ändert. */
+const ASSETS=[__ASSETS__];
+self.addEventListener("install",e=>{e.waitUntil(Promise.all([caches.open(C).then(c=>c.addAll(SHELL)),
+  caches.open(A).then(async c=>{const have=new Set((await c.keys()).map(r=>r.url));await c.addAll(ASSETS.filter(u=>!have.has(new URL(u,self.registration.scope).href)))})]).then(()=>self.skipWaiting()))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C&&k!==A).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 /* Version aus <meta name="app-version"> der Seite */
 const verOf=t=>{const m=/name="app-version" content="([^"]*)"/.exec(t||"");return m?m[1]:""};
 /* Holt die Seite im Hintergrund. Ist sie neuer als die gespeicherte, wird sie gespeichert und die App bekommt Bescheid. */
@@ -22,5 +25,5 @@ self.addEventListener("fetch",e=>{
       const res=await refresh(scope,c,null);
       return res||new Response("Offline und noch nicht gespeichert. Öffne die App einmal mit Internet.",{status:503,headers:{"Content-Type":"text/plain; charset=utf-8"}})})());
     return}
-  e.respondWith(caches.open(C).then(c=>c.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok)c.put(r,res.clone());return res}))));
+  e.respondWith(caches.match(r).then(m=>m||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(/\/(fonts|img)\//.test(u.pathname)?A:C).then(c=>c.put(r,cp))}return res})));
 });
