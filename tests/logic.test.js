@@ -86,6 +86,30 @@ const last=(slot,name,sets)=>E(`S.sessions=[{id:"s_1",date:new Date(Date.now()-3
   for(const [d,i] of [["B",4],["C",3]]){const ex=E(`PROGRAM.${d}.ex[${i}]`);assert.equal(ex.name,"Beinbeuger-Curl sitzend");assert.deepEqual([...ex.alts],["Beinbeuger-Curl am Kabel","Nordic Curls"])}
   assert.equal(E('PAT["Beinbeuger-Curl sitzend"]'),"legcurlseat");assert.ok(E('!!FIG.legcurlseat&&!!TECH["Beinbeuger-Curl sitzend"]'));
   assert.equal(E('weeklyVolume().hams'),9)});
+ // Animationen: starres Skelett
+ ok('Animation: Gliedmaßen behalten in jeder Übung ihre Länge',()=>{
+  const bad=E(`(()=>{const out=[];const D=(A,B)=>Math.hypot(A[0]-B[0],A[1]-B[1]);
+   for(const k of Object.keys(FIG)){const f=FIG[k];if(!f||f.lin)continue;
+    for(const [x,y] of [["hp","kn"],["kn","an"],["sh","el"],["el","ha"],["hp","sh"],["hp","kn2"],["kn2","an2"],["shR","elR"],["elR","haR"]]){if(!f.a[x]||!f.a[y])continue;
+     let mn=1e9,mx=0;for(let i=0;i<=20;i++){const d=D(poseAt(f,i/20)[x],poseAt(f,i/20)[y]);mn=Math.min(mn,d);mx=Math.max(mx,d)}
+     if(mx-mn>3)out.push(k+" "+x+"-"+y+" "+mn.toFixed(0)+".."+mx.toFixed(0))}}
+   return out.join("; ")})()`);assert.equal(bad,"")});
+ ok('Animation: Füße bleiben am Boden, Hände an der Stange',()=>{
+  const r=JSON.parse(E(`JSON.stringify([0,0.3,0.6,1].map(t=>({sq:poseAt(FIG.squat,t).an,pu:poseAt(FIG.pullup,t).ha,sp:poseAt(FIG.split,t).an})))`));
+  r.forEach(x=>{assert.deepEqual(x.sq,[98,150]);assert.deepEqual(x.pu,[100,22]);assert.deepEqual(x.sp,[122,150])})});
+ ok('Animation: jede Übung im Plan hat eine Figur mit vier Anweisungen',()=>{
+  const miss=E(`(()=>{const out=[];ORDER.forEach(d=>PROGRAM[d].ex.forEach(x=>[x.name,...x.alts].forEach(n=>{const f=FIG[PAT[n]];if(!f){if(n!=="Reverse Flys Kurzhantel")out.push("keine Figur: "+n);return}
+    if(!f.tips||f.tips.length!==4||f.tips.some(t=>!t))out.push("Anweisungen fehlen: "+n)})));return out.join("; ")})()`);assert.equal(miss,"")});
+ ok('Animation: Anweisung nennt Phase, Atmung und Hinweis',()=>{
+  assert.deepEqual(JSON.parse(E('JSON.stringify(coachTxt(FIG.squat,0))')),["Runter · einatmen","Hüfte nach hinten-unten, Knie nach außen über die Zehen"]);
+  assert.equal(E('coachTxt(FIG.squat,2)[0]'),"Hochdrücken · ausatmen");assert.equal(E('coachTxt(FIG.latpull,0)[0]'),"Ziehen · ausatmen");assert.equal(E('coachTxt(FIG.nordic,0)[0]'),"Langsam nach vorn · einatmen");
+  E('ui.day="A";drafts={};renderHeute()');const c=w.document.querySelector('article[data-slot="A1"] .figcoach');assert.ok(c&&c.textContent.includes("Runter"))});
+ ok('Keine Pause ist länger als 1:30',()=>{assert.equal(E('Math.max(...ORDER.map(d=>Math.max(...PROGRAM[d].ex.map(x=>x.rest))))'),90);
+  for(const [d,i] of [["A",0],["A",1],["B",0]])assert.equal(E(`PROGRAM.${d}.ex[${i}].rest`),90)});
+ ok('Ausführung zeigt Standbilder für Start und Endposition mit Hinweis',()=>{
+  E('ui.day="A";drafts={};renderHeute()');const f=w.document.querySelectorAll('article[data-slot="A1"] .figstills figure');assert.equal(f.length,2);
+  assert.match(f[0].textContent,/^Start/);assert.match(f[1].textContent,/Endposition.*Oberschenkel mindestens waagerecht/);
+  assert.ok(f[0].querySelector('svg path.bf')&&f[1].querySelector('svg path.bf'),"Figur gezeichnet")});
  ok('keine externen Schriften oder Skripte',()=>{const html=w.document.documentElement.outerHTML;
   assert.doesNotMatch(html,/fonts\.googleapis|fonts\.gstatic|<script[^>]+src=/)});
  ok('keine Skriptfehler',()=>assert.deepEqual(errors,[]));
